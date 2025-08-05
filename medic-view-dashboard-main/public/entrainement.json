@@ -1,0 +1,2081 @@
+{
+  "fitness_programs": {
+    "categories": {
+      "strength_training": {
+        "name": "Prise de masse / endurance musculaire",
+        "equipment_variations": {
+          "gym_equipment": {
+            "name": "Haltères et machines",
+            "levels": {
+              "beginner": {
+                "name": "Débutant",
+                "program": {
+                  "days_per_week": 3,
+                  "schedule": {
+                    "day_1": {
+                      "name": "Haut du corps",
+                      "exercises": [
+                        {
+                          "name": "Écarté debout à la bande (axe horizontal)",
+                          "sets": 3,
+                          "reps": "12-15"
+                        },
+                        {
+                          "name": "Extension triceps à la bande (bande sous un pied)",
+                          "sets": 3,
+                          "reps": "12-15"
+                        },
+                        {
+                          "name": "Kickback triceps (buste penché + bande sous un pied)",
+                          "sets": 3,
+                          "reps": "12-15"
+                        }
+                      ]
+                    },
+                    "day_2": {
+                      "name": "Dos + Biceps",
+                      "exercises": [
+                        {
+                          "name": "Rowing debout à la bande (tirage bas → poitrine)",
+                          "sets": 4,
+                          "reps": "8-12"
+                        },
+                        {
+                          "name": "Tirage horizontal à la bande (bande fixée bas)",
+                          "sets": 3,
+                          "reps": "8-12"
+                        },
+                        {
+                          "name": "Band pull apart (écarté dos)",
+                          "sets": 3,
+                          "reps": "12-15"
+                        },
+                        {
+                          "name": "Curl biceps à la bande (pieds sur la bande)",
+                          "sets": 3,
+                          "reps": "12-15"
+                        },
+                        {
+                          "name": "Curl marteau à la bande (prise neutre)",
+                          "sets": 3,
+                          "reps": "12-15"
+                        }
+                      ]
+                    },
+                    "day_3": {
+                      "name": "Jambes + Core",
+                      "exercises": [
+                        {
+                          "name": "Squat poids du corps + bande autour des cuisses",
+                          "sets": 4,
+                          "reps": "8-12"
+                        },
+                        {
+                          "name": "Bulgarian split squat + bande sous le pied avant",
+                          "sets": 3,
+                          "reps": "8-12 /jambe"
+                        },
+                        {
+                          "name": "Hip thrust (dos sur banc ou sol) + bande autour des genoux",
+                          "sets": 3,
+                          "reps": "12-15"
+                        },
+                        {
+                          "name": "Good morning jambes tendues + bande sous les pieds",
+                          "sets": 3,
+                          "reps": "12-15"
+                        },
+                        {
+                          "name": "Mollets debout unipodaux + bande sous le pied de support",
+                          "sets": 3,
+                          "reps": "12-15 /jambe"
+                        },
+                        {
+                          "name": "Planche latérale",
+                          "sets": 3,
+                          "duration": "30 sec /côté"
+                        }
+                      ]
+                    },
+                    "day_4": {
+                      "name": "Épaules + Abdos",
+                      "exercises": [
+                        {
+                          "name": "Développé épaules debout à la bande (bande sous les pieds)",
+                          "sets": 4,
+                          "reps": "8-12"
+                        },
+                        {
+                          "name": "Élévations latérales à la bande (bande sous les pieds)",
+                          "sets": 3,
+                          "reps": "12-15"
+                        },
+                        {
+                          "name": "Oiseaux (élévations postérieures) à la bande",
+                          "sets": 3,
+                          "reps": "12-15"
+                        },
+                        {
+                          "name": "Crunchs au sol ou à la bande (bande derrière la tête)",
+                          "sets": 3,
+                          "reps": "15"
+                        },
+                        {
+                          "name": "Gainage dynamique (planche + lever bras/jambe opposés)",
+                          "sets": 3,
+                          "duration": "30-45 sec"
+                        }
+                      ]
+                    },
+                    "day_5": {
+                      "name": "Full Body Avancé",
+                      "exercises": [
+                        {
+                          "name": "Pompes archers assistées à la bande",
+                          "sets": 3,
+                          "reps": "6-8 /jambe"
+                        },
+                        {
+                          "name": "Pistol squat assisté à la bande (surélever l'autre jambe)",
+                          "sets": 3,
+                          "reps": "6-8 /jambe"
+                        },
+                        {
+                          "name": "Rowing un bras à la bande (bande fixée basse)",
+                          "sets": 3,
+                          "reps": "8-12 / bras"
+                        },
+                        {
+                          "name": "Dips profonds assistés (entre deux chaises) + bande",
+                          "sets": 3,
+                          "reps": "8-12"
+                        },
+                        {
+                          "name": "Hip thrust unilatéral + bande",
+                          "sets": 3,
+                          "reps": "8-12 /jambe"
+                        },
+                        {
+                          "name": "Gainage planche statique",
+                          "sets": 3,
+                          "duration": "45-60 sec"
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "program_selection_criteria": {
+      "training_type": [
+        "prise de masse",
+        "endurance musculaire"
+      ],
+      "constraints": [
+        "douleurs",
+        "blessures", 
+        "manque de matériel"
+      ],
+      "available_equipment": [
+        "haltères",
+        "bandes élastiques",
+        "machines",
+        "poids du corps"
+      ],
+      "activity_level": [
+        "débutant",
+        "intermédiaire", 
+        "avancé"
+      ]
+    },
+     "selection_logic": {
+      "if_mass_or_endurance_plus_weights_machines_plus_beginner": "programme pour debutant",
+      "if_mass_or_endurance_plus_weights_machines_plus_intermediate": "programme pour intermmediaire", 
+      "if_mass_or_endurance_plus_weights_machines_plus_advanced": "programme pour pro",
+      "if_mass_or_endurance_plus_bodyweight_bands_plus_beginner": "programme sur 3 jours (Débutant)",
+      "if_mass_or_endurance_plus_bodyweight_bands_plus_intermediate": "programme sur 4 jours (Intermédiaire)",
+      "if_mass_or_endurance_plus_bodyweight_bands_plus_advanced": "programme sur 5 jours (avancé)"
+    }
+  ,{{            {
+    
+  
+                      "day_1": {
+                      "name": "Bas du corps + abdos",
+                      "exercises": [
+                        {
+                          "name": "Leg press (machine)",
+                          "sets": 4,
+                          "reps": "10-15"
+                        },
+                        {
+                          "name": "Leg curl (ischio) – machine",
+                          "sets": 4,
+                          "reps": "10-15"
+                        },
+                        {
+                          "name": "Extension mollets debout (machine)",
+                          "sets": 4,
+                          "reps": "12-20"
+                        },
+                        {
+                          "name": "Crunchs au sol",
+                          "sets": 3,
+                          "reps": "20-25"
+                        },
+                        {
+                          "name": "Planche",
+                          "sets": 3,
+                          "duration": "30-60 sec"
+                        }
+                      ]
+                    },
+                    "day_2": {
+                      "name": "Bas du corps + abdos",
+                      "exercises": [
+                        {
+                          "name": "Leg press (machine)",
+                          "sets": 4,
+                          "reps": "10-15"
+                        },
+                        {
+                          "name": "Leg curl (ischio) – machine",
+                          "sets": 4,
+                          "reps": "10-15"
+                        },
+                        {
+                          "name": "Extension mollets debout (machine)",
+                          "sets": 4,
+                          "reps": "12-20"
+                        },
+                        {
+                          "name": "Crunchs au sol",
+                          "sets": 3,
+                          "reps": "20-25"
+                        },
+                        {
+                          "name": "Planche",
+                          "sets": 3,
+                          "duration": "30-60 sec"
+                        }
+                      ]
+                    },
+                    "day_3": {
+                      "name": "Full body",
+                      "exercises": [
+                        {
+                          "name": "Chest press (machine)",
+                          "sets": 3,
+                          "reps": "8-12"
+                        },
+                        {
+                          "name": "Squat avec haltères",
+                          "sets": 4,
+                          "reps": "8-12"
+                        },
+                        {
+                          "name": "Rowing un bras avec haltère",
+                          "sets": 3,
+                          "reps": "10-12"
+                        },
+                        {
+                          "name": "Shoulder press (haltères)",
+                          "sets": 3,
+                          "reps": "8-12"
+                        },
+                        {
+                          "name": "Gainage (planche ou planche latérale)",
+                          "sets": 3,
+                          "duration": "30-45 sec"
+                        }
+                      ]
+                    }
+                  }
+                }
+              },
+              "intermediate": {
+                "name": "Intermédiaire",
+                "program": {
+                  "days_per_week": 4,
+                  "schedule": {
+                    "day_1": {
+                      "name": "Poitrine + Triceps",
+                      "exercises": [
+                        {
+                          "name": "Chest press",
+                          "sets": 4,
+                          "reps": "8-12"
+                        },
+                        {
+                          "name": "Écarté couché avec haltères",
+                          "sets": 3,
+                          "reps": "10-12"
+                        },
+                        {
+                          "name": "Dips assistés",
+                          "sets": 3,
+                          "reps": "6-10"
+                        },
+                        {
+                          "name": "Extension triceps poulie",
+                          "sets": 3,
+                          "reps": "10-12"
+                        },
+                        {
+                          "name": "Kickback triceps (haltère)",
+                          "sets": 3,
+                          "reps": "12-15"
+                        }
+                      ]
+                    },
+                    "day_2": {
+                      "name": "Dos + Biceps",
+                      "exercises": [
+                        {
+                          "name": "Tirage vertical (machine)",
+                          "sets": 4,
+                          "reps": "8-12"
+                        },
+                        {
+                          "name": "Rowing assis (machine)",
+                          "sets": 4,
+                          "reps": "8-12"
+                        },
+                        {
+                          "name": "Curl biceps haltères",
+                          "sets": 3,
+                          "reps": "10-12"
+                        },
+                        {
+                          "name": "Curl marteau (haltères)",
+                          "sets": 3,
+                          "reps": "10-12"
+                        },
+                        {
+                          "name": "Curl poulie basse",
+                          "sets": 3,
+                          "reps": "12-15"
+                        }
+                      ]
+                    },
+                    "day_3": {
+                      "name": "Jambes + Abdos",
+                      "exercises": [
+                        {
+                          "name": "Leg press",
+                          "sets": 4,
+                          "reps": "10-15"
+                        },
+                        {
+                          "name": "Leg curl (machine)",
+                          "sets": 4,
+                          "reps": "10-12"
+                        },
+                        {
+                          "name": "Fentes avec haltères",
+                          "sets": 3,
+                          "reps": "10 par jambe"
+                        },
+                        {
+                          "name": "Crunch au sol ou machine",
+                          "sets": 3,
+                          "reps": "20-25"
+                        },
+                        {
+                          "name": "Relevé de jambes suspendu",
+                          "sets": 3,
+                          "reps": "15-20"
+                        }
+                      ]
+                    },
+                    "day_4": {
+                      "name": "Épaules + Full body",
+                      "exercises": [
+                        {
+                          "name": "Shoulder press",
+                          "sets": 4,
+                          "reps": "8-12"
+                        },
+                        {
+                          "name": "Élévations latérales",
+                          "sets": 3,
+                          "reps": "10-12"
+                        },
+                        {
+                          "name": "Élévations frontales",
+                          "sets": 3,
+                          "reps": "10-12"
+                        },
+                        {
+                          "name": "Squats haltères",
+                          "sets": 4,
+                          "reps": "8-12"
+                        },
+                        {
+                          "name": "Planche (core)",
+                          "sets": 3,
+                          "duration": "30-45 sec"
+                        }
+                      ]
+                    }
+                  }
+                }
+              },
+              "advanced": {
+                "name": "Avancé",
+                "program": {
+                  "days_per_week": 5,
+                  "schedule": {
+                    "day_1": {
+                      "name": "Poitrine",
+                      "exercises": [
+                        {
+                          "name": "Chest press",
+                          "sets": 4,
+                          "reps": "8-12"
+                        },
+                        {
+                          "name": "Développé incliné (machine)",
+                          "sets": 3,
+                          "reps": "8-12"
+                        },
+                        {
+                          "name": "Écarté couché (haltères)",
+                          "sets": 3,
+                          "reps": "10-12"
+                        },
+                        {
+                          "name": "Pompes (si possible)",
+                          "sets": 3,
+                          "reps": "15-20"
+                        }
+                      ]
+                    },
+                    "day_2": {
+                      "name": "Dos",
+                      "exercises": [
+                        {
+                          "name": "Rowing assis (machine)",
+                          "sets": 4,
+                          "reps": "8-12"
+                        },
+                        {
+                          "name": "Tirage horizontal (poulie)",
+                          "sets": 3,
+                          "reps": "8-12"
+                        },
+                        {
+                          "name": "Rowing un bras haltère",
+                          "sets": 3,
+                          "reps": "10-12"
+                        },
+                        {
+                          "name": "Gainage lombaire (hyperextensions)",
+                          "sets": 3,
+                          "reps": "15-20"
+                        }
+                      ]
+                    },
+                    "day_3": {
+                      "name": "Jambes",
+                      "exercises": [
+                        {
+                          "name": "Leg press",
+                          "sets": 4,
+                          "reps": "10-15"
+                        },
+                        {
+                          "name": "Fentes avec haltères",
+                          "sets": 3,
+                          "reps": "10 par jambe"
+                        },
+                        {
+                          "name": "Leg curl",
+                          "sets": 4,
+                          "reps": "10-12"
+                        },
+                        {
+                          "name": "Mollets assis (machine)",
+                          "sets": 4,
+                          "reps": "12-20"
+                        },
+                        {
+                          "name": "Crunchs",
+                          "sets": 3,
+                          "reps": "20-25"
+                        }
+                      ]
+                    },
+                    "day_4": {
+                      "name": "Épaules + abdos",
+                      "exercises": [
+                        {
+                          "name": "Développé épaules (haltères)",
+                          "sets": 4,
+                          "reps": "8-12"
+                        },
+                        {
+                          "name": "Élévations latérales",
+                          "sets": 3,
+                          "reps": "10-12"
+                        },
+                        {
+                          "name": "Élévations postérieures (oiseaux)",
+                          "sets": 3,
+                          "reps": "10-12"
+                        },
+                        {
+                          "name": "Crunchs",
+                          "sets": 3,
+                          "reps": "20-25"
+                        },
+                        {
+                          "name": "Planche",
+                          "sets": 3,
+                          "duration": "30-45 sec"
+                        }
+                      ]
+                    },
+                    "day_5": {
+                      "name": "Bras (biceps & triceps)",
+                      "exercises": [
+                        {
+                          "name": "Curl biceps haltères",
+                          "sets": 4,
+                          "reps": "10-12"
+                        },
+                        {
+                          "name": "Curl marteau",
+                          "sets": 3,
+                          "reps": "10-12"
+                        },
+                        {
+                          "name": "Triceps à la poulie",
+                          "sets": 3,
+                          "reps": "10-12"
+                        },
+                        {
+                          "name": "Dips assistés",
+                          "sets": 3,
+                          "reps": "6-10"
+                        },
+                        {
+                          "name": "Kickback triceps",
+                          "sets": 3,
+                          "reps": "12-15"
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "bodyweight_bands": {
+            "name": "Poids du corps et bandes élastiques",
+            "levels": {
+              "beginner": {
+                "name": "Débutant",
+                "program": {
+                  "days_per_week": 3,
+                  "schedule": {
+                    "day_1": {
+                      "name": "Haut du corps (Poitrine, épaules, triceps)",
+                      "exercises": [
+                        {
+                          "name": "Pompes (poids du corps)",
+                          "sets": 3,
+                          "reps": "8-12",
+                          "notes": "Si trop difficile, fais-les sur les genoux ou contre un mur"
+                        },
+                        {
+                          "name": "Pompes avec bande élastique (sur le dos)",
+                          "sets": 3,
+                          "reps": "10-12"
+                        },
+                        {
+                          "name": "Élévations latérales avec bande élastique",
+                          "sets": 3,
+                          "reps": "12-15"
+                        },
+                        {
+                          "name": "Extensions triceps avec bande élastique",
+                          "sets": 3,
+                          "reps": "12-15"
+                        },
+                        {
+                          "name": "Planche (gainage)",
+                          "sets": 3,
+                          "duration": "20-30 sec"
+                        }
+                      ]
+                    },
+                    "day_2": {
+                      "name": "Bas du corps (Jambes, fessiers, mollets)",
+                      "exercises": [
+                        {
+                          "name": "Squats au poids du corps",
+                          "sets": 3,
+                          "reps": "12-15"
+                        },
+                        {
+                          "name": "Fentes avant (poids du corps)",
+                          "sets": 3,
+                          "reps": "10-12 par jambe"
+                        },
+                        {
+                          "name": "Pont fessier avec bande élastique",
+                          "sets": 3,
+                          "reps": "12-15"
+                        },
+                        {
+                          "name": "Mollets debout avec bande élastique",
+                          "sets": 3,
+                          "reps": "15-20"
+                        },
+                        {
+                          "name": "Planche latérale (gainage)",
+                          "sets": 3,
+                          "duration": "15-20 sec de chaque côté"
+                        }
+                      ]
+                    },
+                    "day_3": {
+                      "name": "Full body (Totalité du corps)",
+                      "exercises": [
+                        {
+                          "name": "Pompes inclinées avec bande élastique",
+                          "sets": 3,
+                          "reps": "8-12"
+                        },
+                        {
+                          "name": "Squats avec bande élastique",
+                          "sets": 3,
+                          "reps": "12-15"
+                        },
+                        {
+                          "name": "Rowing avec bande élastique (debout)",
+                          "sets": 3,
+                          "reps": "12-15"
+                        },
+                        {
+                          "name": "Fentes latérales avec bande élastique",
+                          "sets": 3,
+                          "reps": "12 par jambe"
+                        },
+                        {
+                          "name": "Planche (gainage dynamique)",
+                          "sets": 3,
+                          "duration": "20-30 sec"
+                        }
+                      ]
+                    }
+                  }
+                }
+              },
+              "intermediate": {
+                "name": "Intermédiaire",
+                "program": {
+                  "days_per_week": 4,
+                  "schedule": {
+                    "day_1": {
+                      "name": "Poitrine + Triceps",
+                      "exercises": [
+                        {
+                          "name": "Pompes classiques avec bande élastique",
+                          "sets": 4,
+                          "reps": "8-12"
+                        },
+                        {
+                          "name": "Écarté couché avec bande élastique",
+                          "sets": 3,
+                          "reps": "12-15"
+                        },
+                        {
+                          "name": "Dips assistés avec bande élastique",
+                          "sets": 4,
+                          "reps": "8-12"
+                        },
+                        {
+                          "name": "Extensions triceps avec bande élastique",
+                          "sets": 4,
+                          "reps": "12-15"
+                        },
+                        {
+                          "name": "Kickback triceps avec bande élastique",
+                          "sets": 3,
+                          "reps": "12-15"
+                        }
+                      ]
+                    },
+                    "day_2": {
+                      "name": "Dos + Biceps",
+                      "exercises": [
+                        {
+                          "name": "Rowing avec bande élastique (debout)",
+                          "sets": 4,
+                          "reps": "12-15"
+                        },
+                        {
+                          "name": "Tirage horizontal avec bande élastique",
+                          "sets": 4,
+                          "reps": "12-15"
+                        },
+                        {
+                          "name": "Curl biceps avec bande élastique",
+                          "sets": 4,
+                          "reps": "12-15"
+                        },
+                        {
+                          "name": "Curl marteau avec bande élastique",
+                          "sets": 3,
+                          "reps": "12-15"
+                        },
+                        {
+                          "name": "Planche dynamique",
+                          "sets": 3,
+                          "duration": "30-45 sec"
+                        }
+                      ]
+                    },
+                    "day_3": {
+                      "name": "Jambes + Abdos",
+                      "exercises": [
+                        {
+                          "name": "Squats avec bande élastique autour des genoux",
+                          "sets": 4,
+                          "reps": "12-15"
+                        },
+                        {
+                          "name": "Fentes avant avec bande élastique",
+                          "sets": 4,
+                          "reps": "10-12 par jambe"
+                        },
+                        {
+                          "name": "Pont fessier avec bande élastique",
+                          "sets": 4,
+                          "reps": "12-15"
+                        },
+                        {
+                          "name": "Crunchs avec bande élastique",
+                          "sets": 4,
+                          "reps": "15-20"
+                        },
+                        {
+                          "name": "Relevé de jambes suspendu (si possible)",
+                          "sets": 3,
+                          "reps": "15-20"
+                        }
+                      ]
+                    },
+                    "day_4": {
+                      "name": "Full body",
+                      "exercises": [
+                        {
+                          "name": "Pompes avec bande élastique",
+                          "sets": 4,
+                          "reps": "8-12"
+                        },
+                        {
+                          "name": "Squats sautés avec bande élastique",
+                          "sets": 4,
+                          "reps": "12-15"
+                        },
+                        {
+                          "name": "Rowing avec bande élastique (debout)",
+                          "sets": 4,
+                          "reps": "12-15"
+                        },
+                        {
+                          "name": "Fentes latérales avec bande élastique",
+                          "sets": 4,
+                          "reps": "12 par jambe"
+                        },
+                        {
+                          "name": "Planche dynamique avec mouvement de bras et jambes",
+                          "sets": 3,
+                          "duration": "30-45 sec"
+                        }
+                      ]
+                    }
+                  }
+                }
+              },
+              "advanced": {
+                "name": "Avancé",
+                "program": {
+                  "days_per_week": 5,
+                  "schedule": {
+                    "day_1": {
+                      "name": "Poitrine + Triceps",
+                      "exercises": [
+                        {
+                          "name": "Pompes classiques avec bande élastique",
+                          "sets": 4,
+                          "reps": "8-12"
+                        },
+                        {
+                          "name": "Pompes inclinées avec bande élastique",
+                          "sets": 4,
+                          "reps": "10-12"
+                        },
+                        {
+                          "name": "Écarté couché avec bande élastique",
+                          "sets": 4,
+                          "reps": "12-15"
+                        },
+                        {
+                          "name": "Dips assistés avec bande élastique",
+                          "sets": 4,
+                          "reps": "8-12"
+                        },
+                        {
+                          "name": "Extensions triceps à la poulie avec bande élastique",
+                          "sets": 4,
+                          "reps": "12-15"
+                        },
+                        {
+                          "name": "Kickback triceps avec bande élastique",
+                          "sets": 3,
+                          "reps": "12-15"
+                        }
+                      ]
+                    },
+                    "day_2": {
+                      "name": "Dos + Biceps",
+                      "exercises": [
+                        {
+                          "name": "Rowing avec bande élastique (debout)",
+                          "sets": 4,
+                          "reps": "12-15"
+                        },
+                        {
+                          "name": "Tirage horizontal avec bande élastique",
+                          "sets": 4,
+                          "reps": "12-15"
+                        },
+                        {
+                          "name": "Curl biceps avec bande élastique",
+                          "sets": 4,
+                          "reps": "12-15"
+                        },
+                        {
+                          "name": "Curl marteau avec bande élastique",
+                          "sets": 4,
+                          "reps": "12-15"
+                        },
+                        {
+                          "name": "Planche dynamique avec mouvement de bras",
+                          "sets": 3,
+                          "duration": "30-45 sec"
+                        }
+                      ]
+                    },
+                    "day_3": {
+                      "name": "Jambes + Abdos",
+                      "exercises": [
+                        {
+                          "name": "Squats avec bande élastique autour des genoux",
+                          "sets": 4,
+                          "reps": "12-15"
+                        },
+                        {
+                          "name": "Fentes avant avec bande élastique",
+                          "sets": 4,
+                          "reps": "10-12 par jambe"
+                        },
+                        {
+                          "name": "Pont fessier avec bande élastique",
+                          "sets": 4,
+                          "reps": "12-15"
+                        },
+                        {
+                          "name": "Mollets debout avec bande élastique",
+                          "sets": 4,
+                          "reps": "15-20"
+                        },
+                        {
+                          "name": "Crunchs avec bande élastique",
+                          "sets": 4,
+                          "reps": "15-20"
+                        },
+                        {
+                          "name": "Relevé de jambes suspendu",
+                          "sets": 3,
+                          "reps": "15-20"
+                        }
+                      ]
+                    },
+                    "day_4": {
+                      "name": "Épaules + Abdos",
+                      "exercises": [
+                        {
+                          "name": "Développé épaules avec bande élastique",
+                          "sets": 4,
+                          "reps": "8-12"
+                        },
+                        {
+                          "name": "Élévations latérales avec bande élastique",
+                          "sets": 4,
+                          "reps": "12-15"
+                        },
+                        {
+                          "name": "Élévations frontales avec bande élastique",
+                          "sets": 4,
+                          "reps": "12-15"
+                        },
+                        {
+                          "name": "Oiseaux (élévations postérieures) avec bande élastique",
+                          "sets": 4,
+                          "reps": "12-15"
+                        },
+                        {
+                          "name": "Planche dynamique (gainage)",
+                          "sets": 3,
+                          "duration": "30-45 sec"
+                        }
+                      ]
+                    },
+                    "day_5": {
+                      "name": "Full body (Totalité du corps)",
+                      "exercises": [
+                        {
+                          "name": "Pompes avec bande élastique autour du dos",
+                          "sets": 4,
+                          "reps": "8-12"
+                        },
+                        {
+                          "name": "Squats sautés avec bande élastique",
+                          "sets": 4,
+                          "reps": "12-15"
+                        },
+                        {
+                          "name": "Rowing avec bande élastique (debout)",
+                          "sets": 4,
+                          "reps": "12-15"
+                        },
+                        {
+                          "name": "Fentes latérales avec bande élastique",
+                          "sets": 4,
+                          "reps": "12 par jambe"
+                        },
+                        {
+                          "name": "Gainage dynamique (planche avec rotations)",
+                          "sets": 3,
+                          "duration": "30-45 sec"
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "wellness_sports": {
+        "name": "Sports de bien-être / discipline corporelle",
+        "disciplines": {
+          "yoga": {
+            "name": "Yoga",
+            "program": {
+              "days_per_week": 5,
+              "duration_per_session": "30-45 min",
+              "schedule": {
+                "monday": {
+                  "session": "Hatha Yoga Doux",
+                  "objective": "Éveil du corps, respiration"
+                },
+                "tuesday": {
+                  "session": "Vinyasa Flow Débutant",
+                  "objective": "Renforcement doux, mobilité"
+                },
+                "wednesday": {
+                  "session": "Yoga pour le dos et la posture",
+                  "objective": "Soulager tensions, redresser la posture"
+                },
+                "thursday": {
+                  "session": "Yin Yoga",
+                  "objective": "Étirement profond, relâchement"
+                },
+                "friday": {
+                  "session": "Power Yoga léger",
+                  "objective": "Tonification douce, équilibre"
+                },
+                "saturday": {
+                  "session": "(Optionnel) Méditation + Pranayama",
+                  "objective": "Calme mental, contrôle du souffle"
+                },
+                "sunday": {
+                  "session": "Repos ou balade en conscience",
+                  "objective": "Récupération active"
+                }
+              }
+            }
+          },
+          "pilates": {
+            "name": "Pilates",
+            "program": {
+              "days_per_week": 5,
+              "duration_per_session": "30-45 min",
+              "schedule": {
+                "monday": {
+                  "session": "Pilates de base – Centre & respiration",
+                  "objective": "Renforcement du « core », contrôle du souffle"
+                },
+                "tuesday": {
+                  "session": "Pilates bas du corps",
+                  "objective": "Cuisses, fessiers, stabilité pelvienne"
+                },
+                "wednesday": {
+                  "session": "Stretching & mobilité en Pilates",
+                  "objective": "Étirements actifs, mobilité articulaire"
+                },
+                "thursday": {
+                  "session": "Pilates haut du corps & posture",
+                  "objective": "Épaules, dos, bras, posture"
+                },
+                "friday": {
+                  "session": "Pilates complet + gainage",
+                  "objective": "Travail global, ceinture abdominale"
+                },
+                "saturday": {
+                  "session": "Routine douce avec ballon",
+                  "objective": "Stabilité et contrôle"
+                },
+                "sunday": {
+                  "session": "Repos actif ou marche consciente",
+                  "objective": "Récupération et détente"
+                }
+              }
+            }
+          },
+          "tai_chi": {
+            "name": "Tai-chi",
+            "program": {
+              "days_per_week": 5,
+              "duration_per_session": "20-30 min",
+              "schedule": {
+                "monday": {
+                  "session": "Postures de base + respiration consciente",
+                  "objective": "Ancrage, conscience du souffle"
+                },
+                "tuesday": {
+                  "session": "Enchaînement \"Forme 8\" (forme courte)",
+                  "objective": "Fluidité, mémorisation des gestes simples"
+                },
+                "wednesday": {
+                  "session": "Mouvement lent + ancrage dans le sol",
+                  "objective": "Équilibre, mobilité articulaire"
+                },
+                "thursday": {
+                  "session": "Application martiale lente (Tai-Chi Chuan)",
+                  "objective": "Concentration, gestuelle maîtrisée"
+                },
+                "friday": {
+                  "session": "Forme complète + Qi Gong d'éveil",
+                  "objective": "Circulation énergétique, sérénité mentale"
+                },
+                "saturday": {
+                  "session": "Tai-Chi méditatif en plein air",
+                  "objective": "Méditation en mouvement, apaisement"
+                },
+                "sunday": {
+                  "session": "Repos ou marche lente consciente",
+                  "objective": "Récupération naturelle"
+                }
+              }
+            }
+          },
+          "qi_gong": {
+            "name": "Qi Gong",
+            "program": {
+              "days_per_week": 5,
+              "duration_per_session": "20-30 min",
+              "schedule": {
+                "monday": {
+                  "session": "Échauffement énergétique + 8 pièces de Brocart",
+                  "objective": "Éveil du corps, tonification des organes"
+                },
+                "tuesday": {
+                  "session": "Qi Gong des 5 animaux (Wu Qin Xi) – partie 1",
+                  "objective": "Mobilité, fluidité, activation douce"
+                },
+                "wednesday": {
+                  "session": "Respiration abdominale + mouvements statiques",
+                  "objective": "Détente du système nerveux, enracinement"
+                },
+                "thursday": {
+                  "session": "Qi Gong pour renforcer les reins et l'immunité",
+                  "objective": "Énergie vitale, longévité"
+                },
+                "friday": {
+                  "session": "Qi Gong des méridiens + automassages",
+                  "objective": "Circulation énergétique, détente musculaire"
+                },
+                "saturday": {
+                  "session": "Qi Gong méditatif debout (Zhan Zhuang)",
+                  "objective": "Concentration, ancrage, puissance interne"
+                },
+                "sunday": {
+                  "session": "Marche Qi Gong lente ou repos",
+                  "objective": "Récupération énergétique, conscience du souffle"
+                }
+              }
+            }
+          },
+          "stretching": {
+            "name": "Stretching",
+            "program": {
+              "days_per_week": 5,
+              "duration_per_session": "20-30 min",
+              "schedule": {
+                "monday": {
+                  "session": "Stretching global du corps (full body)",
+                  "objective": "Détente générale, allongement musculaire"
+                },
+                "tuesday": {
+                  "session": "Étirements du bas du corps",
+                  "objective": "Fessiers, quadriceps, ischios, mollets"
+                },
+                "wednesday": {
+                  "session": "Étirements du haut du corps",
+                  "objective": "Dos, épaules, nuque, bras"
+                },
+                "thursday": {
+                  "session": "Stretching actif + mobilité articulaire",
+                  "objective": "Souplesse dynamique, fluidité"
+                },
+                "friday": {
+                  "session": "Stretching profond & relaxation",
+                  "objective": "Postures longues tenues (Yin-like)"
+                },
+                "saturday": {
+                  "session": "Stretching matinal 10-15 min",
+                  "objective": "Éveil musculaire en douceur"
+                },
+                "sunday": {
+                  "session": "Repos ou étirements libres",
+                  "objective": "Auto-écoute et libération corporelle"
+                }
+              }
+            }
+          }
+        }
+      },
+      "martial_arts": {
+        "name": "Arts martiaux",
+        "disciplines": {
+          "karate": {
+            "name": "Karaté",
+            "program": {
+              "days_per_week": 5,
+              "duration_per_session": "30-45 min",
+              "schedule": {
+                "monday": {
+                  "session": "Kihon (techniques de base)",
+                  "objective": "Apprentissage des coups de poing, blocages, positions"
+                },
+                "tuesday": {
+                  "session": "Enchaînements + déplacements (Kihon Waza)",
+                  "objective": "Coordination, équilibre, enchaînements fluides"
+                },
+                "wednesday": {
+                  "session": "Kata de base (ex. : Heian Shodan)",
+                  "objective": "Mémorisation, précision, respiration"
+                },
+                "thursday": {
+                  "session": "Kumite sans contact (combat simulé)",
+                  "objective": "Vitesse, distance, timing, respect"
+                },
+                "friday": {
+                  "session": "Renforcement + souplesse spécifique",
+                  "objective": "Gainage, jambes, étirements, explosivité"
+                },
+                "saturday": {
+                  "session": "Révision libre + shadow karaté",
+                  "objective": "Maîtrise personnelle"
+                },
+                "sunday": {
+                  "session": "Repos ou méditation Zen",
+                  "objective": "Esprit du karaté, recentrage"
+                }
+              }
+            }
+          },
+          "boxing": {
+            "name": "Boxe (Anglaise & Kick-boxing / Full-contact)",
+            "program": {
+              "days_per_week": 5,
+              "schedule": {
+                "monday": "Cardio + shadow boxing",
+                "tuesday": "Techniques de poings/pieds + sac de frappe",
+                "wednesday": "Renfo musculaire + gainage",
+                "thursday": "Sparring (léger ou simulation)",
+                "friday": "Coordination + esquives + souplesse"
+              }
+            }
+          },
+          "taekwondo": {
+            "name": "Taekwondo",
+            "program": {
+              "days_per_week": 5,
+              "schedule": {
+                "monday": "Techniques de jambes (Chagi)",
+                "tuesday": "Séquences de combat + flexibilité",
+                "wednesday": "Poomsae (formes) + équilibre",
+                "thursday": "Cardio + travail des réflexes",
+                "friday": "Simulations de combat + renforcement jambes"
+              }
+            }
+          },
+          "judo": {
+            "name": "Judo",
+            "program": {
+              "days_per_week": 5,
+              "schedule": {
+                "monday": "Ukemi (chutes) + déplacements",
+                "tuesday": "Techniques de projection (nage waza)",
+                "wednesday": "Renforcement + gainage",
+                "thursday": "Combat au sol (ne waza)",
+                "friday": "Randori (combat libre contrôlé)"
+              }
+            }
+          },
+          "kung_fu": {
+            "name": "Kung-Fu / Wushu (Shaolin, Sanda)",
+            "program": {
+              "days_per_week": 5,
+              "schedule": {
+                "monday": "Postures + techniques de base",
+                "tuesday": "Formes traditionnelles (taolu)",
+                "wednesday": "Souplesse + Qi Gong",
+                "thursday": "Sanda (combat avec règles)",
+                "friday": "Enchaînements + saut + arme légère (selon niveau)"
+              }
+            }
+          },
+          "jujitsu": {
+            "name": "Ju-jitsu & Brazilian Jiu-jitsu (BJJ)",
+            "program": {
+              "days_per_week": 5,
+              "schedule": {
+                "monday": "Mouvements au sol (escapes, gardes)",
+                "tuesday": "Techniques de soumission",
+                "wednesday": "Sparring technique",
+                "thursday": "Tactique en combat réel",
+                "friday": "Mobilité, respiration, récupération"
+              }
+            }
+          }
+        }
+      },
+      "women_training": {
+        "name": "Entraînement pour femme",
+        "equipment_variations": {
+          "gym_equipment": {
+            "name": "Haltères et machines",
+            "levels": {
+              "beginner": {
+                "name": "Débutant",
+                "program": {
+                  "days_per_week": 3,
+                  "schedule": {
+                    "day_1": {
+                      "name": "Haut du corps",
+                      "rest_time": "60-90 s entre chaque série",
+                      "exercises": [
+                        {
+                          "name": "Chest press (machine)",
+                          "sets": 4,
+                          "reps": "8-12"
+                        },
+                        {
+                          "name": "Écarté couché haltères",
+                          "sets": 3,
+                          "reps": "12-15"
+                        },
+                        {
+                          "name": "Rowing assis (machine)",
+                          "sets": 4,
+                          "reps": "8-12"
+                        },
+                        {
+                          "name": "Développé épaules (haltères)",
+                          "sets": 3,
+                          "reps": "12-15"
+                        },
+                        {
+                          "name": "Curl biceps (haltères)",
+                          "sets": 3,
+                          "reps": "10-12"
+                        },
+                        {
+                          "name": "Extension triceps à la poulie",
+                          "sets": 3,
+                          "reps": "12-15"
+                        }
+                      ]
+                    },
+                    "day_2": {
+                      "name": "Bas du corps + Core",
+                      "exercises": [
+                        {
+                          "name": "Goblet squat (haltère)",
+                          "sets": 4,
+                          "reps": "8-12"
+                        },
+                        {
+                          "name": "Hip thrust (machine ou barre + banc)",
+                          "sets": 3,
+                          "reps": "12-15"
+                        },
+                        {
+                          "name": "Leg curl (machine ischio)",
+                          "sets": 4,
+                          "reps": "10-12"
+                        },
+                        {
+                          "name": "Mollets debout (machine)",
+                          "sets": 3,
+                          "reps": "15-20"
+                        },
+                        {
+                          "name": "Crunchs au sol",
+                          "sets": 3,
+                          "reps": "20"
+                        },
+                        {
+                          "name": "Planche",
+                          "sets": 3,
+                          "duration": "30-45 sec"
+                        }
+                      ]
+                    },
+                    "day_3": {
+                      "name": "Full Body",
+                      "exercises": [
+                        {
+                          "name": "Soulevé de terre jambes tendues (haltères)",
+                          "sets": 3,
+                          "reps": "8-12"
+                        },
+                        {
+                          "name": "Développé couché haltères",
+                          "sets": 3,
+                          "reps": "8-12"
+                        },
+                        {
+                          "name": "Rowing un bras (haltère)",
+                          "sets": 3,
+                          "reps": "10-12"
+                        },
+                        {
+                          "name": "Élévations latérales (haltères)",
+                          "sets": 3,
+                          "reps": "12-15"
+                        },
+                        {
+                          "name": "Gainage dynamique (planche + lever de bras/jambe opposés)",
+                          "sets": 3,
+                          "duration": "30 sec"
+                        }
+                      ]
+                    }
+                  }
+                }
+              },
+              "intermediate": {
+                "name": "Intermédiaire",
+                "program": {
+                  "days_per_week": 4,
+                  "rest_time": {
+                    "compound": "60-90 s",
+                    "isolation": "45-60 s"
+                  },
+                  "schedule": {
+                    "day_1": {
+                      "name": "Poitrine + Triceps",
+                      "exercises": [
+                        {
+                          "name": "Chest press (machine)",
+                          "sets": 4,
+                          "reps": "8-12"
+                        },
+                        {
+                          "name": "Écarté incliné (haltères)",
+                          "sets": 3,
+                          "reps": "12-15"
+                        },
+                        {
+                          "name": "Dips assistés (machine ou banc)",
+                          "sets": 3,
+                          "reps": "8-12"
+                        },
+                        {
+                          "name": "Extension triceps à la poulie haute",
+                          "sets": 3,
+                          "reps": "12-15"
+                        },
+                        {
+                          "name": "Kickback triceps (haltère)",
+                          "sets": 3,
+                          "reps": "12-15"
+                        }
+                      ]
+                    },
+                    "day_2": {
+                      "name": "Dos + Biceps",
+                      "exercises": [
+                        {
+                          "name": "Tirage vertical (machine)",
+                          "sets": 4,
+                          "reps": "8-12"
+                        },
+                        {
+                          "name": "Rowing assis (machine)",
+                          "sets": 4,
+                          "reps": "8-12"
+                        },
+                        {
+                          "name": "Rowing un bras (haltère)",
+                          "sets": 3,
+                          "reps": "10-12"
+                        },
+                        {
+                          "name": "Curl biceps (haltères)",
+                          "sets": 3,
+                          "reps": "12-15"
+                        },
+                        {
+                          "name": "Curl marteau (haltères)",
+                          "sets": 3,
+                          "reps": "12-15"
+                        }
+                      ]
+                    },
+                    "day_3": {
+                      "name": "Jambes + Abdos",
+                      "exercises": [
+                        {
+                          "name": "Leg press (machine)",
+                          "sets": 4,
+                          "reps": "10-12"
+                        },
+                        {
+                          "name": "Hip thrust (machine ou barre + banc)",
+                          "sets": 3,
+                          "reps": "12-15"
+                        },
+                        {
+                          "name": "Leg curl (machine ischio)",
+                          "sets": 3,
+                          "reps": "10-12"
+                        },
+                        {
+                          "name": "Mollets debout (machine)",
+                          "sets": 4,
+                          "reps": "12-15"
+                        },
+                        {
+                          "name": "Crunchs au sol (ou machine)",
+                          "sets": 3,
+                          "reps": "15-20"
+                        },
+                        {
+                          "name": "Planche (gainage)",
+                          "sets": 3,
+                          "duration": "30-45 sec"
+                        }
+                      ]
+                    },
+                    "day_4": {
+                      "name": "Épaules + Full Body",
+                      "exercises": [
+                        {
+                          "name": "Shoulder press (machine ou haltères)",
+                          "sets": 4,
+                          "reps": "8-12"
+                        },
+                        {
+                          "name": "Élévations latérales (haltères)",
+                          "sets": 3,
+                          "reps": "12-15"
+                        },
+                        {
+                          "name": "Goblet squat (haltère)",
+                          "sets": 3,
+                          "reps": "8-12"
+                        },
+                        {
+                          "name": "Rowing inversé (machine ou poulie basse)",
+                          "sets": 3,
+                          "reps": "10-12"
+                        },
+                        {
+                          "name": "Gainage dynamique (planche + lever bras/jambe opposés)",
+                          "sets": 3,
+                          "duration": "30 sec"
+                        }
+                      ]
+                    }
+                  }
+                }
+              },
+              "advanced": {
+                "name": "Avancé",
+                "program": {
+                  "days_per_week": 5,
+                  "schedule": {
+                    "day_1": {
+                      "name": "Poitrine",
+                      "exercises": [
+                        {
+                          "name": "Chest press (machine)",
+                          "sets": 4,
+                          "reps": "15-20"
+                        },
+                        {
+                          "name": "Développé incliné (haltères)",
+                          "sets": 3,
+                          "reps": "15-20"
+                        },
+                        {
+                          "name": "Écarté couché (haltères)",
+                          "sets": 3,
+                          "reps": "15-20"
+                        },
+                        {
+                          "name": "Pompes pieds surélevés",
+                          "sets": 3,
+                          "reps": "15-20"
+                        }
+                      ]
+                    },
+                    "day_2": {
+                      "name": "Dos",
+                      "exercises": [
+                        {
+                          "name": "Tirage horizontal (poulie)",
+                          "sets": 4,
+                          "reps": "15-20"
+                        },
+                        {
+                          "name": "Rowing assis (machine)",
+                          "sets": 3,
+                          "reps": "15-20"
+                        },
+                        {
+                          "name": "Tirage vertical prise neutre (machine)",
+                          "sets": 3,
+                          "reps": "15-20"
+                        },
+                        {
+                          "name": "Rowing un bras (haltère)",
+                          "sets": 3,
+                          "reps": "15-20"
+                        }
+                      ]
+                    },
+                    "day_3": {
+                      "name": "Jambes",
+                      "exercises": [
+                        {
+                          "name": "Squat hack (machine) ou squat libre léger",
+                          "sets": 4,
+                          "reps": "15-20"
+                        },
+                        {
+                          "name": "Hip thrust (machine ou barre + banc)",
+                          "sets": 4,
+                          "reps": "15-20"
+                        },
+                        {
+                          "name": "Fentes marchées (haltères légers)",
+                          "sets": 3,
+                          "reps": "15-20 par jambe"
+                        },
+                        {
+                          "name": "Leg curl (machine ischio)",
+                          "sets": 3,
+                          "reps": "15-20"
+                        },
+                        {
+                          "name": "Mollets debout (machine)",
+                          "sets": 4,
+                          "reps": "20-25"
+                        }
+                      ]
+                    },
+                    "day_4": {
+                      "name": "Épaules + Abdos",
+                      "exercises": [
+                        {
+                          "name": "Développé épaules (haltères ou machine légère)",
+                          "sets": 4,
+                          "reps": "15-20"
+                        },
+                        {
+                          "name": "Élévations latérales (haltères légers)",
+                          "sets": 3,
+                          "reps": "15-20"
+                        },
+                        {
+                          "name": "Élévations postérieures (haltères ou machine)",
+                          "sets": 3,
+                          "reps": "15-20"
+                        },
+                        {
+                          "name": "Crunchs à la machine ou au sol",
+                          "sets": 3,
+                          "reps": "20-25"
+                        },
+                        {
+                          "name": "Planche dynamique (alternance bras/jambe)",
+                          "sets": 3,
+                          "duration": "45-60 sec"
+                        }
+                      ]
+                    },
+                    "day_5": {
+                      "name": "Bras + Full Body Léger",
+                      "exercises": [
+                        {
+                          "name": "Curl biceps (haltères légers)",
+                          "sets": 3,
+                          "reps": "15-20"
+                        },
+                        {
+                          "name": "Curl incliné (haltères)",
+                          "sets": 3,
+                          "reps": "15-20"
+                        },
+                        {
+                          "name": "Extension triceps à la poulie",
+                          "sets": 3,
+                          "reps": "15-20"
+                        },
+                        {
+                          "name": "Dips assistés (banc ou machine)",
+                          "sets": 3,
+                          "reps": "15-20"
+                        },
+                        {
+                          "name": "Goblet squat léger (haltère)",
+                          "sets": 2,
+                          "reps": "20-25",
+                          "notes": "active recovery"
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "bodyweight_bands": {
+            "name": "Poids du corps et bandes élastiques",
+            "levels": {
+              "beginner": {
+                "name": "Débutant",
+                "program": {
+                  "days_per_week": 3,
+                  "schedule": {
+                    "day_1": {
+                      "name": "Haut du corps",
+                      "exercises": [
+                        {
+                          "name": "Pompes genoux (ou mur)",
+                          "sets": 3,
+                          "reps": "8-12"
+                        },
+                        {
+                          "name": "Rowing debout avec bande (tirage vers le bas)",
+                          "sets": 3,
+                          "reps": "8-12"
+                        },
+                        {
+                          "name": "Élévations latérales (bande sous les pieds)",
+                          "sets": 3,
+                          "reps": "12-15"
+                        },
+                        {
+                          "name": "Extensions triceps debout (bande sous un pied, bras tendu)",
+                          "sets": 3,
+                          "reps": "12-15"
+                        },
+                        {
+                          "name": "Planche (gainage statique)",
+                          "sets": 3,
+                          "duration": "30-45 sec"
+                        }
+                      ]
+                    },
+                    "day_2": {
+                      "name": "Bas du corps + Core",
+                      "exercises": [
+                        {
+                          "name": "Squat poids du corps (bandes autour des cuisses)",
+                          "sets": 3,
+                          "reps": "8-12"
+                        },
+                        {
+                          "name": "Fentes avant (alternées, bande sous le pied arrière)",
+                          "sets": 3,
+                          "reps": "8-12 par jambe"
+                        },
+                        {
+                          "name": "Pont fessier au sol (bandes autour des genoux)",
+                          "sets": 3,
+                          "reps": "12-15"
+                        },
+                        {
+                          "name": "Mollets debout unipodaux (bande sous le pied de support)",
+                          "sets": 3,
+                          "reps": "12-15 par jambe"
+                        },
+                        {
+                          "name": "Planche latérale",
+                          "sets": 3,
+                          "duration": "20-30 sec / côté"
+                        }
+                      ]
+                    },
+                    "day_3": {
+                      "name": "Full Body",
+                      "exercises": [
+                        {
+                          "name": "Pompes inclinées (mains sur banc/chair + bande autour du dos)",
+                          "sets": 3,
+                          "reps": "8-12"
+                        },
+                        {
+                          "name": "Soulevé de terre jambes tendues poids du corps",
+                          "sets": 3,
+                          "reps": "8-12"
+                        },
+                        {
+                          "name": "Rowing un bras (bande fixée bas)",
+                          "sets": 3,
+                          "reps": "8-12 par bras"
+                        },
+                        {
+                          "name": "Fentes latérales (bande autour des genoux)",
+                          "sets": 3,
+                          "reps": "12-15 par jambe"
+                        },
+                        {
+                          "name": "Gainage dynamique (planche + lever bras/jambe opposés)",
+                          "sets": 3,
+                          "duration": "30 sec"
+                        }
+                      ]
+                    }
+                  }
+                }
+              },
+              "intermediate": {
+                "name": "Intermédiaire",
+                "program": {
+                  "days_per_week": 4,
+                  "schedule": {
+                    "day_1": {
+                      "name": "Poitrine + Triceps",
+                      "exercises": [
+                        {
+                          "name": "Pompes classiques ou sur les genoux",
+                          "sets": 4,
+                          "reps": "8-12"
+                        },
+                        {
+                          "name": "Dips assistés (banc / chaise + bande sous les genoux)",
+                          "sets": 3,
+                          "reps": "8-12"
+                        },
+                        {
+                          "name": "Écarté debout avec bande (axe horizontal)",
+                          "sets": 3,
+                          "reps": "12-15"
+                        },
+                        {
+                          "name": "Extension triceps à la bande (bande sous un pied)",
+                          "sets": 3,
+                          "reps": "12-15"
+                        },
+                        {
+                          "name": "Kickback triceps (bande sous un pied, buste penché)",
+                          "sets": 3,
+                          "reps": "12-15"
+                        }
+                      ]
+                    },
+                    "day_2": {
+                      "name": "Dos + Biceps",
+                      "exercises": [
+                        {
+                          "name": "Rowing debout avec bande (tirage bas → poitrine)",
+                          "sets": 4,
+                          "reps": "8-12"
+                        },
+                        {
+                          "name": "Tirage horizontal avec bande (bande fixée bas)",
+                          "sets": 3,
+                          "reps": "8-12"
+                        },
+                        {
+                          "name": "Band pull-apart (écarté dos)",
+                          "sets": 3,
+                          "reps": "12-15"
+                        },
+                        {
+                          "name": "Curl biceps avec bande (pieds sur la bande)",
+                          "sets": 3,
+                          "reps": "12-15"
+                        },
+                        {
+                          "name": "Curl marteau (prise neutre, bande sous les pieds)",
+                          "sets": 3,
+                          "reps": "12-15"
+                        }
+                      ]
+                    },
+                    "day_3": {
+                      "name": "Jambes + Core",
+                      "exercises": [
+                        {
+                          "name": "Squat poids du corps + bande autour des cuisses",
+                          "sets": 4,
+                          "reps": "8-12"
+                        },
+                        {
+                          "name": "Bulgarian split squat (pied arrière surélevé + bande sous le pied avant)",
+                          "sets": 3,
+                          "reps": "8-12 par jambe"
+                        },
+                        {
+                          "name": "Hip thrust au sol ou banc (bande autour des genoux)",
+                          "sets": 3,
+                          "reps": "12-15"
+                        },
+                        {
+                          "name": "Good morning jambes tendues (bande sous les pieds)",
+                          "sets": 3,
+                          "reps": "12-15"
+                        },
+                        {
+                          "name": "Mollets debout unipodaux (bande sous le pied de support)",
+                          "sets": 3,
+                          "reps": "12-15 par jambe"
+                        },
+                        {
+                          "name": "Planche latérale",
+                          "sets": 3,
+                          "duration": "30 sec / côté"
+                        }
+                      ]
+                    },
+                    "day_4": {
+                      "name": "Épaules + Full Body",
+                      "exercises": [
+                        {
+                          "name": "Pompes inclinées (mains surélevées + bande autour du dos)",
+                          "sets": 3,
+                          "reps": "8-12"
+                        },
+                        {
+                          "name": "Développé épaules debout (bande sous les pieds)",
+                          "sets": 3,
+                          "reps": "8-12"
+                        },
+                        {
+                          "name": "Élévations latérales (bande sous les pieds)",
+                          "sets": 3,
+                          "reps": "12-15"
+                        },
+                        {
+                          "name": "Rowing un bras (bande fixée basse)",
+                          "sets": 3,
+                          "reps": "8-12 par bras"
+                        },
+                        {
+                          "name": "Gainage dynamique (planche + lever bras/jambe opposés)",
+                          "sets": 3,
+                          "duration": "30 sec"
+                        }
+                      ]
+                    }
+                  }
+                }
+              },
+              "advanced": {
+                "name": "Avancé",
+                "program": {
+                  "days_per_week": 5,
+                  "schedule": {
+                    "day_1": {
+                      "name": "Poitrine + Triceps",
+                      "exercises": [
+                        {
+                          "name": "Pompes classiques + bande autour du dos",
+                          "sets": 4,
+                          "reps": "8-12"
+                        },
+                        {
+                          "name": "Dips assistés entre deux chaises + bande sous les genoux",
+                          "sets": 3,
+                          "reps": "8-12"
+                        },
+                        {
+                          "name":"Écarté debout à la bande (axe horizontal)",
+                            "sets": 3,
+                            "reps": "12-15"
+                        },
+                        {
+                          "name": "Extension triceps à la bande (bande sous un pied)",
+                          "sets": 3,
+                          "reps": "12-15"
+                        },
+                        {
+                          "name": "Kickback triceps (bande sous un pied, buste penché)",
+                          "sets": 3,
+                          "reps": "12-15"
+                        } ]
+                    },
+                    "day_2": {
+                      "name": "Dos + Biceps",
+                      "exercises": [
+                        {
+                          "name": "Rowing debout avec bande (tirage bas → poitrine)",
+                          "sets": 4,
+                          "reps": "8-12"
+                        },
+                        {
+                          "name": "Tirage horizontal avec bande (bande fixée bas)",
+                          "sets": 3,
+                          "reps": "8-12"
+                        },
+                        {
+                          "name": "Band pull-apart (écarté dos)",
+                          "sets": 3,
+                          "reps": "12-15"
+                        },
+                        {
+                          "name": "Curl biceps avec bande (pieds sur la bande)",
+                          "sets": 3,
+                          "reps": "12-15"
+                        },
+                        {
+                          "name": "Curl marteau (prise neutre, bande sous les pieds)",
+                          "sets": 3,
+                          "reps": "12-15"
+                        }
+                      ]
+                    },
+                    "day_3": {
+                      "name": "Jambes + Core",
+                      "exercises": [
+                        {
+                          "name": "Squat poids du corps + bande autour des cuisses",
+                          "sets": 4,
+                          "reps": "8-12"
+                        },
+                        {
+                          "name": "Bulgarian split squat (pied arrière surélevé + bande sous le pied avant)",
+                          "sets": 3,
+                          "reps": "8-12 par jambe"
+                        },
+                        {
+                          "name": "Hip thrust au sol ou banc (bande autour des genoux)",
+                          "sets": 3,
+                          "reps": "12-15"
+                        },
+                        {
+                          "name": "Good morning jambes tendues (bande sous les pieds)",
+                          "sets": 3,
+                          "reps": "12-15"
+                        },
+                        {
+                          "name": "Mollets debout unipodaux (bande sous le pied de support)",
+                          "sets": 3,
+                          "reps": "12-15 par jambe"
+                        },
+                        {
+                          "name": "Planche latérale",
+                          "sets": 3,
+                          "reps": "30 sec / côté"
+                        }
+                      ]
+                    },
+                    "day_4": {
+                      "name": "Épaules + Abdos",
+                      "exercises": [
+                        {
+                          "name": "Développé épaules debout à la bande (bande sous les pieds)",
+                          "sets": 4,
+                          "reps": "8-12"
+                        },
+                        {
+                          "name": "Élévations latérales à la bande (bande sous les pieds)",
+                          "sets": 3,
+                          "reps": "12-15"
+                        },
+                        {
+                          "name": "Oiseaux (élévations postérieures) à la bande",
+                          "sets": 3,
+                          "reps": "12-15"
+                        },
+                        {
+                          "name": "Crunchs au sol ou à la bande (bande derrière la tête)",
+                          "sets": 3,
+                          "reps": "15"
+                        },
+                        {
+                          "name": "Gainage dynamique (planche + lever bras/jambe opposés)",
+                          "sets": 3,
+                          "reps": "30-45 sec"
+                        }
+                      ]
+                    },
+                    "day_5": {
+                      "name": "Full Body Avancé",
+                      "exercises": [
+                        {
+                          "name": "Pompes archers assistées à la bande",
+                          "sets": 3,
+                          "reps": "6-8 par jambe"
+                        },
+                        {
+                          "name": "Pistol squat assisté à la bande (surélever l’autre jambe)",
+                          "sets": 3,
+                          "reps": "6-8 par jambe"
+                        },
+                        {
+                          "name": "Rowing un bras (bande fixée basse)",
+                          "sets": 3,
+                          "reps": "8-12 par bras"
+                        },
+                        {
+                          "name": "Dips profonds assistés (entre deux chaises) + bande",
+                          "sets": 3,
+                          "reps": "8-12 par jambe"
+                        },
+                        {
+                          "name": "Hip thrust unilatéral + bande",
+                          "sets": 3,
+                          "reps": "8-12 par jambe"
+                        },
+                        {
+                          "name": "Gainage planche statique",
+                          "sets": 3,
+                          "reps": "45-60 sec"
+                        }
+                      ]
+                    }
+                    }
+                    }
+                    }
+                    
+
