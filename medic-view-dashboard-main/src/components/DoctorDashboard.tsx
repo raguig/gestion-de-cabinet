@@ -72,6 +72,16 @@ interface DashboardData {
   }[];
 }
 
+// Add this new component for empty states
+const EmptyState = ({ message }: { message: string }) => (
+  <div className="flex flex-col items-center justify-center p-8 text-center space-y-3 bg-muted/10 rounded-lg border border-dashed border-muted">
+    <div className="p-3 rounded-full bg-muted/20">
+      <AlertTriangle className="h-6 w-6 text-muted-foreground/60" />
+    </div>
+    <p className="text-sm text-muted-foreground">{message}</p>
+  </div>
+);
+
 export function DoctorDashboard() {
   const navigate = useNavigate();
   const { language } = useLanguage();
@@ -112,7 +122,7 @@ export function DoctorDashboard() {
         setError(
           err instanceof Error ? err.message : "Failed to fetch dashboard data"
         );
-        console.error("Dashboard fetch error:", err);
+        
       } finally {
         setIsLoading(false);
       }
@@ -214,34 +224,43 @@ export function DoctorDashboard() {
               </div>
             </CardHeader>
             <CardContent className="space-y-4">
-              {appointments.map((apt, index) => (
-                <div
-                  key={index}
-                  className="p-4 rounded-xl bg-gradient-to-r from-muted/30 to-muted/10 border border-border/50 space-y-2"
-                >
-                  <div className="flex justify-between items-center">
-                    <span className="font-semibold">{apt.name}</span>
-                    <Badge variant="outline" className="font-medium">
-                      {apt.time}
-                    </Badge>
+              {appointments.length > 0 ? (
+                appointments.map((apt, index) => (
+                  <div
+                    key={index}
+                    className="p-4 rounded-xl bg-gradient-to-r from-muted/30 to-muted/10 border border-border/50 space-y-2"
+                  >
+                    <div className="flex justify-between items-center">
+                      <span className="font-semibold">{apt.name}</span>
+                      <Badge variant="outline" className="font-medium">
+                        {apt.time}
+                      </Badge>
+                    </div>
+                    <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                      <Phone className="h-3 w-3" />
+                      <span>{apt.phone}</span>
+                    </div>
+                    <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                      <MapPin className="h-3 w-3" />
+                      <span>{getT(apt.location)}</span>
+                    </div>
+                    <p className="text-sm font-medium text-foreground">
+                      {getT(apt.objective)}
+                    </p>
+                    <div className="flex justify-between text-xs text-muted-foreground">
+                      <span>{getT(apt.type)}</span>
+                      <span>{apt.duration}</span>
+                    </div>
                   </div>
-                  <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                    <Phone className="h-3 w-3" />
-                    <span>{apt.phone}</span>
-                  </div>
-                  <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                    <MapPin className="h-3 w-3" />
-                    <span>{getT(apt.location)}</span>
-                  </div>
-                  <p className="text-sm font-medium text-foreground">
-                    {getT(apt.objective)}
-                  </p>
-                  <div className="flex justify-between text-xs text-muted-foreground">
-                    <span>{getT(apt.type)}</span>
-                    <span>{apt.duration}</span>
-                  </div>
-                </div>
-              ))}
+                ))
+              ) : (
+                <EmptyState
+                  message={
+                    getT(dashboardTranslations.empty.appointments) ||
+                    "No upcoming appointments"
+                  }
+                />
+              )}
             </CardContent>
           </Card>
 
@@ -258,38 +277,47 @@ export function DoctorDashboard() {
               </div>
             </CardHeader>
             <CardContent className="space-y-4">
-              {recentPlans.map((plan, index) => (
-                <div
-                  key={index}
-                  className="p-4 rounded-xl bg-gradient-to-r from-muted/30 to-muted/10 border border-border/50 space-y-2"
-                >
-                  <div className="flex justify-between items-center">
-                    <span className="font-semibold">{plan.patient}</span>
-                    <Badge
-                      variant={
-                        getT(plan.status) ===
-                        getT(dashboardTranslations.status.completed)
-                          ? "default"
-                          : getT(plan.status) ===
-                            getT(dashboardTranslations.status.paused)
-                          ? "outline"
-                          : "secondary"
-                      }
-                    >
-                      {getT(plan.status)}
-                    </Badge>
+              {recentPlans.length > 0 ? (
+                recentPlans.map((plan, index) => (
+                  <div
+                    key={index}
+                    className="p-4 rounded-xl bg-gradient-to-r from-muted/30 to-muted/10 border border-border/50 space-y-2"
+                  >
+                    <div className="flex justify-between items-center">
+                      <span className="font-semibold">{plan.patient}</span>
+                      <Badge
+                        variant={
+                          getT(plan.status) ===
+                          getT(dashboardTranslations.status.completed)
+                            ? "default"
+                            : getT(plan.status) ===
+                              getT(dashboardTranslations.status.paused)
+                            ? "outline"
+                            : "secondary"
+                        }
+                      >
+                        {getT(plan.status)}
+                      </Badge>
+                    </div>
+                    <p className="text-sm font-medium text-foreground">
+                      {getT(plan.goal)}
+                    </p>
+                    <div className="flex justify-between text-xs text-muted-foreground">
+                      <span>
+                        {getT(dashboardTranslations.table.age)}: {plan.age}
+                      </span>
+                    </div>
+                    <div className="flex justify-between text-xs text-muted-foreground"></div>
                   </div>
-                  <p className="text-sm font-medium text-foreground">
-                    {getT(plan.goal)}
-                  </p>
-                  <div className="flex justify-between text-xs text-muted-foreground">
-                    <span>
-                      {getT(dashboardTranslations.table.age)}: {plan.age}
-                    </span>
-                  </div>
-                  <div className="flex justify-between text-xs text-muted-foreground"></div>
-                </div>
-              ))}
+                ))
+              ) : (
+                <EmptyState
+                  message={
+                    getT(dashboardTranslations.empty.plans) ||
+                    "No recent diet plans"
+                  }
+                />
+              )}
             </CardContent>
           </Card>
 
@@ -365,55 +393,64 @@ export function DoctorDashboard() {
               </div>
             </CardHeader>
             <CardContent>
-              <div className="h-80">
-                <ResponsiveContainer width="100%" height="100%">
-                  <LineChart data={chartData}>
-                    <CartesianGrid
-                      strokeDasharray="3 3"
-                      className="opacity-30"
-                    />
-                    <XAxis
-                      dataKey="day"
-                      className="text-xs"
-                      tick={{ fontSize: 12 }}
-                    />
-                    <YAxis className="text-xs" tick={{ fontSize: 12 }} />
-                    <Tooltip
-                      contentStyle={{
-                        backgroundColor: "hsl(var(--card))",
-                        border: "1px solid hsl(var(--border))",
-                        borderRadius: "12px",
-                        fontSize: "12px",
-                      }}
-                    />
-                    <Line
-                      type="monotone"
-                      dataKey="target"
-                      stroke="hsl(var(--primary))"
-                      strokeWidth={3}
-                      name={language === "fr" ? "Cibles" : "Target"}
-                      strokeDasharray="5 5"
-                      dot={{
-                        fill: "hsl(var(--primary))",
-                        strokeWidth: 2,
-                        r: 4,
-                      }}
-                    />
-                    <Line
-                      type="monotone"
-                      dataKey="actual"
-                      stroke="hsl(var(--success))"
-                      strokeWidth={3}
-                      name={language === "fr" ? "Réels" : "Actual"}
-                      dot={{
-                        fill: "hsl(var(--success))",
-                        strokeWidth: 2,
-                        r: 4,
-                      }}
-                    />
-                  </LineChart>
-                </ResponsiveContainer>
-              </div>
+              {chartData.length > 0 ? (
+                <div className="h-80">
+                  <ResponsiveContainer width="100%" height="100%">
+                    <LineChart data={chartData}>
+                      <CartesianGrid
+                        strokeDasharray="3 3"
+                        className="opacity-30"
+                      />
+                      <XAxis
+                        dataKey="day"
+                        className="text-xs"
+                        tick={{ fontSize: 12 }}
+                      />
+                      <YAxis className="text-xs" tick={{ fontSize: 12 }} />
+                      <Tooltip
+                        contentStyle={{
+                          backgroundColor: "hsl(var(--card))",
+                          border: "1px solid hsl(var(--border))",
+                          borderRadius: "12px",
+                          fontSize: "12px",
+                        }}
+                      />
+                      <Line
+                        type="monotone"
+                        dataKey="target"
+                        stroke="hsl(var(--primary))"
+                        strokeWidth={3}
+                        name={language === "fr" ? "Cibles" : "Target"}
+                        strokeDasharray="5 5"
+                        dot={{
+                          fill: "hsl(var(--primary))",
+                          strokeWidth: 2,
+                          r: 4,
+                        }}
+                      />
+                      <Line
+                        type="monotone"
+                        dataKey="actual"
+                        stroke="hsl(var(--success))"
+                        strokeWidth={3}
+                        name={language === "fr" ? "Réels" : "Actual"}
+                        dot={{
+                          fill: "hsl(var(--success))",
+                          strokeWidth: 2,
+                          r: 4,
+                        }}
+                      />
+                    </LineChart>
+                  </ResponsiveContainer>
+                </div>
+              ) : (
+                <EmptyState
+                  message={
+                    getT(dashboardTranslations.empty.chart) ||
+                    "No calorie trend data available"
+                  }
+                />
+              )}
             </CardContent>
           </Card>
 
@@ -488,62 +525,67 @@ export function DoctorDashboard() {
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="overflow-x-auto">
-                <table className="w-full text-sm">
-                  <thead>
-                    <tr className="border-b-2 text-left">
-                      <th className="pb-4 font-semibold">
-                        {getT(dashboardTranslations.table.name)}
-                      </th>
-                      <th className="pb-4 font-semibold">
-                        {getT(dashboardTranslations.table.age)}
-                      </th>
-                      <th className="pb-4 font-semibold">
-                        {getT(dashboardTranslations.table.planType)}
-                      </th>
-                      <th className="pb-4 font-semibold">
-                        {getT(dashboardTranslations.table.startDate)}
-                      </th>
+              {patients.length > 0 ? (
+                <div className="overflow-x-auto">
+                  <table className="w-full text-sm">
+                    <thead>
+                      <tr className="border-b-2 text-left">
+                        <th className="pb-4 font-semibold">
+                          {getT(dashboardTranslations.table.name)}
+                        </th>
+                        <th className="pb-4 font-semibold">
+                          {getT(dashboardTranslations.table.age)}
+                        </th>
 
-                      <th className="pb-4 font-semibold">
-                        {getT(dashboardTranslations.table.status)}
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {patients.map((patient, index) => (
-                      <tr
-                        key={index}
-                        className="border-b hover:bg-muted/30 transition-colors duration-150"
-                      >
-                        <td className="py-4 font-semibold">{patient.name}</td>
-                        <td className="py-4 text-muted-foreground">
-                          {patient.age}
-                        </td>
-                        <td className="py-4 text-muted-foreground font-medium">
-                          {getT(patient.plan)}
-                        </td>
-                        <td className="py-4 text-muted-foreground">
-                          {patient.startDate}
-                        </td>
+                        <th className="pb-4 font-semibold">
+                          {getT(dashboardTranslations.table.startDate)}
+                        </th>
 
-                        <td className="py-4">
-                          <Badge
-                            variant={
-                              getT(patient.status) ===
-                              getT(dashboardTranslations.status.stable)
-                                ? "default"
-                                : "secondary"
-                            }
-                          >
-                            {getT(patient.status)}
-                          </Badge>
-                        </td>
+                        <th className="pb-4 font-semibold">
+                          {getT(dashboardTranslations.table.status)}
+                        </th>
                       </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
+                    </thead>
+                    <tbody>
+                      {patients.map((patient, index) => (
+                        <tr
+                          key={index}
+                          className="border-b hover:bg-muted/30 transition-colors duration-150"
+                        >
+                          <td className="py-4 font-semibold">{patient.name}</td>
+                          <td className="py-4 text-muted-foreground">
+                            {patient.age}
+                          </td>
+
+                          <td className="py-4 text-muted-foreground">
+                            {patient.startDate}
+                          </td>
+
+                          <td className="py-4">
+                            <Badge
+                              variant={
+                                getT(patient.status) ===
+                                getT(dashboardTranslations.status.stable)
+                                  ? "default"
+                                  : "secondary"
+                              }
+                            >
+                              {getT(patient.status)}
+                            </Badge>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              ) : (
+                <EmptyState
+                  message={
+                    getT(dashboardTranslations.empty.patients) ||
+                    "No patient progress data available"
+                  }
+                />
+              )}
             </CardContent>
           </Card>
         </section>

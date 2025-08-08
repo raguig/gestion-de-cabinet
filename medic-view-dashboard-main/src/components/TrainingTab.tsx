@@ -1,5 +1,7 @@
 import jsPDF from "jspdf";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import axios from "axios";
+import { toast } from "sonner";
 
 interface Patient {
   sex: string;
@@ -9,6 +11,8 @@ interface Patient {
 
 interface TrainingTabProps {
   patient: Patient;
+  visitId: string; // Add this prop
+  onTrainingAssigned?: () => void; // Add this callback
 }
 
 interface Exercise {
@@ -25,29 +29,52 @@ interface TrainingDay {
 }
 
 interface SpecializedDay {
-  day: string;
-  session: string;
-  objective: string;
-  duration?: string;
+  title: string;
+  exercises: Exercise[];
 }
 
-export default function TrainingTab({ patient }: TrainingTabProps) {
+export default function TrainingTab({
+  patient,
+  visitId,
+  onTrainingAssigned,
+}: TrainingTabProps) {
   const [trainingType, setTrainingType] = useState("");
   const [equipment, setEquipment] = useState<string[]>([]);
   const [activityLevel, setActivityLevel] = useState("");
+
   const [generatedProgram, setGeneratedProgram] = useState<
     TrainingDay[] | SpecializedDay[]
   >([]);
   const [language, setLanguage] = useState("fr"); // Default to French
 
   const [isSpecialized, setIsSpecialized] = useState(false);
-  console.log("Patient data:", patient);
-  const trainingTypes = ["prise de masse", "endurance musculaire"];
+
+  const trainingTypeEquipment: Record<string, string[]> = {
+    "Musculation (Gym)": ["haltères et machines"],
+    "Musculation (Non Gym)": ["poids du corps et bandes élastiques"],
+    "Sports de bien-être": [
+      "Yoga",
+      "Pilates",
+      "Tai-chi",
+      "Qi Gong",
+      "Stretching",
+      "Karate",
+      "Boxe",
+      "Taekwondo",
+      "Judo",
+      "Kung-Fu / Wushu",
+      "Ju-jitsu",
+    ],
+  };
+
+  const trainingTypes = [
+    "Musculation (Gym)",
+    "Musculation (Non Gym)",
+    "Sports de bien-être",
+  ];
   const equipmentOptions = [
-    "haltères",
-    "bandes élastiques",
-    "machines",
-    "poids du corps",
+    "haltères et machines",
+    "poids du corps et bandes élastiques",
     "Yoga",
     "Pilates",
     "Tai-chi",
@@ -68,445 +95,773 @@ export default function TrainingTab({ patient }: TrainingTabProps) {
       case "Yoga":
         return [
           {
-            day: "Lundi",
-            session: "Hatha Yoga Doux",
-            objective: "Éveil du corps, respiration",
-            duration: "30-45 min",
+            title: "Lundi – Hatha Yoga Doux",
+            exercises: [
+              {
+                name: "Éveil du corps, respiration",
+                sets: 0,
+                reps: "",
+                duration: "30-45 min",
+              },
+            ],
           },
           {
-            day: "Mardi",
-            session: "Vinyasa Flow Débutant",
-            objective: "Renforcement doux, mobilité",
-            duration: "30-45 min",
+            title: "Mardi – Vinyasa Flow Débutant",
+            exercises: [
+              {
+                name: "Renforcement doux, mobilité",
+                sets: 0,
+                reps: "",
+                duration: "30-45 min",
+              },
+            ],
           },
           {
-            day: "Mercredi",
-            session: "Yoga pour le dos et la posture",
-            objective: "Soulager tensions, redresser la posture",
-            duration: "30-45 min",
+            title: "Mercredi – Yoga pour le dos et la posture",
+            exercises: [
+              {
+                name: "Soulager tensions, redresser la posture",
+                sets: 0,
+                reps: "",
+                duration: "30-45 min",
+              },
+            ],
           },
           {
-            day: "Jeudi",
-            session: "Yin Yoga",
-            objective: "Étirement profond, relâchement",
-            duration: "30-45 min",
+            title: "Jeudi – Yin Yoga",
+            exercises: [
+              {
+                name: "Étirement profond, relâchement",
+                sets: 0,
+                reps: "",
+                duration: "30-45 min",
+              },
+            ],
           },
           {
-            day: "Vendredi",
-            session: "Power Yoga léger",
-            objective: "Tonification douce, équilibre",
-            duration: "30-45 min",
+            title: "Vendredi – Power Yoga léger",
+            exercises: [
+              {
+                name: "Tonification douce, équilibre",
+                sets: 0,
+                reps: "",
+                duration: "30-45 min",
+              },
+            ],
           },
           {
-            day: "Samedi",
-            session: "(Optionnel) Méditation + Pranayama",
-            objective: "Calme mental, contrôle du souffle",
-            duration: "30-45 min",
+            title: "Samedi – (Optionnel) Méditation + Pranayama",
+            exercises: [
+              {
+                name: "Calme mental, contrôle du souffle",
+                sets: 0,
+                reps: "",
+                duration: "30-45 min",
+              },
+            ],
           },
           {
-            day: "Dimanche",
-            session: "Repos ou balade en conscience",
-            objective: "Récupération active",
-            duration: "30-45 min",
+            title: "Dimanche – Repos ou balade en conscience",
+            exercises: [
+              {
+                name: "Récupération active",
+                sets: 0,
+                reps: "",
+                duration: "30-45 min",
+              },
+            ],
           },
         ];
       case "Pilates":
         return [
           {
-            day: "Lundi",
-            session: "Pilates de base – Centre & respiration",
-            objective: "Renforcement du « core », contrôle du souffle",
-            duration: "30-45 min",
+            title: "Lundi – Pilates de base – Centre & respiration",
+            exercises: [
+              {
+                name: "Renforcement du « core », contrôle du souffle",
+                sets: 0,
+                reps: "",
+                duration: "30-45 min",
+              },
+            ],
           },
           {
-            day: "Mardi",
-            session: "Pilates bas du corps",
-            objective: "Cuisses, fessiers, stabilité pelvienne",
-            duration: "30-45 min",
+            title: "Mardi – Pilates bas du corps",
+            exercises: [
+              {
+                name: "Cuisses, fessiers, stabilité pelvienne",
+                sets: 0,
+                reps: "",
+                duration: "30-45 min",
+              },
+            ],
           },
           {
-            day: "Mercredi",
-            session: "Stretching & mobilité en Pilates",
-            objective: "Étirements actifs, mobilité articulaire",
-            duration: "30-45 min",
+            title: "Mercredi – Stretching & mobilité en Pilates",
+            exercises: [
+              {
+                name: "Étirements actifs, mobilité articulaire",
+                sets: 0,
+                reps: "",
+                duration: "30-45 min",
+              },
+            ],
           },
           {
-            day: "Jeudi",
-            session: "Pilates haut du corps & posture",
-            objective: "Épaules, dos, bras, posture",
-            duration: "30-45 min",
+            title: "Jeudi – Pilates haut du corps & posture",
+            exercises: [
+              {
+                name: "Épaules, dos, bras, posture",
+                sets: 0,
+                reps: "",
+                duration: "30-45 min",
+              },
+            ],
           },
           {
-            day: "Vendredi",
-            session: "Pilates complet + gainage",
-            objective: "Travail global, ceinture abdominale",
-            duration: "30-45 min",
+            title: "Vendredi – Pilates complet + gainage",
+            exercises: [
+              {
+                name: "Travail global, ceinture abdominale",
+                sets: 0,
+                reps: "",
+                duration: "30-45 min",
+              },
+            ],
           },
           {
-            day: "Samedi",
-            session: "(optionnel) Routine douce avec ballon",
-            objective: "Stabilité et contrôle",
-            duration: "30-45 min",
+            title: "Samedi – (optionnel) Routine douce avec ballon",
+            exercises: [
+              {
+                name: "Stabilité et contrôle",
+                sets: 0,
+                reps: "",
+                duration: "30-45 min",
+              },
+            ],
           },
           {
-            day: "Dimanche",
-            session: "Repos actif ou marche consciente",
-            objective: "Récupération et détente",
-            duration: "30-45 min",
+            title: "Dimanche – Repos actif ou marche consciente",
+            exercises: [
+              {
+                name: "Récupération et détente",
+                sets: 0,
+                reps: "",
+                duration: "30-45 min",
+              },
+            ],
           },
         ];
       case "Karate":
         return [
           {
-            day: "Lundi",
-            session: "Kihon (techniques de base)",
-            objective: "Apprentissage des coups de poing, blocages, positions",
-            duration: "30-45 min",
+            title: "Lundi – Kihon (techniques de base)",
+            exercises: [
+              {
+                name: "Apprentissage des coups de poing, blocages, positions",
+                sets: 0,
+                reps: "",
+                duration: "30-45 min",
+              },
+            ],
           },
           {
-            day: "Mardi",
-            session: "Enchaînements + déplacements (Kihon Waza)",
-            objective: "Coordination, équilibre, enchaînements fluides",
-            duration: "30-45 min",
+            title: "Mardi – Enchaînements + déplacements (Kihon Waza)",
+            exercises: [
+              {
+                name: "Coordination, équilibre, enchaînements fluides",
+                sets: 0,
+                reps: "",
+                duration: "30-45 min",
+              },
+            ],
           },
           {
-            day: "Mercredi",
-            session: "Kata de base (ex. : Heian Shodan)",
-            objective: "Mémorisation, précision, respiration",
-            duration: "30-45 min",
+            title: "Mercredi – Kata de base (ex. : Heian Shodan)",
+            exercises: [
+              {
+                name: "Mémorisation, précision, respiration",
+                sets: 0,
+                reps: "",
+                duration: "30-45 min",
+              },
+            ],
           },
           {
-            day: "Jeudi",
-            session: "Kumite sans contact (combat simulé)",
-            objective: "Vitesse, distance, timing, respect",
-            duration: "30-45 min",
+            title: "Jeudi – Kumite sans contact (combat simulé)",
+            exercises: [
+              {
+                name: "Vitesse, distance, timing, respect",
+                sets: 0,
+                reps: "",
+                duration: "30-45 min",
+              },
+            ],
           },
           {
-            day: "Vendredi",
-            session: "Renforcement + souplesse spécifique",
-            objective: "Gainage, jambes, étirements, explosivité",
-            duration: "30-45 min",
+            title: "Vendredi – Renforcement + souplesse spécifique",
+            exercises: [
+              {
+                name: "Gainage, jambes, étirements, explosivité",
+                sets: 0,
+                reps: "",
+                duration: "30-45 min",
+              },
+            ],
           },
           {
-            day: "Samedi",
-            session: "Révision libre + shadow karaté",
-            objective: "Maîtrise personnelle",
-            duration: "30-45 min",
+            title: "Samedi – Révision libre + shadow karaté",
+            exercises: [
+              {
+                name: "Maîtrise personnelle",
+                sets: 0,
+                reps: "",
+                duration: "30-45 min",
+              },
+            ],
           },
           {
-            day: "Dimanche",
-            session: "Repos ou méditation Zen",
-            objective: "Esprit du karaté, recentrage",
-            duration: "30-45 min",
+            title: "Dimanche – Repos ou méditation Zen",
+            exercises: [
+              {
+                name: "Esprit du karaté, recentrage",
+                sets: 0,
+                reps: "",
+                duration: "30-45 min",
+              },
+            ],
           },
         ];
       case "Tai-chi":
         return [
           {
-            day: "Lundi",
-            session: "Postures de base + respiration consciente",
-            objective: "Ancrage, conscience du souffle",
-            duration: "20-30 min",
+            title: "Lundi – Postures de base + respiration consciente",
+            exercises: [
+              {
+                name: "Ancrage, conscience du souffle",
+                sets: 0,
+                reps: "",
+                duration: "20-30 min",
+              },
+            ],
           },
           {
-            day: "Mardi",
-            session: "Enchaînement 'Forme 8' (forme courte)",
-            objective: "Fluidité, mémorisation des gestes simples",
-            duration: "20-30 min",
+            title: "Mardi – Enchaînement 'Forme 8' (forme courte)",
+            exercises: [
+              {
+                name: "Fluidité, mémorisation des gestes simples",
+                sets: 0,
+                reps: "",
+                duration: "20-30 min",
+              },
+            ],
           },
           {
-            day: "Mercredi",
-            session: "Mouvement lent + ancrage dans le sol",
-            objective: "Équilibre, mobilité articulaire",
-            duration: "20-30 min",
+            title: "Mercredi – Mouvement lent + ancrage dans le sol",
+            exercises: [
+              {
+                name: "Équilibre, mobilité articulaire",
+                sets: 0,
+                reps: "",
+                duration: "20-30 min",
+              },
+            ],
           },
           {
-            day: "Jeudi",
-            session: "Application martiale lente (Tai-Chi Chuan)",
-            objective: "Concentration, gestuelle maîtrisée",
-            duration: "20-30 min",
+            title: "Jeudi – Application martiale lente (Tai-Chi Chuan)",
+            exercises: [
+              {
+                name: "Concentration, gestuelle maîtrisée",
+                sets: 0,
+                reps: "",
+                duration: "20-30 min",
+              },
+            ],
           },
           {
-            day: "Vendredi",
-            session: "Forme complète + Qi Gong d’éveil",
-            objective: "Circulation énergétique, sérénité mentale",
-            duration: "20-30 min",
+            title: "Vendredi – Forme complète + Qi Gong d'éveil",
+            exercises: [
+              {
+                name: "Circulation énergétique, sérénité mentale",
+                sets: 0,
+                reps: "",
+                duration: "20-30 min",
+              },
+            ],
           },
           {
-            day: "Samedi",
-            session: "(Optionnel) Tai-Chi méditatif en plein air",
-            objective: "Méditation en mouvement, apaisement",
-            duration: "20-30 min",
+            title: "Samedi – (Optionnel) Tai-Chi méditatif en plein air",
+            exercises: [
+              {
+                name: "Méditation en mouvement, apaisement",
+                sets: 0,
+                reps: "",
+                duration: "20-30 min",
+              },
+            ],
           },
           {
-            day: "Dimanche",
-            session: "Repos ou marche lente consciente",
-            objective: "Récupération naturelle",
-            duration: "20-30 min",
+            title: "Dimanche – Repos ou marche lente consciente",
+            exercises: [
+              {
+                name: "Récupération naturelle",
+                sets: 0,
+                reps: "",
+                duration: "20-30 min",
+              },
+            ],
           },
         ];
       case "Qi Gong":
         return [
           {
-            day: "Lundi",
-            session: "Échauffement énergétique + 8 pièces de Brocart",
-            objective: "Éveil du corps, tonification des organes",
-            duration: "20-30 min",
+            title: "Lundi – Échauffement énergétique + 8 pièces de Brocart",
+            exercises: [
+              {
+                name: "Éveil du corps, tonification des organes",
+                sets: 0,
+                reps: "",
+                duration: "20-30 min",
+              },
+            ],
           },
           {
-            day: "Mardi",
-            session: "Qi Gong des 5 animaux (Wu Qin Xi) – partie 1",
-            objective: "Mobilité, fluidité, activation douce",
-            duration: "20-30 min",
+            title: "Mardi – Qi Gong des 5 animaux (Wu Qin Xi) – partie 1",
+            exercises: [
+              {
+                name: "Mobilité, fluidité, activation douce",
+                sets: 0,
+                reps: "",
+                duration: "20-30 min",
+              },
+            ],
           },
           {
-            day: "Mercredi",
-            session: "Respiration abdominale + mouvements statiques",
-            objective: "Détente du système nerveux, enracinement",
-            duration: "20-30 min",
+            title: "Mercredi – Respiration abdominale + mouvements statiques",
+            exercises: [
+              {
+                name: "Détente du système nerveux, enracinement",
+                sets: 0,
+                reps: "",
+                duration: "20-30 min",
+              },
+            ],
           },
           {
-            day: "Jeudi",
-            session: "Qi Gong pour renforcer les reins et l'immunité",
-            objective: "Énergie vitale, longévité",
-            duration: "20-30 min",
+            title: "Jeudi – Qi Gong pour renforcer les reins et l'immunité",
+            exercises: [
+              {
+                name: "Énergie vitale, longévité",
+                sets: 0,
+                reps: "",
+                duration: "20-30 min",
+              },
+            ],
           },
           {
-            day: "Vendredi",
-            session: "Qi Gong des méridiens + automassages",
-            objective: "Circulation énergétique, détente musculaire",
-            duration: "20-30 min",
+            title: "Vendredi – Qi Gong des méridiens + automassages",
+            exercises: [
+              {
+                name: "Circulation énergétique, détente musculaire",
+                sets: 0,
+                reps: "",
+                duration: "20-30 min",
+              },
+            ],
           },
           {
-            day: "Samedi",
-            session: "Qi Gong méditatif debout (Zhan Zhuang)",
-            objective: "Concentration, ancrage, puissance interne",
-            duration: "20-30 min",
+            title: "Samedi – Qi Gong méditatif debout (Zhan Zhuang)",
+            exercises: [
+              {
+                name: "Concentration, ancrage, puissance interne",
+                sets: 0,
+                reps: "",
+                duration: "20-30 min",
+              },
+            ],
           },
           {
-            day: "Dimanche",
-            session: "Marche Qi Gong lente ou repos",
-            objective: "Récupération énergétique, conscience du souffle",
-            duration: "20-30 min",
+            title: "Dimanche – Marche Qi Gong lente ou repos",
+            exercises: [
+              {
+                name: "Récupération énergétique, conscience du souffle",
+                sets: 0,
+                reps: "",
+                duration: "20-30 min",
+              },
+            ],
           },
         ];
-
       case "Stretching":
         return [
           {
-            day: "Lundi",
-            session: "Stretching global du corps (full body)",
-            objective: "Détente générale, allongement musculaire",
-            duration: "20-30 min",
+            title: "Lundi – Stretching global du corps (full body)",
+            exercises: [
+              {
+                name: "Détente générale, allongement musculaire",
+                sets: 0,
+                reps: "",
+                duration: "20-30 min",
+              },
+            ],
           },
           {
-            day: "Mardi",
-            session: "Étirements du bas du corps",
-            objective: "Fessiers, quadriceps, ischios, mollets",
-            duration: "20-30 min",
+            title: "Mardi – Étirements du bas du corps",
+            exercises: [
+              {
+                name: "Fessiers, quadriceps, ischios, mollets",
+                sets: 0,
+                reps: "",
+                duration: "20-30 min",
+              },
+            ],
           },
           {
-            day: "Mercredi",
-            session: "Étirements du haut du corps",
-            objective: "Dos, épaules, nuque, bras",
-            duration: "20-30 min",
+            title: "Mercredi – Étirements du haut du corps",
+            exercises: [
+              {
+                name: "Dos, épaules, nuque, bras",
+                sets: 0,
+                reps: "",
+                duration: "20-30 min",
+              },
+            ],
           },
           {
-            day: "Jeudi",
-            session: "Stretching actif + mobilité articulaire",
-            objective: "Souplesse dynamique, fluidité",
-            duration: "20-30 min",
+            title: "Jeudi – Stretching actif + mobilité articulaire",
+            exercises: [
+              {
+                name: "Souplesse dynamique, fluidité",
+                sets: 0,
+                reps: "",
+                duration: "20-30 min",
+              },
+            ],
           },
           {
-            day: "Vendredi",
-            session: "Stretching profond & relaxation",
-            objective: "Postures longues tenues (Yin-like)",
-            duration: "20-30 min",
+            title: "Vendredi – Stretching profond & relaxation",
+            exercises: [
+              {
+                name: "Postures longues tenues (Yin-like)",
+                sets: 0,
+                reps: "",
+                duration: "20-30 min",
+              },
+            ],
           },
           {
-            day: "Samedi",
-            session: "Stretching matinal 10-15 min",
-            objective: "Éveil musculaire en douceur",
-            duration: "10-15 min",
+            title: "Samedi – Stretching matinal 10-15 min",
+            exercises: [
+              {
+                name: "Éveil musculaire en douceur",
+                sets: 0,
+                reps: "",
+                duration: "10-15 min",
+              },
+            ],
           },
           {
-            day: "Dimanche",
-            session: "Repos ou étirements libres",
-            objective: "Auto-écoute et libération corporelle",
-            duration: "20-30 min",
+            title: "Dimanche – Repos ou étirements libres",
+            exercises: [
+              {
+                name: "Auto-écoute et libération corporelle",
+                sets: 0,
+                reps: "",
+                duration: "20-30 min",
+              },
+            ],
           },
         ];
-
       case "Boxe":
         return [
           {
-            day: "Lundi",
-            session: "Cardio + shadow boxing",
-            objective: "Endurance cardiovasculaire et fluidité technique",
-            duration: "45-60 min",
+            title: "Lundi – Cardio + shadow boxing",
+            exercises: [
+              {
+                name: "Endurance cardiovasculaire et fluidité technique",
+                sets: 0,
+                reps: "",
+                duration: "45-60 min",
+              },
+            ],
           },
           {
-            day: "Mardi",
-            session: "Techniques de poings/pieds + sac de frappe",
-            objective: "Perfectionnement technique et puissance",
-            duration: "45-60 min",
+            title: "Mardi – Techniques de poings/pieds + sac de frappe",
+            exercises: [
+              {
+                name: "Perfectionnement technique et puissance",
+                sets: 0,
+                reps: "",
+                duration: "45-60 min",
+              },
+            ],
           },
           {
-            day: "Mercredi",
-            session: "Renfo musculaire + gainage",
-            objective: "Renforcement global et stabilité",
-            duration: "45-60 min",
+            title: "Mercredi – Renfo musculaire + gainage",
+            exercises: [
+              {
+                name: "Renforcement global et stabilité",
+                sets: 0,
+                reps: "",
+                duration: "45-60 min",
+              },
+            ],
           },
           {
-            day: "Jeudi",
-            session: "Sparring (léger ou simulation)",
-            objective: "Application technique et distance",
-            duration: "45-60 min",
+            title: "Jeudi – Sparring (léger ou simulation)",
+            exercises: [
+              {
+                name: "Application technique et distance",
+                sets: 0,
+                reps: "",
+                duration: "45-60 min",
+              },
+            ],
           },
           {
-            day: "Vendredi",
-            session: "Coordination + esquives + souplesse",
-            objective: "Agilité et défense",
-            duration: "45-60 min",
+            title: "Vendredi – Coordination + esquives + souplesse",
+            exercises: [
+              {
+                name: "Agilité et défense",
+                sets: 0,
+                reps: "",
+                duration: "45-60 min",
+              },
+            ],
           },
         ];
-
       case "Taekwondo":
         return [
           {
-            day: "Lundi",
-            session: "Techniques de jambes (Chagi)",
-            objective: "Maîtrise des coups de pied fondamentaux",
-            duration: "45-60 min",
+            title: "Lundi – Techniques de jambes (Chagi)",
+            exercises: [
+              {
+                name: "Maîtrise des coups de pied fondamentaux",
+                sets: 0,
+                reps: "",
+                duration: "45-60 min",
+              },
+            ],
           },
           {
-            day: "Mardi",
-            session: "Séquences de combat + flexibilité",
-            objective: "Enchaînements et souplesse",
-            duration: "45-60 min",
+            title: "Mardi – Séquences de combat + flexibilité",
+            exercises: [
+              {
+                name: "Enchaînements et souplesse",
+                sets: 0,
+                reps: "",
+                duration: "45-60 min",
+              },
+            ],
           },
           {
-            day: "Mercredi",
-            session: "Poomsae (formes) + équilibre",
-            objective: "Formes techniques et stabilité",
-            duration: "45-60 min",
+            title: "Mercredi – Poomsae (formes) + équilibre",
+            exercises: [
+              {
+                name: "Formes techniques et stabilité",
+                sets: 0,
+                reps: "",
+                duration: "45-60 min",
+              },
+            ],
           },
           {
-            day: "Jeudi",
-            session: "Cardio + travail des réflexes",
-            objective: "Vitesse et réactivité",
-            duration: "45-60 min",
+            title: "Jeudi – Cardio + travail des réflexes",
+            exercises: [
+              {
+                name: "Vitesse et réactivité",
+                sets: 0,
+                reps: "",
+                duration: "45-60 min",
+              },
+            ],
           },
           {
-            day: "Vendredi",
-            session: "Simulations de combat + renforcement jambes",
-            objective: "Application combat et puissance",
-            duration: "45-60 min",
+            title: "Vendredi – Simulations de combat + renforcement jambes",
+            exercises: [
+              {
+                name: "Application combat et puissance",
+                sets: 0,
+                reps: "",
+                duration: "45-60 min",
+              },
+            ],
           },
         ];
-
       case "Judo":
         return [
           {
-            day: "Lundi",
-            session: "Ukemi (chutes) + déplacements",
-            objective: "Sécurité et mobilité de base",
-            duration: "45-60 min",
+            title: "Lundi – Ukemi (chutes) + déplacements",
+            exercises: [
+              {
+                name: "Sécurité et mobilité de base",
+                sets: 0,
+                reps: "",
+                duration: "45-60 min",
+              },
+            ],
           },
           {
-            day: "Mardi",
-            session: "Techniques de projection (nage waza)",
-            objective: "Maîtrise des projections fondamentales",
-            duration: "45-60 min",
+            title: "Mardi – Techniques de projection (nage waza)",
+            exercises: [
+              {
+                name: "Maîtrise des projections fondamentales",
+                sets: 0,
+                reps: "",
+                duration: "45-60 min",
+              },
+            ],
           },
           {
-            day: "Mercredi",
-            session: "Renforcement + gainage",
-            objective: "Force fonctionnelle et stabilité",
-            duration: "45-60 min",
+            title: "Mercredi – Renforcement + gainage",
+            exercises: [
+              {
+                name: "Force fonctionnelle et stabilité",
+                sets: 0,
+                reps: "",
+                duration: "45-60 min",
+              },
+            ],
           },
           {
-            day: "Jeudi",
-            session: "Combat au sol (ne waza)",
-            objective: "Techniques de contrôle au sol",
-            duration: "45-60 min",
+            title: "Jeudi – Combat au sol (ne waza)",
+            exercises: [
+              {
+                name: "Techniques de contrôle au sol",
+                sets: 0,
+                reps: "",
+                duration: "45-60 min",
+              },
+            ],
           },
           {
-            day: "Vendredi",
-            session: "Randori (combat libre contrôlé)",
-            objective: "Application pratique des techniques",
-            duration: "45-60 min",
+            title: "Vendredi – Randori (combat libre contrôlé)",
+            exercises: [
+              {
+                name: "Application pratique des techniques",
+                sets: 0,
+                reps: "",
+                duration: "45-60 min",
+              },
+            ],
           },
         ];
-
       case "Kung-Fu / Wushu":
         return [
           {
-            day: "Lundi",
-            session: "Postures + techniques de base",
-            objective: "Fondamentaux et alignement",
-            duration: "45-60 min",
+            title: "Lundi – Postures + techniques de base",
+            exercises: [
+              {
+                name: "Fondamentaux et alignement",
+                sets: 0,
+                reps: "",
+                duration: "45-60 min",
+              },
+            ],
           },
           {
-            day: "Mardi",
-            session: "Formes traditionnelles (taolu)",
-            objective: "Enchaînements codifiés",
-            duration: "45-60 min",
+            title: "Mardi – Formes traditionnelles (taolu)",
+            exercises: [
+              {
+                name: "Enchaînements codifiés",
+                sets: 0,
+                reps: "",
+                duration: "45-60 min",
+              },
+            ],
           },
           {
-            day: "Mercredi",
-            session: "Souplesse + Qi Gong",
-            objective: "Mobilité et énergie interne",
-            duration: "45-60 min",
+            title: "Mercredi – Souplesse + Qi Gong",
+            exercises: [
+              {
+                name: "Mobilité et énergie interne",
+                sets: 0,
+                reps: "",
+                duration: "45-60 min",
+              },
+            ],
           },
           {
-            day: "Jeudi",
-            session: "Sanda (combat avec règles)",
-            objective: "Application martiale",
-            duration: "45-60 min",
+            title: "Jeudi – Sanda (combat avec règles)",
+            exercises: [
+              {
+                name: "Application martiale",
+                sets: 0,
+                reps: "",
+                duration: "45-60 min",
+              },
+            ],
           },
           {
-            day: "Vendredi",
-            session: "Enchaînements + saut + arme légère",
-            objective: "Techniques avancées selon niveau",
-            duration: "45-60 min",
+            title: "Vendredi – Enchaînements + saut + arme légère",
+            exercises: [
+              {
+                name: "Techniques avancées selon niveau",
+                sets: 0,
+                reps: "",
+                duration: "45-60 min",
+              },
+            ],
           },
         ];
-
       case "Ju-jitsu":
         return [
           {
-            day: "Lundi",
-            session: "Mouvements au sol (escapes, gardes)",
-            objective: "Défense et contrôle au sol",
-            duration: "45-60 min",
+            title: "Lundi – Mouvements au sol (escapes, gardes)",
+            exercises: [
+              {
+                name: "Défense et contrôle au sol",
+                sets: 0,
+                reps: "",
+                duration: "45-60 min",
+              },
+            ],
           },
           {
-            day: "Mardi",
-            session: "Techniques de soumission",
-            objective: "Maîtrise des clés et étranglements",
-            duration: "45-60 min",
+            title: "Mardi – Techniques de soumission",
+            exercises: [
+              {
+                name: "Maîtrise des clés et étranglements",
+                sets: 0,
+                reps: "",
+                duration: "45-60 min",
+              },
+            ],
           },
           {
-            day: "Mercredi",
-            session: "Sparring technique",
-            objective: "Application contrôlée des techniques",
-            duration: "45-60 min",
+            title: "Mercredi – Sparring technique",
+            exercises: [
+              {
+                name: "Application contrôlée des techniques",
+                sets: 0,
+                reps: "",
+                duration: "45-60 min",
+              },
+            ],
           },
           {
-            day: "Jeudi",
-            session: "Tactique en combat réel",
-            objective: "Stratégie et adaptation",
-            duration: "45-60 min",
+            title: "Jeudi – Tactique en combat réel",
+            exercises: [
+              {
+                name: "Stratégie et adaptation",
+                sets: 0,
+                reps: "",
+                duration: "45-60 min",
+              },
+            ],
           },
           {
-            day: "Vendredi",
-            session: "Mobilité, respiration, récupération",
-            objective: "Maintien et régénération",
-            duration: "45-60 min",
+            title: "Vendredi – Mobilité, respiration, récupération",
+            exercises: [
+              {
+                name: "Maintien et régénération",
+                sets: 0,
+                reps: "",
+                duration: "45-60 min",
+              },
+            ],
           },
         ];
-
       default:
         return [];
     }
@@ -517,11 +872,10 @@ export default function TrainingTab({ patient }: TrainingTabProps) {
     level: string,
     equipment: string[]
   ): TrainingDay[] => {
-    const isWeightsMachines =
-      equipment.includes("haltères") || equipment.includes("machines");
-    const isBodyweightBands =
-      equipment.includes("poids du corps") ||
-      equipment.includes("bandes élastiques");
+    const isWeightsMachines = equipment.includes("haltères et machines");
+    const isBodyweightBands = equipment.includes(
+      "poids du corps et bandes élastiques"
+    );
 
     if (isWeightsMachines) {
       switch (level) {
@@ -1084,11 +1438,10 @@ export default function TrainingTab({ patient }: TrainingTabProps) {
     level: string,
     equipment: string[]
   ): TrainingDay[] => {
-    const isWeightsMachines =
-      equipment.includes("haltères") || equipment.includes("machines");
-    const isBodyweightBands =
-      equipment.includes("poids du corps") ||
-      equipment.includes("bandes élastiques");
+    const isWeightsMachines = equipment.includes("haltères et machines");
+    const isBodyweightBands = equipment.includes(
+      "poids du corps et bandes élastiques"
+    );
 
     if (isWeightsMachines) {
       switch (level) {
@@ -1791,16 +2144,139 @@ export default function TrainingTab({ patient }: TrainingTabProps) {
       return generateFemaleProgram(level, equipment);
     }
   };
+  const handleAssignTraining = async (
+    program: TrainingDay[] | SpecializedDay[]
+  ) => {
+    try {
+      const token = localStorage.getItem("token");
 
+      // Format the training data to match the schema
+      const trainingData = {
+        name: `Training Plan - ${patient?.nom || "patient"}`,
+        type: trainingType,
+        level:
+          trainingType === "Sports de bien-être" ? "débutant" : activityLevel,
+        equipment: equipment,
+        exercises: program.map((day) => ({
+          day: day.title, // Using title as the day identifier
+          title: day.title,
+          workouts: day.exercises.map((exercise) => ({
+            name: exercise.name,
+            sets: exercise.sets || 0,
+            reps: exercise.reps || "",
+            duration: exercise.duration || "",
+            note: exercise.note || "",
+          })),
+        })),
+      };
+
+
+      // Create training plan
+      const addTrainingResponse = await axios.post(
+        "http://localhost:8000/api/patients/trainings",
+        trainingData,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      const createdTraining = addTrainingResponse.data.trainingPlan;
+
+      // Assign training to visit
+      await axios.put(
+        `http://localhost:8000/api/patients/visits/${visitId}/assign-training`,
+        { trainingId: createdTraining._id },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      toast.success(
+        language === "fr"
+          ? "Plan d'entraînement attribué avec succès !"
+          : "Training plan assigned successfully!",
+        {
+          className:
+            "bg-green-50 dark:bg-green-900 border border-green-200 dark:border-green-800",
+          descriptionClassName: "text-green-800 dark:text-green-200",
+          style: {
+            color: "rgb(21 128 61)", // text-green-700
+          },
+        }
+      );
+
+      if (onTrainingAssigned) {
+        onTrainingAssigned();
+      }
+    } catch (error) {
+      // Replace the error handling block with:
+      if (axios.isAxiosError(error)) {
+        toast.error(
+          `${
+            language === "fr"
+              ? "Échec de l'attribution du plan : "
+              : "Failed to assign training plan: "
+          } ${error.response?.data?.message || error.message}`,
+          {
+            className:
+              "bg-red-50 dark:bg-red-900 border border-red-200 dark:border-red-800",
+            descriptionClassName: "text-red-800 dark:text-red-200",
+            style: {
+              color: "rgb(185 28 28)", // text-red-700
+            },
+          }
+        );
+      } else {
+        toast.error(
+          language === "fr"
+            ? "Échec de l'attribution du plan d'entraînement"
+            : "Failed to assign training plan",
+          {
+            className:
+              "bg-red-50 dark:bg-red-900 border border-red-200 dark:border-red-800",
+            descriptionClassName: "text-red-800 dark:text-red-200",
+            style: {
+              color: "rgb(185 28 28)", // text-red-700
+            },
+          }
+        );
+      }
+    }
+  };
   const handleTrainingSubmit = () => {
-    if (!trainingType || equipment.length === 0 || !activityLevel) {
-      alert("Veuillez remplir tous les champs requis");
+    if (
+      !trainingType ||
+      equipment.length === 0 ||
+      (trainingType !== "Sports de bien-être" && !activityLevel)
+    ) {
+      toast.error(
+        language === "fr"
+          ? "Veuillez remplir tous les champs requis."
+          : "Please fill in all required fields.",
+        {
+          className:
+            "bg-red-50 dark:bg-red-900 border border-red-200 dark:border-red-800",
+          descriptionClassName: "text-red-800 dark:text-red-200",
+          style: {
+            color: "rgb(185 28 28)", // text-red-700
+          },
+        }
+      );
+
       return;
     }
 
     const isMale = patient.sex === "male";
     const program = generateProgram(activityLevel, isMale, equipment);
     setGeneratedProgram(program);
+
+    // Assign the training plan
+    handleAssignTraining(program);
 
     // Generate PDF
     generatePDF(program, isMale);
@@ -1920,75 +2396,104 @@ export default function TrainingTab({ patient }: TrainingTabProps) {
       let currentY = 110;
 
       if (isSpecialized) {
-        // Draw specialized program
+        // Table headers for specialized program
+        const headers = [
+          language === "fr" ? "Jour" : "Day",
+          language === "fr" ? "Séance" : "Session",
+          language === "fr" ? "Objectif" : "Objective",
+          language === "fr" ? "Durée" : "Duration",
+        ];
+
+        // Calculate column widths
+        const margins = margin * 2;
+        const tableWidth = pageWidth - margins;
+        const colWidths = [
+          tableWidth * 0.15, // Jour
+          tableWidth * 0.3, // Séance
+          tableWidth * 0.35, // Objectif
+          tableWidth * 0.2, // Durée
+        ];
+
+        // Draw table header
+        doc.setFillColor(...colors.primary);
+        doc.setTextColor(...colors.white);
+        doc.setFont("helvetica", "bold");
+        doc.setFontSize(10);
+
+        let xOffset = margin;
+        headers.forEach((header, i) => {
+          doc.rect(xOffset, currentY, colWidths[i], 10, "F");
+          doc.text(header, xOffset + 2, currentY + 7);
+          xOffset += colWidths[i];
+        });
+
+        currentY += 10;
+
+        // Draw table content
+        doc.setTextColor(...colors.text);
+        doc.setFont("helvetica", "normal");
+        doc.setFontSize(9);
+
         (program as SpecializedDay[]).forEach((day, index) => {
-          if (currentY > pageHeight - 50) {
+          if (currentY > pageHeight - 30) {
             doc.addPage();
             drawHeader();
             currentY = 50;
+
+            // Redraw headers on new page
+            xOffset = margin;
+            doc.setFillColor(...colors.primary);
+            doc.setTextColor(...colors.white);
+            doc.setFont("helvetica", "bold");
+            doc.setFontSize(10);
+            headers.forEach((header, i) => {
+              doc.rect(xOffset, currentY, colWidths[i], 10, "F");
+              doc.text(header, xOffset + 2, currentY + 7);
+              xOffset += colWidths[i];
+            });
+            currentY += 10;
+            doc.setTextColor(...colors.text);
+            doc.setFont("helvetica", "normal");
+            doc.setFontSize(9);
           }
 
-          // Day header
-          doc.setFillColor(...colors.primary);
-          doc.roundedRect(
-            margin,
-            currentY - 5,
-            pageWidth - 2 * margin,
-            12,
-            2,
-            2,
-            "F"
-          );
+          // Draw row background
+          if (index % 2 === 0) {
+            doc.setFillColor(...colors.lightGray);
+            doc.rect(margin, currentY, tableWidth, 20, "F");
+          }
 
-          doc.setFontSize(16);
-          doc.setTextColor(...colors.white);
-          doc.setFont("helvetica", "bold");
-          doc.text(day.day, margin + 5, currentY + 4);
+          // Draw cell content
+          let x = margin;
+
+          // Day
+          doc.text(day.day, x + 2, currentY + 7);
+          x += colWidths[0];
+
+          // Session (with word wrap)
+          const sessionLines = doc.splitTextToSize(
+            day.session,
+            colWidths[1] - 4
+          );
+          doc.text(sessionLines, x + 2, currentY + 7);
+          x += colWidths[1];
+
+          // Objective (with word wrap)
+          const objectiveLines = doc.splitTextToSize(
+            day.objective,
+            colWidths[2] - 4
+          );
+          doc.text(objectiveLines, x + 2, currentY + 7);
+          x += colWidths[2];
+
+          // Duration
+          doc.text(day.duration || "", x + 2, currentY + 7);
 
           currentY += 20;
-
-          // Session details
-          doc.setFontSize(12);
-          doc.setTextColor(...colors.text);
-          doc.setFont("helvetica", "normal");
-
-          // Session box
-          doc.setFillColor(...colors.lightGray);
-          doc.roundedRect(
-            margin + 10,
-            currentY - 3,
-            pageWidth - 2 * margin - 20,
-            35,
-            1,
-            1,
-            "F"
-          );
-
-          doc.text(
-            `${language === "fr" ? "Séance:" : "Session:"} ${day.session}`,
-            margin + 15,
-            currentY + 3
-          );
-          doc.text(
-            `${language === "fr" ? "Objectif:" : "Objective:"} ${
-              day.objective
-            }`,
-            margin + 15,
-            currentY + 13
-          );
-          if (day.duration) {
-            doc.text(
-              `${language === "fr" ? "Durée:" : "Duration:"} ${day.duration}`,
-              margin + 15,
-              currentY + 23
-            );
-          }
-
-          currentY += 45;
         });
       } else {
-        // Draw regular training program
-        (program as TrainingDay[]).forEach((day, index) => {
+        // Table for regular training program
+        (program as TrainingDay[]).forEach((day, dayIndex) => {
           if (currentY > pageHeight - 50) {
             doc.addPage();
             drawHeader();
@@ -1997,66 +2502,99 @@ export default function TrainingTab({ patient }: TrainingTabProps) {
 
           // Day header
           doc.setFillColor(...colors.primary);
-          doc.roundedRect(
-            margin,
-            currentY - 5,
-            pageWidth - 2 * margin,
-            12,
-            2,
-            2,
-            "F"
-          );
-
-          doc.setFontSize(16);
+          doc.rect(margin, currentY, pageWidth - margin * 2, 10, "F");
           doc.setTextColor(...colors.white);
           doc.setFont("helvetica", "bold");
-          doc.text(day.title, margin + 5, currentY + 4);
+          doc.setFontSize(12);
+          doc.text(day.title, margin + 5, currentY + 7);
+          currentY += 15;
 
-          currentY += 20;
+          // Exercise table headers
+          const headers = [
+            language === "fr" ? "Exercice" : "Exercise",
+            language === "fr" ? "Séries" : "Sets",
+            language === "fr" ? "Répétitions" : "Reps",
+            language === "fr" ? "Notes" : "Notes",
+          ];
 
-          // Exercises
-          day.exercises.forEach((exercise) => {
-            if (currentY > pageHeight - 50) {
+          const colWidths = [
+            (pageWidth - margin * 2) * 0.4, // Exercise name
+            (pageWidth - margin * 2) * 0.15, // Sets
+            (pageWidth - margin * 2) * 0.15, // Reps
+            (pageWidth - margin * 2) * 0.3, // Notes
+          ];
+
+          // Draw table headers
+          let x = margin;
+          doc.setFillColor(...colors.primary);
+          headers.forEach((header, i) => {
+            doc.rect(x, currentY, colWidths[i], 8, "F");
+            doc.text(header, x + 2, currentY + 6);
+            x += colWidths[i];
+          });
+          currentY += 8;
+
+          // Draw exercises
+          doc.setTextColor(...colors.text);
+          doc.setFont("helvetica", "normal");
+          doc.setFontSize(9);
+
+          day.exercises.forEach((exercise, index) => {
+            if (currentY > pageHeight - 30) {
               doc.addPage();
               drawHeader();
               currentY = 50;
-            }
 
-            // Exercise box
-            doc.setFillColor(...colors.lightGray);
-            doc.roundedRect(
-              margin + 10,
-              currentY - 3,
-              pageWidth - 2 * margin - 20,
-              35,
-              1,
-              1,
-              "F"
-            );
-
-            doc.setFontSize(12);
-            doc.setTextColor(...colors.text);
-            doc.setFont("helvetica", "bold");
-            doc.text(exercise.name, margin + 15, currentY + 3);
-
-            doc.setFont("helvetica", "normal");
-            doc.text(
-              `${exercise.sets} × ${exercise.reps}${
-                exercise.duration ? ` (${exercise.duration})` : ""
-              }`,
-              margin + 15,
-              currentY + 13
-            );
-
-            if (exercise.note) {
+              // Redraw headers on new page
+              x = margin;
+              doc.setFillColor(...colors.primary);
+              doc.setTextColor(...colors.white);
+              doc.setFont("helvetica", "bold");
               doc.setFontSize(10);
-              doc.text(exercise.note, margin + 15, currentY + 23);
+              headers.forEach((header, i) => {
+                doc.rect(x, currentY, colWidths[i], 8, "F");
+                doc.text(header, x + 2, currentY + 6);
+                x += colWidths[i];
+              });
+              currentY += 8;
+              doc.setTextColor(...colors.text);
+              doc.setFont("helvetica", "normal");
+              doc.setFontSize(9);
             }
 
-            currentY += 45;
+            // Draw row background
+            if (index % 2 === 0) {
+              doc.setFillColor(...colors.lightGray);
+              doc.rect(margin, currentY, pageWidth - margin * 2, 8, "F");
+            }
+
+            // Draw cell content
+            x = margin;
+
+            // Exercise name
+            doc.text(exercise.name, x + 2, currentY + 6);
+            x += colWidths[0];
+
+            // Sets
+            if (exercise.sets != 0) {
+              doc.text(exercise.sets.toString(), x + 2, currentY + 6);
+              x += colWidths[1];
+            }
+
+            // Reps/Duration
+            doc.text(
+              exercise.reps || exercise.duration || "",
+              x + 2,
+              currentY + 6
+            );
+            x += colWidths[2];
+
+            // Notes
+
+            currentY += 8;
           });
 
-          currentY += 10;
+          currentY += 15; // Add space between days
         });
       }
     };
@@ -2091,6 +2629,12 @@ export default function TrainingTab({ patient }: TrainingTabProps) {
     doc.save(`programme-entrainement-${patient?.firstname || "patient"}.pdf`);
   };
 
+  const getFilteredEquipmentOptions = () => {
+    if (!trainingType) return [];
+    return trainingTypeEquipment[trainingType] || [];
+  };
+
+  // Handle equipment selection
   const handleEquipmentChange = (equipmentItem: string) => {
     setEquipment((prev) =>
       prev.includes(equipmentItem)
@@ -2099,8 +2643,12 @@ export default function TrainingTab({ patient }: TrainingTabProps) {
     );
   };
 
+  // Clear equipment when training type changes
+  useEffect(() => {
+    setEquipment([]);
+  }, [trainingType]);
   return (
-    <div className="bg-card rounded-xl shadow-lg p-8 mb-8 max-w-4xl mx-auto border border-border/50">
+    <div className="bg-card space-y-6 rounded-xl shadow-lg p-8 mb-8  border border-border/50">
       <h2 className="text-2xl font-bold text-foreground mb-6 text-center">
         Assigner un entraînement - {patient.sex === "male" ? "Homme" : "Femme"}
       </h2>
@@ -2131,66 +2679,70 @@ export default function TrainingTab({ patient }: TrainingTabProps) {
           </div>
 
           {/* Equipment Selection */}
-          <div className="space-y-2">
-            <label className="block text-sm font-semibold text-foreground mb-2">
-              Matériel disponible
-            </label>
-            <div className="border-2 border-border rounded-lg p-4 bg-background/50 max-h-48 overflow-y-auto">
-              <div className="grid grid-cols-1 gap-2">
-                {equipmentOptions.map((eq) => (
+          {trainingType && (
+            <div className="space-y-2">
+              <label className="block text-sm font-semibold text-foreground mb-2">
+                Matériel disponible
+              </label>
+              <div className="border-2 border-border rounded-lg p-4 bg-background/50 max-h-48 overflow-y-auto">
+                <div className="grid grid-cols-1 gap-2">
+                  {getFilteredEquipmentOptions().map((eq) => (
+                    <label
+                      key={eq}
+                      className="flex items-center space-x-2 p-2 rounded-md hover:bg-accent cursor-pointer transition-colors duration-150"
+                    >
+                      <input
+                        type="checkbox"
+                        checked={equipment.includes(eq)}
+                        onChange={() => handleEquipmentChange(eq)}
+                        className="w-4 h-4 text-primary border-2 border-border rounded focus:ring-2 focus:ring-primary/20"
+                      />
+                      <span className="text-sm text-foreground select-none">
+                        {eq}
+                      </span>
+                    </label>
+                  ))}
+                </div>
+              </div>
+              <p className="text-xs text-muted-foreground mt-2">
+                Sélectionnez le matériel disponible pour {trainingType}
+              </p>
+            </div>
+          )}
+
+          {/* Activity Level */}
+          {trainingType && trainingType !== "Sports de bien-être" && (
+            <div className="space-y-2">
+              <label className="block text-sm font-semibold text-foreground mb-2">
+                Niveau d'activité
+              </label>
+              <div className="grid grid-cols-1 gap-3">
+                {activityLevels.map((level) => (
                   <label
-                    key={eq}
-                    className="flex items-center space-x-2 p-2 rounded-md hover:bg-accent cursor-pointer transition-colors duration-150"
+                    key={level}
+                    className={`flex items-center justify-center p-3 border-2 rounded-lg cursor-pointer transition-all duration-200 ${
+                      activityLevel === level
+                        ? "border-primary bg-primary/10 text-primary"
+                        : "border-border bg-background/50 hover:border-border/80 hover:bg-background"
+                    }`}
                   >
                     <input
-                      type="checkbox"
-                      checked={equipment.includes(eq)}
-                      onChange={() => handleEquipmentChange(eq)}
-                      className="w-4 h-4 text-primary border-2 border-border rounded focus:ring-2 focus:ring-primary/20"
+                      type="radio"
+                      name="activityLevel"
+                      value={level}
+                      checked={activityLevel === level}
+                      onChange={(e) => setActivityLevel(e.target.value)}
+                      className="sr-only"
+                      required
                     />
-                    <span className="text-sm text-foreground select-none">
-                      {eq}
+                    <span className="text-sm font-medium capitalize">
+                      {level}
                     </span>
                   </label>
                 ))}
               </div>
             </div>
-            <p className="text-xs text-muted-foreground mt-2">
-              Sélectionnez tout le matériel disponible
-            </p>
-          </div>
-
-          {/* Activity Level */}
-          <div className="space-y-2">
-            <label className="block text-sm font-semibold text-foreground mb-2">
-              Niveau d'activité
-            </label>
-            <div className="grid grid-cols-1 gap-3">
-              {activityLevels.map((level) => (
-                <label
-                  key={level}
-                  className={`flex items-center justify-center p-3 border-2 rounded-lg cursor-pointer transition-all duration-200 ${
-                    activityLevel === level
-                      ? "border-primary bg-primary/10 text-primary"
-                      : "border-border bg-background/50 hover:border-border/80 hover:bg-background"
-                  }`}
-                >
-                  <input
-                    type="radio"
-                    name="activityLevel"
-                    value={level}
-                    checked={activityLevel === level}
-                    onChange={(e) => setActivityLevel(e.target.value)}
-                    className="sr-only"
-                    required
-                  />
-                  <span className="text-sm font-medium capitalize">
-                    {level}
-                  </span>
-                </label>
-              ))}
-            </div>
-          </div>
+          )}
 
           {/* Submit Button */}
           <button

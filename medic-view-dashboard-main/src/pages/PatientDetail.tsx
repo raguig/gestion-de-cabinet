@@ -8,6 +8,7 @@ import { HistoryTab } from "@/components/HistoryTab";
 import { DietEditorTab } from "@/components/DietEditorTab";
 import TrainingTab from "../components/TrainingTab";
 import { useLanguage } from "@/context/LanguageContext";
+import { toast } from "sonner";
 
 export default function PatientDetail() {
   const navigate = useNavigate();
@@ -39,7 +40,19 @@ export default function PatientDetail() {
       setPatient(patientRes.data);
       setVisits(visitsRes.data);
     } catch (error) {
-      console.error("Error fetching data:", error);
+      toast.error(
+        language === "fr"
+          ? "Erreur lors du chargement des données du patient"
+          : "Error loading patient data",
+        {
+          className:
+            "bg-red-50 dark:bg-red-900 border border-red-200 dark:border-red-800",
+          descriptionClassName: "text-red-800 dark:text-red-200",
+          style: {
+            color: "rgb(185 28 28)",
+          },
+        }
+      );
     } finally {
       setIsLoading(false);
     }
@@ -65,7 +78,19 @@ export default function PatientDetail() {
       setPatient(patientRes.data);
       setVisits(visitsRes.data);
     } catch (error) {
-      console.error("Error fetching data:", error);
+      toast.error(
+        language === "fr"
+          ? "Erreur lors de l'actualisation des données"
+          : "Error refreshing data",
+        {
+          className:
+            "bg-red-50 dark:bg-red-900 border border-red-200 dark:border-red-800",
+          descriptionClassName: "text-red-800 dark:text-red-200",
+          style: {
+            color: "rgb(185 28 28)",
+          },
+        }
+      );
     } finally {
       setIsLoading(false);
     }
@@ -84,6 +109,10 @@ export default function PatientDetail() {
       );
     }
 
+    // Get latest visit ID outside of the switch statement
+    const latestVisitId =
+      visits.length > 0 ? visits[visits.length - 1]._id : null;
+
     switch (activeTab) {
       case "apercu":
         return (
@@ -97,18 +126,22 @@ export default function PatientDetail() {
       case "historique":
         return <HistoryTab language={language} visits={visits} />;
       case "editeur":
-        const latestVisitId =
-          visits.length > 0 ? visits[visits.length - 1]._id : null;
         return (
           <DietEditorTab
             language={language}
             patient={patient}
             visitId={latestVisitId}
-            onDietAssigned={refreshData} // Add this prop
+            onDietAssigned={refreshData}
           />
         );
       case "entrainement":
-        return <TrainingTab patient={patient} />;
+        return (
+          <TrainingTab
+            patient={patient}
+            visitId={latestVisitId}
+            onTrainingAssigned={refreshData}
+          />
+        );
       default:
         return null;
     }
@@ -119,7 +152,7 @@ export default function PatientDetail() {
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <button
           onClick={() => navigate("/patients")}
-          className="mb-6 flex items-center gap-2 text-gray-600 hover:text-gray-900 transition-colors duration-200"
+          className="mb-6 flex items-center gap-2 text-blue-600 hover:text-blue-900 transition-colors duration-200"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"

@@ -12,52 +12,70 @@ import { PatientManagement } from "./components/PatientManagement";
 import { LanguageProvider } from "@/context/LanguageContext";
 import Appointments from "./components/Appointments";
 import Login from "./pages/login";
-import { AuthProvider } from "./context/AuthContext.jsx";
+import { AuthProvider, useAuth } from "./context/AuthContext.jsx";
 import ProtectedRoute from "./components/ProtectedRoute.jsx";
 import DoctorProfile from "./components/DoctorProfile.js";
 import Admin from "./pages/Admin";
 import { AdminRoute } from "@/components/AdminRoute";
 const queryClient = new QueryClient();
 
-const App = () => (
-  <QueryClientProvider client={queryClient}>
-    <BrowserRouter>
-      <AuthProvider>
-        <LanguageProvider>
-          <TooltipProvider>
-            <Toaster />
-            <Sonner />
-            <Routes>
-              <Route path="/login" element={<Login />} />
-              <Route
-                path="/"
-                element={
-                  <ProtectedRoute>
-                    <MainLayout />
-                  </ProtectedRoute>
-                }
-              >
-                <Route index element={<DoctorDashboard />} />
-                <Route path="/dashboard" element={<DoctorDashboard />} />
-                <Route path="/patients" element={<PatientManagement />} />
-                <Route path="/profile" element={<DoctorProfile />} />
-                <Route path="/appointments" element={<Appointments />} />
-                <Route path="/patients/:id" element={<PatientDetail />} />
-                <Route
-                  path="/admin"
-                  element={
-                    <AdminRoute>
-                      <Admin />
-                    </AdminRoute>
-                  }
-                />
-              </Route>
-            </Routes>
-          </TooltipProvider>
-        </LanguageProvider>
-      </AuthProvider>
-    </BrowserRouter>
-  </QueryClientProvider>
-);
+const AppRoutes = () => {
+  const { loading } = useAuth();
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+      </div>
+    );
+  }
+
+  return (
+    <Routes>
+      <Route path="/login" element={<Login />} />
+      <Route
+        path="/"
+        element={
+          <ProtectedRoute>
+            <MainLayout />
+          </ProtectedRoute>
+        }
+      >
+        <Route index element={<DoctorDashboard />} />
+        <Route path="/dashboard" element={<DoctorDashboard />} />
+        <Route path="/patients" element={<PatientManagement />} />
+        <Route path="/profile" element={<DoctorProfile />} />
+        <Route path="/appointments" element={<Appointments />} />
+        <Route path="/patients/:id" element={<PatientDetail />} />
+        <Route
+          path="/admin"
+          element={
+            <AdminRoute>
+              <Admin />
+            </AdminRoute>
+          }
+        />
+      </Route>
+    </Routes>
+  );
+};
+
+const App = () => {
+  return (
+    <QueryClientProvider client={queryClient}>
+      <BrowserRouter>
+        <AuthProvider>
+          <LanguageProvider>
+            <TooltipProvider>
+              <Toaster />
+              <Sonner />
+              <AppRoutes />
+            </TooltipProvider>
+          </LanguageProvider>
+        </AuthProvider>
+      </BrowserRouter>
+    </QueryClientProvider>
+  );
+};
 
 export default App;

@@ -28,6 +28,7 @@ import {
 } from "lucide-react";
 import jsPDF from "jspdf";
 import axios from "axios";
+import { toast } from "sonner";
 
 interface DietEditorSlideProps {
   language: "fr" | "en";
@@ -83,7 +84,7 @@ export function DietEditorSlide({
   patient,
 }: DietEditorSlideProps) {
   const [versions, setVersions] = useState<DietVersion[]>([
-    { id: "v1", name: "Équilibré", selectedDays: ["J1", "J3", "J7"] },
+    { id: "v1", name: "Équilibré", selectedDays: [] },
     { id: "v2", name: "Intensif", selectedDays: ["J1", "J3", "J5", "J7"] },
   ]);
   const [selectedVersion, setSelectedVersion] = useState<string>("v1");
@@ -224,7 +225,7 @@ export function DietEditorSlide({
       if (dayPlan.day) {
         // Map French meal names to English keys for consistency
         const mealMapping = {
-          "Petit-déjeuner": "breakfast",
+          "Petit-Déjeuner": "breakfast",
           "Collation-matin": "morningSnack",
           Déjeuner: "lunch",
           Collation: "afternoonSnack",
@@ -235,7 +236,7 @@ export function DietEditorSlide({
           breakfast: {
             name: getMealName("breakfast", dayPlan.meals?.breakfast || []),
             details: formatMealDetails(
-              dayPlan.meals?.["Petit-déjeuner"] ||
+              dayPlan.meals?.["Petit-Déjeuner"] ||
                 dayPlan.meals?.breakfast ||
                 []
             ),
@@ -358,7 +359,7 @@ export function DietEditorSlide({
 
   const getCurrentDietPlan = (dayId: string): DietPlan => {
     const plan = editedDietPlans[dayId] || dietPlans[dayId];
-    console.log(plan)
+
     if (!plan) {
       return {
         id: dayId,
@@ -438,7 +439,6 @@ export function DietEditorSlide({
       );
 
       const createdDiet = addDietResponse.data.dietPlan;
-      console.log("visitid: ", visitId);
       // Assign the diet to the visit
       await axios.put(
         `http://localhost:8000/api/patients/visits/${visitId}/assign-diet`,
@@ -450,15 +450,36 @@ export function DietEditorSlide({
         }
       );
 
-      alert(
-        `${t[mealType as keyof typeof t]} diet added and assigned successfully!`
+      toast.success(
+        language === "fr"
+          ? `${t[mealType as keyof typeof t]} ajouté et assigné avec succès!`
+          : `${t[mealType as keyof typeof t]} added and assigned successfully!`,
+        {
+          className:
+            "bg-green-50 dark:bg-green-900 border border-green-200 dark:border-green-800",
+          descriptionClassName: "text-green-800 dark:text-green-200",
+          style: {
+            color: "rgb(21 128 61)", // text-green-700
+          },
+        }
       );
       if (onDietAssigned) {
         onDietAssigned(); // Call the refresh function
       }
     } catch (error) {
-      console.error("Error adding and assigning diet:", error);
-      alert("Failed to add and assign diet.");
+      toast.error(
+        language === "fr"
+          ? "Échec de l'ajout et de l'assignation du régime."
+          : "Failed to add and assign diet.",
+        {
+          className:
+            "bg-red-50 dark:bg-red-900 border border-red-200 dark:border-red-800",
+          descriptionClassName: "text-red-800 dark:text-red-200",
+          style: {
+            color: "rgb(185 28 28)", // text-red-700
+          },
+        }
+      );
     }
   };
 
@@ -468,7 +489,19 @@ export function DietEditorSlide({
       const currentVersion = versions.find((v) => v.id === selectedVersion);
 
       if (!currentVersion || currentVersion.selectedDays.length === 0) {
-        alert("Please select at least one day to assign.");
+        toast.error(
+          language === "fr"
+            ? "Veuillez sélectionner au moins un jour à assigner."
+            : "Please select at least one day to assign.",
+          {
+            className:
+              "bg-red-50 dark:bg-red-900 border border-red-200 dark:border-red-800",
+            descriptionClassName: "text-red-800 dark:text-red-200",
+            style: {
+              color: "rgb(185 28 28)", // text-red-700
+            },
+          }
+        );
         return;
       }
 
@@ -511,7 +544,6 @@ export function DietEditorSlide({
         )}`,
         meals: combinedMeals,
       };
-      console.log("Diet Data to be sent:", dietData);
       const addDietResponse = await axios.post(
         "http://localhost:8000/api/patients/diets",
         dietData,
@@ -523,7 +555,6 @@ export function DietEditorSlide({
       );
 
       const createdDiet = addDietResponse.data.dietPlan;
-      console.log("visit id " + visitId);
       // Assign the diet to the visit
       await axios.put(
         `http://localhost:8000/api/patients/visits/${visitId}/assign-diet`,
@@ -535,13 +566,37 @@ export function DietEditorSlide({
         }
       );
 
-      alert("Diet plan assigned successfully!");
+      toast.success(
+        language === "fr"
+          ? "Régime assigné avec succès!"
+          : "Diet assigned successfully!",
+        {
+          className:
+            "bg-green-50 dark:bg-green-900 border border-green-200 dark:border-green-800",
+          descriptionClassName: "text-green-800 dark:text-green-200",
+          style: {
+            color: "rgb(21 128 61)", // text-green-700
+          },
+        }
+      );
+
       if (onDietAssigned) {
         onDietAssigned(); // Call the refresh function
       }
     } catch (error) {
-      console.error("Error assigning diet:", error);
-      alert("Failed to assign diet.");
+      toast.error(
+        language === "fr"
+          ? "Échec de l'assignation du régime."
+          : "Failed to assign diet.",
+        {
+          className:
+            "bg-red-50 dark:bg-red-900 border border-red-200 dark:border-red-800",
+          descriptionClassName: "text-red-800 dark:text-red-200",
+          style: {
+            color: "rgb(185 28 28)", // text-red-700
+          },
+        }
+      );
     }
   };
 
@@ -550,7 +605,19 @@ export function DietEditorSlide({
       const token = localStorage.getItem("token");
 
       if (!newDietForm.name.trim()) {
-        alert("Please enter a diet name.");
+        toast.error(
+          language === "fr"
+            ? "Veuillez entrer un nom de régime."
+            : "Please enter a diet name.",
+          {
+            className:
+              "bg-red-50 dark:bg-red-900 border border-red-200 dark:border-red-800",
+            descriptionClassName: "text-red-800 dark:text-red-200",
+            style: {
+              color: "rgb(185 28 28)", // text-red-700
+            },
+          }
+        );
         return;
       }
 
@@ -577,7 +644,20 @@ export function DietEditorSlide({
         }
       );
 
-      alert("Custom diet added and assigned successfully!");
+      toast.success(
+        language === "fr"
+          ? "Régime personnalisé ajouté avec succès!"
+          : "Custom diet added successfully!",
+        {
+          className:
+            "bg-green-50 dark:bg-green-900 border border-green-200 dark:border-green-800",
+          descriptionClassName: "text-green-800 dark:text-green-200",
+          style: {
+            color: "rgb(21 128 61)", // text-green-700
+          },
+        }
+      );
+
       setIsAddingDiet(false);
       setNewDietForm({
         name: "",
@@ -590,8 +670,19 @@ export function DietEditorSlide({
         },
       });
     } catch (error) {
-      console.error("Error adding custom diet:", error);
-      alert("Failed to add custom diet.");
+      toast.error(
+        language === "fr"
+          ? "Échec de l'ajout du régime personnalisé."
+          : "Failed to add custom diet.",
+        {
+          className:
+            "bg-red-50 dark:bg-red-900 border border-red-200 dark:border-red-800",
+          descriptionClassName: "text-red-800 dark:text-red-200",
+          style: {
+            color: "rgb(185 28 28)", // text-red-700
+          },
+        }
+      );
     }
   };
 
@@ -599,7 +690,6 @@ export function DietEditorSlide({
     const doc = new jsPDF();
     const version = versions.find((v) => v.id === selectedVersion);
     if (!version || version.selectedDays.length === 0) return;
-    console.log(patient);
     // Use actual patient info
     const patientInfo = {
       name: `${patient?.firstname} ${patient?.lastname}`,
@@ -861,85 +951,11 @@ export function DietEditorSlide({
   return (
     <div className="space-y-6">
       {/* Version Management */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center justify-between">
-            <span>{t.versions}</span>
-            <Button
-              onClick={() => setIsCreatingVersion(true)}
-              size="sm"
-              className="flex items-center gap-2"
-            >
-              <Plus className="h-4 w-4" />
-              {t.createVersion}
-            </Button>
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          {isCreatingVersion && (
-            <div className="flex gap-2 mb-4">
-              <Input
-                placeholder={t.newVersionName}
-                value={newVersionName}
-                onChange={(e) => setNewVersionName(e.target.value)}
-              />
-              <Button onClick={handleCreateVersion} size="sm">
-                <Save className="h-4 w-4" />
-              </Button>
-              <Button
-                variant="outline"
-                onClick={() => {
-                  setIsCreatingVersion(false);
-                  setNewVersionName("");
-                }}
-                size="sm"
-              >
-                {t.cancel}
-              </Button>
-            </div>
-          )}
-
-          <div className="flex flex-wrap gap-2">
-            {versions.map((version) => (
-              <div key={version.id} className="flex items-center gap-1">
-                <Button
-                  variant={
-                    selectedVersion === version.id ? "default" : "outline"
-                  }
-                  onClick={() => setSelectedVersion(version.id)}
-                  className="flex items-center gap-2"
-                >
-                  {version.name}
-                  <Badge variant="secondary" className="text-xs">
-                    {version.selectedDays.length}
-                  </Badge>
-                </Button>
-                {versions.length > 1 && (
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => handleDeleteVersion(version.id)}
-                    className="h-8 w-8 p-0 text-destructive hover:text-destructive"
-                  >
-                    <Trash2 className="h-3 w-3" />
-                  </Button>
-                )}
-              </div>
-            ))}
-          </div>
-        </CardContent>
-      </Card>
 
       {/* Day Plans Accordion */}
       <Card>
         <CardHeader>
           <CardTitle>{t.dayPlans}</CardTitle>
-          {currentVersion && (
-            <p className="text-sm text-muted-foreground">
-              {currentVersion.selectedDays.length} {t.selectedForVersion} "
-              {currentVersion.name}"
-            </p>
-          )}
         </CardHeader>
         <CardContent>
           <Accordion type="multiple" className="w-full">
@@ -1023,7 +1039,9 @@ export function DietEditorSlide({
                                                 e.target.value
                                               )
                                             }
-                                            className="text-base font-semibold h-10 border-blue-200 dark:border-blue-700 focus:border-blue-400 dark:focus:border-blue-500 focus:ring-blue-200 dark:focus:ring-blue-800 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
+                                            className="text-base font-semibold h-10 border-2 border-blue-200 dark:border-blue-700 
+              focus:border-blue-400 dark:focus:border-blue-500 focus:ring-2 focus:ring-blue-200 
+              dark:focus:ring-blue-800 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
                                             placeholder="Nom du plat"
                                           />
                                         ) : (
@@ -1037,22 +1055,26 @@ export function DietEditorSlide({
                                       <div className="flex items-center gap-3 flex-shrink-0">
                                         {/* Edit Button */}
                                         {isEditing ? (
-                                          <div className="flex gap-1">
+                                          <div className="flex gap-2">
                                             <Button
                                               size="sm"
                                               variant="ghost"
                                               onClick={handleSaveMealEdit}
-                                              className="h-9 w-9 p-0 text-green-600 dark:text-green-400 hover:text-green-700 dark:hover:text-green-300 hover:bg-green-50 dark:hover:bg-green-900/50 transition-colors rounded-lg"
+                                              className="h-10 w-10 p-0 text-green-600 dark:text-green-400 hover:text-green-700 
+                dark:hover:text-green-300 hover:bg-green-50 dark:hover:bg-green-900/50 
+                border-2 border-green-200 dark:border-green-700 rounded-lg"
                                             >
-                                              <Check className="h-4 w-4" />
+                                              <Check className="h-5 w-5" />
                                             </Button>
                                             <Button
                                               size="sm"
                                               variant="ghost"
                                               onClick={handleCancelMealEdit}
-                                              className="h-9 w-9 p-0 text-red-600 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300 hover:bg-red-50 dark:hover:bg-red-900/50 transition-colors rounded-lg"
+                                              className="h-10 w-10 p-0 text-red-600 dark:text-red-400 hover:text-red-700 
+                dark:hover:text-red-300 hover:bg-red-50 dark:hover:bg-red-900/50 
+                border-2 border-red-200 dark:border-red-700 rounded-lg"
                                             >
-                                              <X className="h-4 w-4" />
+                                              <X className="h-5 w-5" />
                                             </Button>
                                           </div>
                                         ) : (
@@ -1065,27 +1087,15 @@ export function DietEditorSlide({
                                                 mealType,
                                               })
                                             }
-                                            className="h-9 w-9 p-0 text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 hover:bg-blue-50 dark:hover:bg-blue-900/50 transition-colors rounded-lg"
+                                            className="h-10 w-10 p-0 text-blue-600 dark:text-blue-400 hover:text-blue-700 
+              dark:hover:text-blue-300 hover:bg-blue-50 dark:hover:bg-blue-900/50 
+              border-2 border-blue-200 dark:border-blue-700 rounded-lg"
                                           >
                                             <Edit2 className="h-4 w-4" />
                                           </Button>
                                         )}
 
                                         {/* Select Diet Button */}
-                                        <Button
-                                          size="sm"
-                                          variant="ghost"
-                                          onClick={() =>
-                                            handleSelectSingleMeal(
-                                              dayId,
-                                              mealType
-                                            )
-                                          }
-                                          className="h-9 w-9 p-0 text-green-600 dark:text-green-400 hover:text-green-700 dark:hover:text-green-300 hover:bg-green-50 dark:hover:bg-green-900/50 transition-colors rounded-lg"
-                                          title={t.selectAndAssign}
-                                        >
-                                          <Check className="h-4 w-4" />
-                                        </Button>
                                       </div>
                                     </div>
 
@@ -1134,22 +1144,21 @@ export function DietEditorSlide({
         <CardContent className="pt-6">
           <div className="flex flex-col gap-4">
             {/* Selected Days Action */}
-            {currentVersion && currentVersion.selectedDays.length > 0 && (
-              <div className="flex gap-3">
-                <Button
-                  className="flex-1"
-                  size="lg"
-                  onClick={handleAssignSelectedDays}
-                >
-                  {t.assignToPatient} - {currentVersion.name} (
-                  {currentVersion.selectedDays.length} jours)
-                </Button>
-                <Button onClick={generatePDF} variant="outline" size="lg">
-                  <Download className="h-4 w-4 mr-2" />
-                  {t.downloadPdf}
-                </Button>
-              </div>
-            )}
+
+            <div className="flex gap-3">
+              <Button
+                className="flex-1"
+                size="lg"
+                onClick={handleAssignSelectedDays}
+              >
+                {t.assignToPatient} - {currentVersion.name} (
+                {currentVersion.selectedDays.length} jours)
+              </Button>
+              <Button onClick={generatePDF} variant="outline" size="lg">
+                <Download className="h-4 w-4 mr-2" />
+                {t.downloadPdf}
+              </Button>
+            </div>
 
             {/* Add Custom Diet Button */}
           </div>

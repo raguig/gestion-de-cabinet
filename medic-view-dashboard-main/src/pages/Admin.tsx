@@ -39,6 +39,7 @@ import { Badge } from "@/components/ui/badge";
 import { useForm } from "react-hook-form";
 import { toast } from "@/hooks/use-toast";
 import { useLanguage } from "@/context/LanguageContext";
+import { useAuth } from "@/context/AuthContext";
 
 // Define admin translations
 const adminTranslations = {
@@ -150,6 +151,7 @@ interface Doctor {
 
 const Admin = () => {
   const { language } = useLanguage();
+  const { user } = useAuth();
   const [doctors, setDoctors] = useState<Doctor[]>([]);
   const [totalPatients, setTotalPatients] = useState(0);
   const [loading, setLoading] = useState(false);
@@ -178,7 +180,13 @@ const Admin = () => {
   const fetchDoctors = async () => {
     try {
       setLoading(true);
-      const response = await fetch("http://localhost:8000/api/doctors");
+      const token = localStorage.getItem("token");
+      const response = await fetch("http://localhost:8000/api/doctors", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      });
       if (!response.ok) {
         throw new Error("Failed to fetch doctors");
       }
@@ -217,6 +225,7 @@ const Admin = () => {
     data: Omit<Doctor, "id" | "patientsCount" | "status">
   ) => {
     try {
+      const token = localStorage.getItem("token");
       const payload = {
         firstname: data.firstname,
         lastname: data.lastname,
@@ -234,6 +243,7 @@ const Admin = () => {
         method: editingDoctor ? "PUT" : "POST",
         headers: {
           "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify(payload),
       });
@@ -282,12 +292,14 @@ const Admin = () => {
 
   const handleDelete = async (doctorId: string) => {
     try {
+      const token = localStorage.getItem("token");
       const response = await fetch(
         `http://localhost:8000/api/doctors/${doctorId}`,
         {
           method: "DELETE",
           headers: {
             "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
           },
         }
       );

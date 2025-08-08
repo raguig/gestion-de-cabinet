@@ -3,7 +3,7 @@
   {
     "day": "J1",
     "meals": {
-      "petit-déjeuner": [
+      "Petit-Déjeuner": [
         { "name": "flocons d'avoine", "amount": 25, "unit": "g" },
         { "name": "œuf", "amount": 3, "unit": "unité" },
         { "name": "banane", "amount": 1, "unit": "unité" },
@@ -12,7 +12,7 @@
         { "name": "brocoli (vapeur)", "amount": 100, "unit": "g" },
         { "name": "huile d'olive", "amount": 1, "unit": "c.c." }
       ],
-      "dîner": [
+      "Dîner": [
         { "name": "sardines (conserve, nature)", "amount": 60, "unit": "g" },
         { "name": "patate douce (cuite)", "amount": 60, "unit": "g" },
         { "name": "épinards (vapeur)", "amount": 100, "unit": "g" },
@@ -24,13 +24,13 @@
   {
     "day": "J2",
     "meals": {
-      "Petit-déjeuner": [
+      "Petit-Déjeuner": [
         { "name": "pain complet", "amount": 100, "unit": "g" },
         { "name": "orange", "amount": 1, "unit": "unité" },
         { "name": "thon", "amount": 80, "unit": "g" },
         { "name": "légumes sautés", "amount": 150, "unit": "g" }
       ],
-      "dîner": [
+      "Dîner": [
         { "name": "steak", "amount": 90, "unit": "g" },
         { "name": "riz", "amount": 70, "unit": "g" },
         { "name": "carottes", "amount": 100, "unit": "g" },
@@ -41,14 +41,14 @@
   {
     "day": "J3",
     "meals": {
-      "Petit-déjeuner": [
+      "Petit-Déjeuner": [
         { "name": "flocons d'avoine", "amount": 20, "unit": "g" },
         { "name": "œuf", "amount": 1, "unit": "unité" },
         { "name": "fruit", "amount": 1, "unit": "unité" },
         { "name": "amandes", "amount": 15, "unit": "g" },
         { "name": "thon", "amount": 50, "unit": "g" }
       ],
-      "dîner": [
+      "Dîner": [
         { "name": "steak", "amount": 90, "unit": "g" },
         { "name": "riz", "amount": 50, "unit": "g" },
         { "name": "Brocoli", "amount": 100, "unit": "g" },
@@ -59,14 +59,14 @@
   {
     "day": "J4",
     "meals": {
-      "déjeuner": [
+      "Déjeuner": [
         { "name": "steak de viande 5%", "amount": 90, "unit": "g" },
         { "name": "pomme de terre (cuite)", "amount": 100, "unit": "g" },
         { "name": "pain complet", "amount": 30, "unit": "g" },
         { "name": "huile d'olive", "amount": 1, "unit": "c.c." },
         { "name": "légumes sautés", "amount": 100, "unit": "g" }
       ],
-      "dîner": [
+      "Dîner": [
         { "name": "sardines grillées", "amount": 60, "unit": "g" },
         { "name": "purée de patate douce", "amount": 100, "unit": "g" },
         { "name": "flocons d'avoine", "amount": 20, "unit": "g" },
@@ -79,7 +79,7 @@
   {
     "day": "J5",
     "meals": {
-      "déjeuner": [
+      "Déjeuner": [
         { "name": "sardines grillées", "amount": 60, "unit": "g" },
         { "name": "purée de patate douce", "amount": 100, "unit": "g" },
         { "name": "flocons d'avoine", "amount": 20, "unit": "g" },
@@ -87,7 +87,7 @@
         { "name": "lait demi-écrémé", "amount": 100, "unit": "ml" },
         { "name": "raisins secs", "amount": 5, "unit": "g" }
       ],
-      "dîner": [
+      "Dîner": [
         { "name": "steak de viande 5%", "amount": 90, "unit": "g" },
         { "name": "pomme de terre (cuite)", "amount": 100, "unit": "g" },
         { "name": "pain complet", "amount": 30, "unit": "g" },
@@ -116,7 +116,7 @@
   {
     "day": "J7",
     "meals": {
-      "Petit-déjeuner": [
+      "Petit-Déjeuner": [
         { "name": "œufs brouillés", "amount": 1, "unit": "œuf" },
         { "name": "tomates", "amount": 50, "unit": "g" },
         { "name": "olives", "amount": 8, "unit": "g" },
@@ -138,7 +138,7 @@
   {
     "day": "J1",
     "meals": {
-      "Petit-déjeuner": [
+      "Petit-Déjeuner": [
         { "name": "flocons d'avoine", "amount": 70, "unit": "g" },
         { "name": "œuf", "amount": 2, "unit": "unité" },
         { "name": "banane", "amount": 1, "unit": "unité" },
@@ -156,7 +156,7 @@
   {
     "day": "J2",
     "meals": {
-      "Petit-déjeuner": [
+      "Petit-Déjeuner": [
         { "name": "flocons d'avoine", "amount": 40, "unit": "g" },
         { "name": "lait demi-écrémé", "amount": 150, "unit": "ml" },
         { "name": "œuf", "amount": 1, "unit": "unité" },
@@ -175,7 +175,7 @@
   {
     "day": "J3",
     "meals": {
-      "Petit-déjeuner": [
+      "Petit-Déjeuner": [
         { "name": "Les pâtes", "amount": 100, "unit": "g" },
         { "name": "fruit (ex: pomme)", "amount": 1, "unit": "unité" },
         { "name": "huile d'olive", "amount": 1, "unit": "c.c." },
@@ -227,14 +227,14 @@
   {
     "day": "J6",
     "meals": {
-      "petit-déjeuner": [
+      "Petit-Déjeuner": [
         { "name": "quinoa cuit", "amount": 100, "unit": "g" },
         { "name": "yaourt grec 0 %", "amount": 100, "unit": "g" },
         { "name": "beurre de cacahuète", "amount": 40, "unit": "g" },
         { "name": "graines de chia", "amount": 5, "unit": "g" },
         { "name": "fruit rouges", "amount": 100, "unit": "g" }
       ],
-      "dîner": [
+      "Dîner": [
         { "name": "saumon grillé", "amount": 100, "unit": "g" },
         { "name": "quinoa cuit", "amount": 100, "unit": "g" },
         { "name": "courgettes grillées", "amount": 100, "unit": "g" },
@@ -246,7 +246,7 @@
   {
     "day": "J7",
     "meals": {
-      "petit-déjeuner": [
+      "Petit-Déjeuner": [
         { "name": "blé complet", "amount": 100, "unit": "g" },
         { "name": "poulet fumé", "amount": 100, "unit": "g" },
         { "name": "concombre", "amount": 50, "unit": "g" },
@@ -269,7 +269,7 @@
   {
     "day": "J1",
     "meals": {
-      "Petit-déjeuner": [
+      "Petit-Déjeuner": [
         { "name": "flocons d'avoine", "amount": 50, "unit": "g" },
         { "name": "œuf (entier)", "amount": 2, "unit": "unité" },
         { "name": "banane", "amount": 1, "unit": "unité" },
@@ -287,7 +287,7 @@
   {
     "day": "J2",
     "meals": {
-      "Petit-déjeuner": [
+      "Petit-Déjeuner": [
         { "name": "flocons d'avoine", "amount": 40, "unit": "g" },
         { "name": "lait demi-écrémé", "amount": 200, "unit": "ml" },
         { "name": "œuf", "amount": 1, "unit": "unité" },
@@ -306,7 +306,7 @@
   {
     "day": "J3",
     "meals": {
-      "Petit-déjeuner": [
+      "Petit-Déjeuner": [
         { "name": "Les pâtes", "amount": 100, "unit": "g" },
         { "name": "huile d'olive", "amount": 2, "unit": "c.c." },
         { "name": "thon", "amount": 80, "unit": "g" }
@@ -321,7 +321,7 @@
   {
     "day": "J4",
     "meals": {
-      "Petit-déjeuner": [
+      "Petit-Déjeuner": [
         { "name": "œuf", "amount": 2, "unit": "unité" },
         { "name": "champignons sautés", "amount": 100, "unit": "g" },
         { "name": "poivrons sautés", "amount": 100, "unit": "g" },
@@ -339,7 +339,7 @@
   {
     "day": "J5",
     "meals": {
-      "Petit-déjeuner": [
+      "Petit-Déjeuner": [
         { "name": "fromage blanc 0%", "amount": 200, "unit": "g" },
         { "name": "granola sans sucre ajouté", "amount": 50, "unit": "g" },
         { "name": "poire", "amount": 1, "unit": "unité" }
@@ -355,7 +355,7 @@
   {
     "day": "J6",
     "meals": {
-      "Petit-déjeuner": [
+      "Petit-Déjeuner": [
         { "name": "flocons d'avoine", "amount": 90, "unit": "g" },
         { "name": "œuf", "amount": 2, "unit": "unité" },
         { "name": "lait", "amount": 150, "unit": "g" }
@@ -371,7 +371,7 @@
   {
     "day": "J7",
     "meals": {
-      "Petit-déjeuner": [
+      "Petit-Déjeuner": [
         { "name": "pain complet", "amount": 65, "unit": "g" },
         { "name": "jambon de dinde", "amount": 50, "unit": "g" },
         { "name": "tomates cerises", "amount": 100, "unit": "g" },
@@ -391,7 +391,7 @@
   {
     "day": "J1",
     "meals": {
-      "Petit-déjeuner": [
+      "Petit-Déjeuner": [
         { "name": "flocons d'avoine", "amount": 80, "unit": "g" },
         { "name": "œuf", "amount": 2, "unit": "unité" },
         { "name": "avocat", "amount": 30, "unit": "g" },
@@ -408,7 +408,7 @@
   {
     "day": "J2",
     "meals": {
-      "Petit-déjeuner": [
+      "Petit-Déjeuner": [
         { "name": "flocons d'avoine", "amount": 60, "unit": "g" },
         { "name": "lait demi-écrémé", "amount": 200, "unit": "ml" },
         { "name": "œuf", "amount": 2, "unit": "unité" },
@@ -426,7 +426,7 @@
   {
     "day": "J3",
     "meals": {
-      "Petit-déjeuner": [
+      "Petit-Déjeuner": [
         { "name": "pâtes complètes (sèches)", "amount": 80, "unit": "g" },
         { "name": "pomme", "amount": 1, "unit": "unité" },
         { "name": "huile d'olive", "amount": 2, "unit": "c.c." },
@@ -443,7 +443,7 @@
   {
     "day": "J4",
     "meals": {
-      "Petit-déjeuner": [
+      "Petit-Déjeuner": [
         { "name": "œuf", "amount": 3, "unit": "unité" },
         { "name": "champignons sautés", "amount": 100, "unit": "g" },
         { "name": "poivrons sautés", "amount": 100, "unit": "g" },
@@ -461,7 +461,7 @@
   {
     "day": "J5",
     "meals": {
-      "Petit-déjeuner": [
+      "Petit-Déjeuner": [
         { "name": "fromage blanc 0 %", "amount": 200, "unit": "g" },
         { "name": "granola sans sucre", "amount": 50, "unit": "g" },
         { "name": "banane", "amount": 1, "unit": "unité" }
@@ -477,7 +477,7 @@
   {
     "day": "J6",
     "meals": {
-      "Petit-déjeuner": [
+      "Petit-Déjeuner": [
         { "name": "flocons d'avoine", "amount": 70, "unit": "g" },
         { "name": "œuf", "amount": 3, "unit": "unité" },
         { "name": "avocat", "amount": 25, "unit": "g" },
@@ -494,7 +494,7 @@
   {
     "day": "J7",
     "meals": {
-      "Petit-déjeuner": [
+      "Petit-Déjeuner": [
         { "name": "pain complet", "amount": 90, "unit": "g" },
         { "name": "jambon de dinde", "amount": 70, "unit": "g" },
         { "name": "tomates cerises", "amount": 100, "unit": "g" },
@@ -515,7 +515,7 @@
   {
     "day": "J1",
     "meals": {
-      "Petit-déjeuner": [
+      "Petit-Déjeuner": [
         { "name": "flocons d'avoine", "amount": 60, "unit": "g" },
         { "name": "œuf", "amount": 2, "unit": "unité" },
         { "name": "huile d'olive", "amount": 1, "unit": "c.c." }
@@ -537,7 +537,7 @@
   {
     "day": "J2",
     "meals": {
-      "Petit-déjeuner": [
+      "Petit-Déjeuner": [
         { "name": "flocons d'avoine", "amount": 50, "unit": "g" },
         { "name": "lait demi-écrémé", "amount": 200, "unit": "ml" },
         { "name": "œuf", "amount": 1, "unit": "unité" },
@@ -562,7 +562,7 @@
   {
     "day": "J3",
     "meals": {
-      "Petit-déjeuner": [
+      "Petit-Déjeuner": [
         { "name": "pâtes complètes (sèches)", "amount": 80, "unit": "g" },
         { "name": "pomme", "amount": 1, "unit": "unité" },
         { "name": "huile d'olive", "amount": 1, "unit": "c.c." },
@@ -584,7 +584,7 @@
   {
     "day": "J4",
     "meals": {
-      "Petit-déjeuner": [
+      "Petit-Déjeuner": [
         { "name": "œuf", "amount": 2, "unit": "unité" },
         { "name": "champignons sautés", "amount": 100, "unit": "g" },
         { "name": "poivrons sautés", "amount": 100, "unit": "g" },
@@ -607,7 +607,7 @@
   {
     "day": "J5",
     "meals": {
-      "Petit-déjeuner": [
+      "Petit-Déjeuner": [
         { "name": "fromage blanc 0%", "amount": 200, "unit": "g" },
         { "name": "granola sans sucre ajouté", "amount": 60, "unit": "g" },
         { "name": "Fruit", "amount": 1, "unit": "unité" }
@@ -629,7 +629,7 @@
   {
     "day": "J6",
     "meals": {
-      "Petit-déjeuner": [
+      "Petit-Déjeuner": [
         { "name": "flocons d'avoine", "amount": 60, "unit": "g" },
         { "name": "œuf", "amount": 2, "unit": "unité" },
         { "name": "avocat", "amount": 50, "unit": "g" },
@@ -652,7 +652,7 @@
   {
     "day": "J7",
     "meals": {
-      "Petit-déjeuner": [
+      "Petit-Déjeuner": [
         { "name": "pain complet", "amount": 80, "unit": "g" },
         { "name": "jambon de dinde", "amount": 70, "unit": "g" },
         { "name": "tomates cerises", "amount": 120, "unit": "g" },
@@ -679,7 +679,7 @@
     {
       "day": "J1",
       "meals": {
-        "Petit-déjeuner": [
+        "Petit-Déjeuner": [
           { "name": "flocons d'avoine", "amount": 40, "unit": "g" },
           { "name": "œuf", "amount": 2, "unit": "unité" },
           { "name": "banane", "amount": 1, "unit": "unité" },
@@ -702,7 +702,7 @@
     {
       "day": "J2",
       "meals": {
-        "Petit-déjeuner": [
+        "Petit-Déjeuner": [
           { "name": "pain complet", "amount": 100, "unit": "g" },
           { "name": "œuf", "amount": 2, "unit": "unité" },
           { "name": "banane", "amount": 1, "unit": "unité" },
@@ -728,7 +728,7 @@
     {
       "day": "J3",
       "meals": {
-        "Petit-déjeuner": [
+        "Petit-Déjeuner": [
           { "name": "pâtes cuites", "amount": 100, "unit": "g" },
           { "name": "pomme", "amount": 1, "unit": "unité" },
           { "name": "huile d'olive", "amount": 1, "unit": "c.c." },
@@ -750,7 +750,7 @@
     {
       "day": "J4",
       "meals": {
-        "Petit-déjeuner": [
+        "Petit-Déjeuner": [
           { "name": "œuf", "amount": 3, "unit": "unité" },
           { "name": "champignons sautés", "amount": 100, "unit": "g" },
           { "name": "poivrons sautés", "amount": 100, "unit": "g" },
@@ -773,7 +773,7 @@
     {
       "day": "J5",
       "meals": {
-        "Petit-déjeuner": [
+        "Petit-Déjeuner": [
           { "name": "fromage blanc 0%", "amount": 150, "unit": "g" },
           { "name": "granola sans sucre", "amount": 40, "unit": "g" },
           { "name": "Fruit", "amount": 1, "unit": "unité" }
@@ -795,7 +795,7 @@
     {
       "day": "J6",
       "meals": {
-        "Petit-déjeuner": [
+        "Petit-Déjeuner": [
           { "name": "flocons d'avoine", "amount": 60, "unit": "g" },
           { "name": "œuf", "amount": 3, "unit": "unité" },
           { "name": "avocat", "amount": 60, "unit": "g" },
@@ -818,7 +818,7 @@
     {
       "day": "J7",
       "meals": {
-        "Petit-déjeuner": [
+        "Petit-Déjeuner": [
           { "name": "pain complet", "amount": 80, "unit": "g" },
           { "name": "jambon de dinde", "amount": 60, "unit": "g" },
           { "name": "tomates cerises", "amount": 100, "unit": "g" },
@@ -842,7 +842,7 @@
     {
       "day": "J1",
       "meals": {
-        "Petit-déjeuner": [
+        "Petit-Déjeuner": [
           { "name": "flocons d'avoine", "amount": 90, "unit": "g" },
           { "name": "œuf", "amount": 2, "unit": "unité" },
           { "name": "banane", "amount": 1, "unit": "unité" }
@@ -864,7 +864,7 @@
     {
       "day": "J2",
       "meals": {
-        "Petit-déjeuner": [
+        "Petit-Déjeuner": [
           { "name": "flocons d'avoine", "amount": 50, "unit": "g" },
           { "name": "lait demi-écrémé", "amount": 200, "unit": "ml" },
           { "name": "œuf", "amount": 2, "unit": "unité" },
@@ -887,7 +887,7 @@
     {
       "day": "J3",
       "meals": {
-        "Petit-déjeuner": [
+        "Petit-Déjeuner": [
           { "name": "pâtes cuites", "amount": 140, "unit": "g" },
           { "name": "pomme", "amount": 1, "unit": "unité" },
           { "name": "huile d'olive", "amount": 2, "unit": "c.c." },
@@ -909,7 +909,7 @@
     {
       "day": "J4",
       "meals": {
-        "Petit-déjeuner": [
+        "Petit-Déjeuner": [
           { "name": "œuf", "amount": 2, "unit": "unité" },
           { "name": "champignons sautés", "amount": 80, "unit": "g" },
           { "name": "poivrons sautés", "amount": 80, "unit": "g" },
@@ -932,7 +932,7 @@
     {
       "day": "J5",
       "meals": {
-        "Petit-déjeuner": [
+        "Petit-Déjeuner": [
           { "name": "fromage blanc 0% MG", "amount": 150, "unit": "g" },
           { "name": "granola sans sucre ajouté", "amount": 60, "unit": "g" },
           { "name": "fruit", "amount": 1, "unit": "unité" }
@@ -954,7 +954,7 @@
     {
       "day": "J6",
       "meals": {
-        "Petit-déjeuner": [
+        "Petit-Déjeuner": [
           { "name": "flocons d'avoine", "amount": 70, "unit": "g" },
           { "name": "œuf", "amount": 2, "unit": "unité" },
           { "name": "avocat", "amount": 70, "unit": "g" },
@@ -976,7 +976,7 @@
     {
       "day": "J7",
       "meals": {
-        "Petit-déjeuner": [
+        "Petit-Déjeuner": [
           { "name": "pain complet", "amount": 80, "unit": "g" },
           { "name": "jambon de dinde", "amount": 60, "unit": "g" },
           { "name": "tomates cerises", "amount": 90, "unit": "g" },
@@ -1002,7 +1002,7 @@
     {
       "day": "J1",
       "meals": {
-        "Petit-déjeuner": [
+        "Petit-Déjeuner": [
           { "name": "flocons d'avoine", "amount": 70, "unit": "g" },
           { "name": "œuf", "amount": 3, "unit": "unité" },
           { "name": "banane", "amount": 1, "unit": "unité" },
@@ -1024,7 +1024,7 @@
     {
       "day": "J2",
       "meals": {
-        "Petit-déjeuner": [
+        "Petit-Déjeuner": [
           { "name": "flocons d'avoine", "amount": 80, "unit": "g" },
           { "name": "lait demi-écrémé", "amount": 100, "unit": "ml" },
           { "name": "œuf", "amount": 3, "unit": "unité" }
@@ -1046,7 +1046,7 @@
     {
       "day": "J3",
       "meals": {
-        "Petit-déjeuner": [
+        "Petit-Déjeuner": [
           { "name": "pâtes cuites", "amount": 150, "unit": "g" },
           { "name": "pomme", "amount": 100, "unit": "g" },
           { "name": "huile d'olive", "amount": 2, "unit": "c.c." },
@@ -1068,7 +1068,7 @@
     {
       "day": "J4",
       "meals": {
-        "Petit-déjeuner": [
+        "Petit-Déjeuner": [
           { "name": "œuf", "amount": 3, "unit": "unité" },
           { "name": "champignons", "amount": 100, "unit": "g" },
           { "name": "poivrons", "amount": 100, "unit": "g" },
@@ -1091,7 +1091,7 @@
     {
       "day": "J5",
       "meals": {
-        "Petit-déjeuner": [
+        "Petit-Déjeuner": [
           { "name": "fromage blanc 0%", "amount": 150, "unit": "g" },
           { "name": "granola sans sucre", "amount": 60, "unit": "g" },
           { "name": "fruit", "amount": 100, "unit": "g" },
@@ -1114,7 +1114,7 @@
     {
       "day": "J6",
       "meals": {
-        "Petit-déjeuner": [
+        "Petit-Déjeuner": [
           { "name": "flocons d'avoine", "amount": 60, "unit": "g" },
           { "name": "œuf", "amount": 3, "unit": "unité" },
           { "name": "lait demi-écrémé", "amount": 150, "unit": "ml" }
@@ -1136,7 +1136,7 @@
     {
       "day": "J7",
       "meals": {
-        "Petit-déjeuner": [
+        "Petit-Déjeuner": [
           { "name": "pain complet", "amount": 90, "unit": "g" },
           { "name": "jambon de dinde", "amount": 50, "unit": "g" },
           { "name": "œuf", "amount": 3, "unit": "unité" },
@@ -1163,7 +1163,7 @@
   {
     "day": "J1",
     "meals": {
-      "Petit-déjeuner": [
+      "Petit-Déjeuner": [
         { "name": "flocons d'avoine", "amount": 70, "unit": "g" },
         { "name": "œuf", "amount": 3, "unit": "unité" },
         { "name": "banane", "amount": 100, "unit": "g" }
@@ -1185,7 +1185,7 @@
   {
     "day": "J2",
     "meals": {
-      "Petit-déjeuner": [
+      "Petit-Déjeuner": [
         { "name": "flocons d'avoine", "amount": 70, "unit": "g" },
         { "name": "œuf", "amount": 3, "unit": "unité" },
         { "name": "banane", "amount": 1, "unit": "unité" },
@@ -1208,7 +1208,7 @@
   {
     "day": "J3",
     "meals": {
-      "Petit-déjeuner": [
+      "Petit-Déjeuner": [
         { "name": "pâtes cuites", "amount": 150, "unit": "g" },
         { "name": "pomme", "amount": 100, "unit": "g" },
         { "name": "huile d'olive", "amount": 2, "unit": "c.c." },
@@ -1230,7 +1230,7 @@
   {
     "day": "J4",
     "meals": {
-      "Petit-déjeuner": [
+      "Petit-Déjeuner": [
         { "name": "œuf", "amount": 2, "unit": "unité" },
         { "name": "champignons", "amount": 100, "unit": "g" },
         { "name": "poivrons", "amount": 100, "unit": "g" },
@@ -1253,7 +1253,7 @@
   {
     "day": "J5",
     "meals": {
-      "Petit-déjeuner": [
+      "Petit-Déjeuner": [
         { "name": "fromage blanc 0%", "amount": 150, "unit": "g" },
         { "name": "granola sans sucre", "amount": 30, "unit": "g" },
         { "name": "fruit", "amount": 100, "unit": "g" },
@@ -1276,7 +1276,7 @@
   {
     "day": "J6",
     "meals": {
-      "Petit-déjeuner": [
+      "Petit-Déjeuner": [
         { "name": "flocons d'avoine", "amount": 90, "unit": "g" },
         { "name": "œuf", "amount": 3, "unit": "unité" },
         { "name": "lait demi-écrémé", "amount": 150, "unit": "ml" }
@@ -1298,7 +1298,7 @@
   {
     "day": "J7",
     "meals": {
-      "Petit-déjeuner": [
+      "Petit-Déjeuner": [
         { "name": "pain complet", "amount": 90, "unit": "g" },
         { "name": "jambon de dinde", "amount": 50, "unit": "g" },
         { "name": "œuf", "amount": 3, "unit": "unité" },
@@ -1326,7 +1326,7 @@
   {
     "day": "J1",
     "meals": {
-      "Petit-déjeuner": [
+      "Petit-Déjeuner": [
         { "name": "flocons d'avoine", "amount": 70, "unit": "g" },
         { "name": "œuf", "amount": 3, "unit": "unité" },
         { "name": "banane", "amount": 100, "unit": "g" },
@@ -1349,7 +1349,7 @@
   {
     "day": "J2",
     "meals": {
-      "Petit-déjeuner": [
+      "Petit-Déjeuner": [
         { "name": "flocons d'avoine", "amount": 70, "unit": "g" },
         { "name": "œuf", "amount": 3, "unit": "unité" },
         { "name": "banane", "amount": 1, "unit": "unité" },
@@ -1372,7 +1372,7 @@
   {
     "day": "J3",
     "meals": {
-      "Petit-déjeuner": [
+      "Petit-Déjeuner": [
         { "name": "pâtes cuites", "amount": 150, "unit": "g" },
         { "name": "pomme", "amount": 100, "unit": "g" },
         { "name": "huile d'olive", "amount": 1, "unit": "c.c." },
@@ -1395,7 +1395,7 @@
   {
     "day": "J4",
     "meals": {
-      "Petit-déjeuner": [
+      "Petit-Déjeuner": [
         { "name": "œuf", "amount": 2, "unit": "unité" },
         { "name": "champignons", "amount": 100, "unit": "g" },
         { "name": "poivrons", "amount": 100, "unit": "g" },
@@ -1418,7 +1418,7 @@
   {
     "day": "J5",
     "meals": {
-      "Petit-déjeuner": [
+      "Petit-Déjeuner": [
         { "name": "fromage blanc 0%", "amount": 150, "unit": "g" },
         { "name": "granola sans sucre", "amount": 50, "unit": "g" },
         { "name": "fruit", "amount": 100, "unit": "g" },
@@ -1441,7 +1441,7 @@
   {
     "day": "J6",
     "meals": {
-      "Petit-déjeuner": [
+      "Petit-Déjeuner": [
         { "name": "flocons d'avoine", "amount": 90, "unit": "g" },
         { "name": "œuf", "amount": 3, "unit": "unité" },
         { "name": "lait demi-écrémé", "amount": 150, "unit": "ml" },
@@ -1464,7 +1464,7 @@
   {
     "day": "J7",
     "meals": {
-      "Petit-déjeuner": [
+      "Petit-Déjeuner": [
         { "name": "pain complet", "amount": 90, "unit": "g" },
         { "name": "jambon de dinde", "amount": 50, "unit": "g" },
         { "name": "œuf", "amount": 3, "unit": "unité" },
@@ -1492,7 +1492,7 @@
     {
       "day": "J1",
       "meals": {
-        "Petit-déjeuner": [
+        "Petit-Déjeuner": [
           { "name": "flocons d'avoine",   "amount": 80,  "unit": "g" },
           { "name": "œuf",                "amount": 3,   "unit": "unité" },
           { "name": "banane",             "amount": 150, "unit": "g" },
@@ -1515,7 +1515,7 @@
     {
       "day": "J2",
         "meals": {
-        "Petit-déjeuner": [
+        "Petit-Déjeuner": [
           { "name": "flocons d'avoine",   "amount": 80,  "unit": "g" },
           { "name": "œuf",                "amount": 3,   "unit": "unité" },
           { "name": "banane",             "amount": 1, "unit": "unité" },
@@ -1538,7 +1538,7 @@
     {
       "day": "J3",
       "meals": {
-       "Petit-déjeuner": [
+       "Petit-Déjeuner": [
         { "name": "pâtes cuites",       "amount": 150, "unit": "g" },
         { "name": "huile d'olive",      "amount": 1,   "unit": "c.c." },
         { "name": "thon en conserve",   "amount": 90, "unit": "g" },
@@ -1560,7 +1560,7 @@
     {
       "day": "J4",
       "meals": {
-        "Petit-déjeuner": [
+        "Petit-Déjeuner": [
           { "name": "œuf",                  "amount": 3,   "unit": "unité" },
           { "name": "champignons sautés",   "amount": 100, "unit": "g" },
           { "name": "poivrons",             "amount": 100, "unit": "g" },
@@ -1583,7 +1583,7 @@
     {
       "day": "J5",
       "meals": {
-       "Petit-déjeuner": [
+       "Petit-Déjeuner": [
         { "name": "fromage blanc 0%",    "amount": 180, "unit": "g" },
         { "name": "granola sans sucre",  "amount": 40,  "unit": "g" },
         { "name": "fruit",               "amount": 100, "unit": "g" },
@@ -1606,7 +1606,7 @@
     {
       "day": "J6",
       "meals": {
-        "Petit-déjeuner": [
+        "Petit-Déjeuner": [
         { "name": "flocons d'avoine",    "amount": 100,  "unit": "g" },
         { "name": "œuf",                 "amount": 4,   "unit": "unité" },
         { "name": "lait demi-écrémé",    "amount": 150, "unit": "ml" }
@@ -1628,7 +1628,7 @@
     {
       "day": "J7",
       "meals": {
-       "Petit-déjeuner": [
+       "Petit-Déjeuner": [
         { "name": "pain complet",        "amount": 100, "unit": "g" },
         { "name": "jambon de dinde",     "amount": 56,  "unit": "g" },
         { "name": "œuf",                 "amount": 4,   "unit": "unité" },
@@ -1654,7 +1654,7 @@
     {
       "day": "J1",
       "meals": {
-        "Petit-déjeuner": [
+        "Petit-Déjeuner": [
           { "name": "flocons d'avoine",       "amount": 70,   "unit": "g" },
           { "name": "œuf",                    "amount": 3,  "unit": "unité" },
           { "name": "banane",                 "amount": 1,    "unit": "unité" },
@@ -1681,7 +1681,7 @@
     {
       "day": "J2",
       "meals": {
-        "Petit-déjeuner": [
+        "Petit-Déjeuner": [
           { "name": "flocons d'avoine",   "amount": 80,  "unit": "g" },
           { "name": "lait demi-écrémé",   "amount": 150, "unit": "ml" },
           { "name": "œuf",                "amount": 3,   "unit": "unité" },
@@ -1706,7 +1706,7 @@
     {
       "day": "J3",
       "meals": {
-        "Petit-déjeuner": [
+        "Petit-Déjeuner": [
           { "name": "pâtes (cuites)",              "amount": 200, "unit": "g" },
           { "name": "pomme",                       "amount": 1,   "unit": "unité" },
           { "name": "huile d'olive",               "amount": 2,   "unit": "c.c." },
@@ -1734,13 +1734,13 @@
       "day": "J4",
       "meals": {
        
-         "petit-déjeuner": [
+         "Petit-Déjeuner": [
       { "name": "œuf",                   "amount": 3,   "unit": "unité" },
       { "name": "champignons sautés",    "amount": 100, "unit": "g" },
       { "name": "poivrons sautés",       "amount": 100, "unit": "g" },
       { "name": "pain complet",          "amount": 90,  "unit": "g" }
     ],
-    "déjeuner": [
+    "Déjeuner": [
       { "name": "viande hachée (maigre)", "amount": 180, "unit": "g" },
       { "name": "quinoa cuit",            "amount": 160, "unit": "g" },
       { "name": "courgettes + poivrons",  "amount": 150, "unit": "g" },
@@ -1750,7 +1750,7 @@
       { "name": "Yaourt nature",      "amount": 150,  "unit": "g" },
           { "name": "fruit secs",             "amount": 50,   "unit": "g" }
     ],
-    "dîner": [
+    "Dîner": [
       { "name": "filet de poulet grillé", "amount": 150, "unit": "g" },
       { "name": "riz complet",            "amount": 150, "unit": "g" },
       { "name": "haricots verts vapeur",  "amount": 150, "unit": "g" },
@@ -1761,12 +1761,12 @@
     {
       "day": "J5",
   "meals": {
-    "petit-déjeuner": [
+    "Petit-Déjeuner": [
       { "name": "fromage blanc 0 %",       "amount": 150, "unit": "g" },
       { "name": "granola sans sucre ajouté","amount": 80,  "unit": "g" },
       { "name": "fruit ",                   "amount": 1,   "unit": "unité" }
     ],
-    "déjeuner": [
+    "Déjeuner": [
       { "name": "viande hachée (maigre)",  "amount": 170, "unit": "g" },
       { "name": "quinoa cuit",             "amount": 160, "unit": "g" },
       { "name": "courgettes + poivrons",   "amount": 150, "unit": "g" },
@@ -1776,7 +1776,7 @@
       { "name": "jus",                     "amount": 200, "unit": "ml" },
       { "name": "fruits secs",             "amount": 50,  "unit": "g" }
     ],
-    "dîner": [
+    "Dîner": [
       { "name": "saumon grillé",           "amount": 150, "unit": "g" },
       { "name": "pomme de terre",          "amount": 150, "unit": "g" },
       { "name": "courgettes grillées",     "amount": 150, "unit": "g" },
@@ -1787,7 +1787,7 @@
     {
       "day": "J6",
       "meals": {
-        "Petit-déjeuner": [
+        "Petit-Déjeuner": [
           { "name": "flocons d'avoine",    "amount": 80,  "unit": "g" },
           { "name": "œuf",                 "amount": 3,   "unit": "unité" },
           { "name": "avocat",              "amount": 60,  "unit": "g" },
@@ -1814,7 +1814,7 @@
     {
       "day": "J7",
       "meals": {
-        "Petit-déjeuner": [
+        "Petit-Déjeuner": [
         { "name": "pain complet",        "amount": 80, "unit": "g" },
         { "name": "jambon de dinde",     "amount": 56,  "unit": "g" },
         { "name": "œuf",                 "amount": 4,   "unit": "unité" },
@@ -1844,7 +1844,7 @@
     {
       "day": "J1",
     "meals": {
-      "Petit-déjeuner": [
+      "Petit-Déjeuner": [
         { "name": "flocons d'avoine", "amount": 80,"unit": "g" },
         { "name": "œuf",                "amount": 3,   "unit": "unité" },
         { "name": "banane",             "amount": 1,   "unit": "unité" },
@@ -1871,7 +1871,7 @@
   {
     "day": "J2",
     "meals": {
-      "Petit-déjeuner": [
+      "Petit-Déjeuner": [
         { "name": "flocons d'avoine", "amount": 85,  "unit": "g" },
         { "name": "lait demi-écrémé", "amount": 100, "unit": "ml" },
         { "name": "œuf",               "amount": 3,   "unit": "unité" },
@@ -1901,7 +1901,7 @@
   {
     "day": "J3",
     "meals": {
-      "Petit-déjeuner": [
+      "Petit-Déjeuner": [
         { "name": "pâtes cuit ",              "amount": 300, "unit": "g" },
         { "name": "pomme",                       "amount": 1,   "unit": "unité" },
         { "name": "huile d'olive",               "amount": 1,   "unit": "c.c." },
@@ -1929,13 +1929,13 @@
   {
     "day": "J4",
     "meals": {
-      "petit-déjeuner": [
+      "Petit-Déjeuner": [
         { "name": "œuf",                    "amount": 4,   "unit": "unité" },
         { "name": "champignons sautés",     "amount": 100, "unit": "g" },
         { "name": "poivrons sautés",        "amount": 100, "unit": "g" },
         { "name": "pain complet",           "amount": 95,  "unit": "g" }
       ],
-      "déjeuner": [
+      "Déjeuner": [
         { "name": "viande hachée (maigre)", "amount": 190, "unit": "g" },
         { "name": "quinoa cuit",            "amount": 170, "unit": "g" },
         { "name": "courgettes + poivrons",  "amount": 160, "unit": "g" },
@@ -1945,7 +1945,7 @@
         { "name": "yaourt nature",          "amount": 160, "unit": "g" },
         { "name": "fruits secs",            "amount": 55,  "unit": "g" }
       ],
-      "dîner": [
+      "Dîner": [
         { "name": "filet de poulet grillé", "amount": 160, "unit": "g" },
         { "name": "riz complet",            "amount": 180, "unit": "g" },
         { "name": "haricots verts vapeur",  "amount": 160, "unit": "g" },
@@ -1956,12 +1956,12 @@
   {
     "day": "J5",
     "meals": {
-      "petit-déjeuner": [
+      "Petit-Déjeuner": [
         { "name": "fromage blanc 0 %",        "amount": 160, "unit": "g" },
         { "name": "granola sans sucre ajouté","amount": 60,  "unit": "g" },
         { "name": "fruit",                    "amount": 1,   "unit": "unité" }
       ],
-      "déjeuner": [
+      "Déjeuner": [
         { "name": "viande hachée (maigre)",   "amount": 180, "unit": "g" },
         { "name": "quinoa cuit",              "amount": 170, "unit": "g" },
         { "name": "courgettes + poivrons",    "amount": 160, "unit": "g" },
@@ -1971,7 +1971,7 @@
         { "name": "jus",                      "amount": 200, "unit": "ml" },
         { "name": "fruits secs",              "amount": 55,  "unit": "g" }
       ],
-      "dîner": [
+      "Dîner": [
         { "name": "saumon grillé",            "amount": 160, "unit": "g" },
         { "name": "pomme de terre",           "amount": 200, "unit": "g" },
         { "name": "courgettes grillées",      "amount": 160, "unit": "g" },
@@ -1982,7 +1982,7 @@
   {
     "day": "J6",
     "meals": {
-      "Petit-déjeuner": [
+      "Petit-Déjeuner": [
         { "name": "flocons d'avoine",     "amount": 85,  "unit": "g" },
         { "name": "œuf",                  "amount": 3,   "unit": "unité" },
         { "name": "avocat",               "amount": 65,  "unit": "g" },
@@ -2009,7 +2009,7 @@
   {
     "day": "J7",
     "meals": {
-      "Petit-déjeuner": [
+      "Petit-Déjeuner": [
         { "name": "pain complet",         "amount": 80,  "unit": "g" },
         { "name": "jambon de dinde",      "amount": 60,  "unit": "g" },
         { "name": "œuf",                  "amount": 4,   "unit": "unité" },
@@ -2040,7 +2040,7 @@
     {
       "day": "J1",
       "meals": {
-        "Petit-déjeuner": [
+        "Petit-Déjeuner": [
         { "name": "flocons d'avoine", "amount": 80,"unit": "g" },
         { "name": "œuf",                "amount": 3,   "unit": "unité" },
         { "name": "banane",             "amount": 1,   "unit": "unité" },
@@ -2067,7 +2067,7 @@
   {
     "day": "J2",
     "meals": {
-      "Petit-déjeuner": [
+      "Petit-Déjeuner": [
         { "name": "flocons d'avoine", "amount": 85,  "unit": "g" },
         { "name": "lait demi-écrémé", "amount": 160, "unit": "ml" },
         { "name": "œuf",               "amount": 3,   "unit": "unité" },
@@ -2097,7 +2097,7 @@
   {
     "day": "J3",
     "meals": {
-      "Petit-déjeuner": [
+      "Petit-Déjeuner": [
         { "name": "pâtes cuit ",              "amount": 300, "unit": "g" },
         { "name": "pomme",                       "amount": 1,   "unit": "unité" },
         { "name": "huile d'olive",               "amount": 1,   "unit": "c.c." },
@@ -2125,13 +2125,13 @@
   {
     "day": "J4",
     "meals": {
-      "petit-déjeuner": [
+      "Petit-Déjeuner": [
         { "name": "œuf",                    "amount": 4,   "unit": "unité" },
         { "name": "champignons sautés",     "amount": 100, "unit": "g" },
         { "name": "poivrons sautés",        "amount": 100, "unit": "g" },
         { "name": "pain complet",           "amount": 120,  "unit": "g" }
       ],
-      "déjeuner": [
+      "Déjeuner": [
         { "name": "viande hachée (maigre)", "amount": 190, "unit": "g" },
         { "name": "quinoa cuit",            "amount": 140, "unit": "g" },
         { "name": "courgettes + poivrons",  "amount": 160, "unit": "g" },
@@ -2141,7 +2141,7 @@
         { "name": "yaourt nature",          "amount": 160, "unit": "g" },
         { "name": "fruits secs",            "amount": 55,  "unit": "g" }
       ],
-      "dîner": [
+      "Dîner": [
         { "name": "filet de poulet grillé", "amount": 160, "unit": "g" },
         { "name": "riz complet",            "amount": 180, "unit": "g" },
         { "name": "haricots verts vapeur",  "amount": 160, "unit": "g" },
@@ -2152,12 +2152,12 @@
   {
     "day": "J5",
     "meals": {
-      "petit-déjeuner": [
+      "Petit-Déjeuner": [
         { "name": "fromage blanc 0 %",        "amount": 160, "unit": "g" },
         { "name": "granola sans sucre ajouté","amount": 60,  "unit": "g" },
         { "name": "fruit",                    "amount": 1,   "unit": "unité" }
       ],
-      "déjeuner": [
+      "Déjeuner": [
         { "name": "viande hachée (maigre)",   "amount": 180, "unit": "g" },
         { "name": "quinoa cuit",              "amount": 170, "unit": "g" },
         { "name": "courgettes + poivrons",    "amount": 160, "unit": "g" },
@@ -2167,7 +2167,7 @@
         { "name": "jus",                      "amount": 200, "unit": "ml" },
         { "name": "fruits secs",              "amount": 55,  "unit": "g" }
       ],
-      "dîner": [
+      "Dîner": [
         { "name": "saumon grillé",            "amount": 160, "unit": "g" },
         { "name": "pomme de terre",           "amount": 220, "unit": "g" },
         { "name": "courgettes grillées",      "amount": 160, "unit": "g" },
@@ -2179,7 +2179,7 @@
   {
     "day": "J6",
     "meals": {
-      "Petit-déjeuner": [
+      "Petit-Déjeuner": [
         { "name": "flocons d'avoine",     "amount": 90,  "unit": "g" },
         { "name": "œuf",                  "amount": 3,   "unit": "unité" },
         { "name": "avocat",               "amount": 65,  "unit": "g" },
@@ -2206,7 +2206,7 @@
   {
     "day": "J7",
     "meals": {
-      "Petit-déjeuner": [
+      "Petit-Déjeuner": [
         { "name": "pain complet",         "amount": 90,  "unit": "g" },
         { "name": "jambon de dinde",      "amount": 60,  "unit": "g" },
         { "name": "œuf",                  "amount": 4,   "unit": "unité" },
@@ -2236,7 +2236,7 @@
     {
      "day": "J1",
       "meals": {
-        "Petit-déjeuner": [
+        "Petit-Déjeuner": [
         { "name": "flocons d'avoine", "amount": 80,"unit": "g" },
         { "name": "œuf",                "amount": 4,   "unit": "unité" },
         { "name": "banane",             "amount": 1,   "unit": "unité" },
@@ -2263,7 +2263,7 @@
   {
     "day": "J2",
     "meals": {
-      "Petit-déjeuner": [
+      "Petit-Déjeuner": [
         { "name": "flocons d'avoine", "amount": 100,  "unit": "g" },
         { "name": "lait demi-écrémé", "amount": 160, "unit": "ml" },
         { "name": "œuf",               "amount": 3,   "unit": "unité" },
@@ -2292,7 +2292,7 @@
   {
     "day": "J3",
     "meals": {
-      "Petit-déjeuner": [
+      "Petit-Déjeuner": [
         { "name": "pâtes cuit ",              "amount": 300, "unit": "g" },
         { "name": "pomme",                       "amount": 1,   "unit": "unité" },
         { "name": "huile d'olive",               "amount": 1,   "unit": "c.c." },
@@ -2320,13 +2320,13 @@
   {
     "day": "J4",
     "meals": {
-      "petit-déjeuner": [
+      "Petit-Déjeuner": [
         { "name": "œuf",                    "amount": 4,   "unit": "unité" },
         { "name": "champignons sautés",     "amount": 100, "unit": "g" },
         { "name": "poivrons sautés",        "amount": 100, "unit": "g" },
         { "name": "pain complet",           "amount": 120,  "unit": "g" }
       ],
-      "déjeuner": [
+      "Déjeuner": [
         { "name": "viande hachée (maigre)", "amount": 190, "unit": "g" },
         { "name": "quinoa cuit",            "amount": 140, "unit": "g" },
         { "name": "courgettes + poivrons",  "amount": 160, "unit": "g" },
@@ -2336,7 +2336,7 @@
         { "name": "yaourt nature",          "amount": 160, "unit": "g" },
         { "name": "fruits secs",            "amount": 30,  "unit": "g" }
       ],
-      "dîner": [
+      "Dîner": [
         { "name": "filet de poulet grillé", "amount": 160, "unit": "g" },
         { "name": "riz complet cuit",            "amount": 200, "unit": "g" },
         { "name": "haricots verts vapeur",  "amount": 160, "unit": "g" },
@@ -2347,12 +2347,12 @@
   {
     "day": "J5",
     "meals": {
-      "petit-déjeuner": [
+      "Petit-Déjeuner": [
         { "name": "fromage blanc 0 %",        "amount": 160, "unit": "g" },
         { "name": "granola sans sucre ajouté","amount": 60,  "unit": "g" },
         { "name": "fruit",                    "amount": 2,   "unit": "unité" }
       ],
-      "déjeuner": [
+      "Déjeuner": [
         { "name": "viande hachée (maigre)",   "amount": 180, "unit": "g" },
         { "name": "riz cuit",              "amount": 250, "unit": "g" },
         { "name": "courgettes + poivrons",    "amount": 160, "unit": "g" },
@@ -2362,7 +2362,7 @@
         { "name": "jus",                      "amount": 200, "unit": "ml" },
         { "name": "fruits secs",              "amount": 55,  "unit": "g" }
       ],
-      "dîner": [
+      "Dîner": [
         { "name": "saumon grillé",            "amount": 160, "unit": "g" },
         { "name": "pomme de terre",           "amount": 220, "unit": "g" },
         { "name": "courgettes grillées",      "amount": 160, "unit": "g" },
@@ -2374,7 +2374,7 @@
   {
     "day": "J6",
     "meals": {
-      "Petit-déjeuner": [
+      "Petit-Déjeuner": [
         { "name": "flocons d'avoine",     "amount": 90,  "unit": "g" },
         { "name": "œuf",                  "amount": 3,   "unit": "unité" },
         { "name": "avocat",               "amount": 65,  "unit": "g" },
@@ -2401,7 +2401,7 @@
   {
     "day": "J7",
     "meals": {
-      "Petit-déjeuner": [
+      "Petit-Déjeuner": [
         { "name": "pain complet",         "amount": 90,  "unit": "g" },
         { "name": "jambon de dinde",      "amount": 60,  "unit": "g" },
         { "name": "œuf",                  "amount": 4,   "unit": "unité" },
@@ -2431,7 +2431,7 @@
     {
       "day": "J1",
       "meals": {
-        "Petit-déjeuner": [
+        "Petit-Déjeuner": [
         { "name": "flocons d'avoine", "amount": 100,"unit": "g" },
         { "name": "œuf",                "amount": 4,   "unit": "unité" },
         { "name": "huile d'olive",      "amount": 1, "unit": "c.c." }
@@ -2457,7 +2457,7 @@
   {
     "day": "J2",
     "meals": {
-      "Petit-déjeuner": [
+      "Petit-Déjeuner": [
         { "name": "flocons d'avoine", "amount": 100,  "unit": "g" },
         { "name": "lait demi-écrémé", "amount": 160, "unit": "ml" },
         { "name": "œuf",               "amount": 3,   "unit": "unité" },
@@ -2486,7 +2486,7 @@
   {
     "day": "J3",
     "meals": {
-      "Petit-déjeuner": [
+      "Petit-Déjeuner": [
         { "name": "pâtes cuit ",              "amount": 300, "unit": "g" },
         { "name": "pomme",                       "amount": 1,   "unit": "unité" },
         { "name": "huile d'olive",               "amount": 1,   "unit": "c.c." },
@@ -2514,13 +2514,13 @@
   {
     "day": "J4",
     "meals": {
-      "petit-déjeuner": [
+      "Petit-Déjeuner": [
         { "name": "œuf",                    "amount": 4,   "unit": "unité" },
         { "name": "champignons sautés",     "amount": 100, "unit": "g" },
         { "name": "poivrons sautés",        "amount": 100, "unit": "g" },
         { "name": "pain complet",           "amount": 120,  "unit": "g" }
       ],
-      "déjeuner": [
+      "Déjeuner": [
         { "name": "viande hachée (maigre)", "amount": 190, "unit": "g" },
         { "name": "quinoa cuit",            "amount": 140, "unit": "g" },
         { "name": "courgettes + poivrons",  "amount": 160, "unit": "g" },
@@ -2530,7 +2530,7 @@
         { "name": "yaourt nature",          "amount": 160, "unit": "g" },
         { "name": "fruits secs",            "amount": 30,  "unit": "g" }
       ],
-      "dîner": [
+      "Dîner": [
         { "name": "filet de poulet grillé", "amount": 160, "unit": "g" },
         { "name": "riz complet cuit",            "amount": 200, "unit": "g" },
         { "name": "haricots verts vapeur",  "amount": 160, "unit": "g" },
@@ -2541,12 +2541,12 @@
   {
     "day": "J5",
     "meals": {
-      "petit-déjeuner": [
+      "Petit-Déjeuner": [
         { "name": "fromage blanc 0 %",        "amount": 160, "unit": "g" },
         { "name": "granola sans sucre ajouté","amount": 60,  "unit": "g" },
         { "name": "fruit rouge",                    "amount": 60,   "unit": "g" }
       ],
-      "déjeuner": [
+      "Déjeuner": [
         { "name": "viande hachée (maigre)",   "amount": 200, "unit": "g" },
         { "name": "riz cuit",              "amount": 250, "unit": "g" },
         { "name": "courgettes + poivrons",    "amount": 160, "unit": "g" },
@@ -2556,7 +2556,7 @@
         { "name": "jus",                      "amount": 200, "unit": "ml" },
         { "name": "fruits secs",              "amount": 60,  "unit": "g" }
       ],
-      "dîner": [
+      "Dîner": [
         { "name": "saumon grillé",            "amount": 160, "unit": "g" },
         { "name": "pomme de terre",           "amount": 220, "unit": "g" },
         { "name": "courgettes grillées",      "amount": 160, "unit": "g" },
@@ -2568,7 +2568,7 @@
   {
     "day": "J6",
     "meals": {
-      "Petit-déjeuner": [
+      "Petit-Déjeuner": [
         { "name": "flocons d'avoine",     "amount": 90,  "unit": "g" },
         { "name": "œuf",                  "amount": 3,   "unit": "unité" },
         { "name": "avocat",               "amount": 65,  "unit": "g" },
@@ -2595,7 +2595,7 @@
   {
     "day": "J7",
     "meals": {
-      "Petit-déjeuner": [
+      "Petit-Déjeuner": [
         { "name": "pain complet",         "amount": 130,  "unit": "g" },
         { "name": "jambon de dinde",      "amount": 60,  "unit": "g" },
         { "name": "œuf",                  "amount": 4,   "unit": "unité" },
@@ -2625,7 +2625,7 @@
     {
       "day": "J1",
       "meals": {
-        "Petit-déjeuner": [
+        "Petit-Déjeuner": [
         { "name": "flocons d'avoine", "amount": 100,"unit": "g" },
         { "name": "œuf",                "amount": 4,   "unit": "unité" },
         { "name": "huile d'olive",      "amount": 1, "unit": "c.c." }
@@ -2651,7 +2651,7 @@
   {
     "day": "J2",
     "meals": {
-      "Petit-déjeuner": [
+      "Petit-Déjeuner": [
         { "name": "flocons d'avoine", "amount": 100,  "unit": "g" },
         { "name": "lait demi-écrémé", "amount": 160, "unit": "ml" },
         { "name": "œuf",               "amount": 3,   "unit": "unité" },
@@ -2680,7 +2680,7 @@
   {
     "day": "J3",
     "meals": {
-      "Petit-déjeuner": [
+      "Petit-Déjeuner": [
         { "name": "pâtes cuit ",              "amount": 300, "unit": "g" },
         { "name": "pomme",                       "amount": 1,   "unit": "unité" },
         { "name": "huile d'olive",               "amount": 2,   "unit": "c.c." },
@@ -2708,13 +2708,13 @@
   {
     "day": "J4",
     "meals": {
-      "petit-déjeuner": [
+      "Petit-Déjeuner": [
         { "name": "œuf",                    "amount": 4,   "unit": "unité" },
         { "name": "champignons sautés",     "amount": 100, "unit": "g" },
         { "name": "poivrons sautés",        "amount": 100, "unit": "g" },
         { "name": "pain complet",           "amount": 120,  "unit": "g" }
       ],
-      "déjeuner": [
+      "Déjeuner": [
         { "name": "viande hachée (maigre)", "amount": 200, "unit": "g" },
         { "name": "quinoa cuit",            "amount": 120, "unit": "g" },
         { "name": "riz complet cuit",       "amount": 120, "unit": "g" },
@@ -2725,7 +2725,7 @@
         { "name": "yaourt nature",          "amount": 160, "unit": "g" },
         { "name": "fruits secs",            "amount": 55,  "unit": "g" }
       ],
-      "dîner": [
+      "Dîner": [
         { "name": "filet de poulet grillé", "amount": 200, "unit": "g" },
         { "name": "riz complet cuit",            "amount": 200, "unit": "g" },
         { "name": "haricots verts vapeur",  "amount": 160, "unit": "g" },
@@ -2736,12 +2736,12 @@
   {
     "day": "J5",
     "meals": {
-      "petit-déjeuner": [
+      "Petit-Déjeuner": [
         { "name": "fromage blanc 0 %",        "amount": 160, "unit": "g" },
         { "name": "granola sans sucre ajouté","amount": 60,  "unit": "g" },
         { "name": "fruit rouge",                    "amount": 60,   "unit": "g" }
       ],
-      "déjeuner": [
+      "Déjeuner": [
         { "name": "viande hachée (maigre)",   "amount": 200, "unit": "g" },
         { "name": "riz cuit",              "amount": 200, "unit": "g" },
         { "name": "pomme de terre",           "amount": 150, "unit": "g" },
@@ -2752,7 +2752,7 @@
         { "name": "jus",                      "amount": 200, "unit": "ml" },
         { "name": "fruits secs",              "amount": 60,  "unit": "g" }
       ],
-      "dîner": [
+      "Dîner": [
         { "name": "saumon grillé",            "amount": 160, "unit": "g" },
         { "name": "pomme de terre",           "amount": 220, "unit": "g" },
         { "name": "courgettes grillées",      "amount": 160, "unit": "g" },
@@ -2764,7 +2764,7 @@
   {
     "day": "J6",
     "meals": {
-      "Petit-déjeuner": [
+      "Petit-Déjeuner": [
         { "name": "flocons d'avoine",     "amount": 90,  "unit": "g" },
         { "name": "œuf",                  "amount": 3,   "unit": "unité" },
         { "name": "avocat",               "amount": 65,  "unit": "g" },
@@ -2791,7 +2791,7 @@
   {
     "day": "J7",
     "meals": {
-      "Petit-déjeuner": [
+      "Petit-Déjeuner": [
         { "name": "pain complet",         "amount": 130,  "unit": "g" },
         { "name": "jambon de dinde",      "amount": 60,  "unit": "g" },
         { "name": "œuf",                  "amount": 4,   "unit": "unité" },
@@ -2821,7 +2821,7 @@
     {
       "day": "J1",
       "meals": {
-        "Petit-déjeuner": [
+        "Petit-Déjeuner": [
         { "name": "flocons d'avoine", "amount": 100,"unit": "g" },
         { "name": "œuf",                "amount": 4,    "unit": "unité" },
         { "name": "banane",             "amount": 1, "unit": "unité" },
@@ -2848,7 +2848,7 @@
   {
     "day": "J2",
     "meals": {
-      "Petit-déjeuner": [
+      "Petit-Déjeuner": [
         { "name": "flocons d'avoine", "amount": 100,  "unit": "g" },
         { "name": "lait demi-écrémé", "amount": 160, "unit": "ml" },
         { "name": "œuf",               "amount": 3,   "unit": "unité" },
@@ -2877,7 +2877,7 @@
   {
     "day": "J3",
     "meals": {
-      "Petit-déjeuner": [
+      "Petit-Déjeuner": [
         { "name": "pâtes cuit ",              "amount": 300, "unit": "g" },
         { "name": "pomme",                       "amount": 1,   "unit": "unité" },
         { "name": "huile d'olive",               "amount": 2,   "unit": "c.c." },
@@ -2905,13 +2905,13 @@
   {
     "day": "J4",
     "meals": {
-      "petit-déjeuner": [
+      "Petit-Déjeuner": [
         { "name": "œuf",                    "amount": 4,   "unit": "unité" },
         { "name": "champignons sautés",     "amount": 100, "unit": "g" },
         { "name": "poivrons sautés",        "amount": 100, "unit": "g" },
         { "name": "pain complet",           "amount": 120,  "unit": "g" }
       ],
-      "déjeuner": [
+      "Déjeuner": [
         { "name": "viande hachée (maigre)", "amount": 190, "unit": "g" },
         { "name": "quinoa cuit",            "amount": 140, "unit": "g" },
         { "name": "courgettes + poivrons",  "amount": 160, "unit": "g" },
@@ -2921,7 +2921,7 @@
         { "name": "yaourt nature",          "amount": 160, "unit": "g" },
         { "name": "fruits secs",            "amount": 55,  "unit": "g" }
       ],
-      "dîner": [
+      "Dîner": [
         { "name": "filet de poulet grillé", "amount": 160, "unit": "g" },
         { "name": "riz complet cuit",            "amount": 300, "unit": "g" },
         { "name": "haricots verts vapeur",  "amount": 160, "unit": "g" },
@@ -2932,13 +2932,13 @@
   {
     "day": "J5",
     "meals": {
-      "petit-déjeuner": [
+      "Petit-Déjeuner": [
         { "name": "fromage blanc 0 %",        "amount": 160, "unit": "g" },
         { "name": "granola sans sucre ajouté","amount": 60,  "unit": "g" },
         { "name": "fruit rouge",                    "amount": 60,   "unit": "g" },
         { "name": "Beurre de cacahuète ",                    "amount": 30,   "unit": "g" }
       ],
-      "déjeuner": [
+      "Déjeuner": [
         { "name": "viande hachée (maigre)",   "amount": 200, "unit": "g" },
         { "name": "riz cuit",              "amount": 200, "unit": "g" },
         { "name": "pomme de terre",           "amount": 100, "unit": "g" },
@@ -2949,7 +2949,7 @@
         { "name": "jus",                      "amount": 200, "unit": "ml" },
         { "name": "fruits secs",              "amount": 60,  "unit": "g" }
       ],
-      "dîner": [
+      "Dîner": [
         { "name": "saumon grillé",            "amount": 180, "unit": "g" },
         { "name": "pomme de terre",           "amount": 220, "unit": "g" },
         { "name": "courgettes grillées",      "amount": 160, "unit": "g" },
@@ -2961,7 +2961,7 @@
   {
     "day": "J6",
     "meals": {
-      "Petit-déjeuner": [
+      "Petit-Déjeuner": [
         { "name": "flocons d'avoine",     "amount": 90,  "unit": "g" },
         { "name": "œuf",                  "amount": 3,   "unit": "unité" },
         { "name": "avocat",               "amount": 65,  "unit": "g" },
@@ -2988,7 +2988,7 @@
   {
     "day": "J7",
     "meals": {
-      "Petit-déjeuner": [
+      "Petit-Déjeuner": [
         { "name": "pain complet",         "amount": 130,  "unit": "g" },
         { "name": "jambon de dinde",      "amount": 60,  "unit": "g" },
         { "name": "œuf",                  "amount": 4,   "unit": "unité" },
@@ -3019,7 +3019,7 @@
     {
         "day": "J1",
         "meals": {
-          "Petit-déjeuner": [
+          "Petit-Déjeuner": [
           { "name": "flocons d'avoine", "amount": 100,"unit": "g" },
           { "name": "œuf",                "amount": 4,    "unit": "unité" },
           { "name": "banane",             "amount": 1, "unit": "unité" },
@@ -3048,7 +3048,7 @@
     {
       "day": "J2",
       "meals": {
-        "Petit-déjeuner": [
+        "Petit-Déjeuner": [
           { "name": "flocons d'avoine", "amount": 100,  "unit": "g" },
           { "name": "lait demi-écrémé", "amount": 160, "unit": "ml" },
           { "name": "œuf",               "amount": 3,   "unit": "unité" },
@@ -3077,7 +3077,7 @@
     {
       "day": "J3",
       "meals": {
-        "Petit-déjeuner": [
+        "Petit-Déjeuner": [
           { "name": "pâtes cuit ",              "amount": 300, "unit": "g" },
           { "name": "pomme",                       "amount": 1,   "unit": "unité" },
           { "name": "huile d'olive",               "amount": 2,   "unit": "c.c." },
@@ -3105,13 +3105,13 @@
     {
       "day": "J4",
       "meals": {
-        "petit-déjeuner": [
+        "Petit-Déjeuner": [
           { "name": "œuf",                    "amount": 4,   "unit": "unité" },
           { "name": "champignons sautés",     "amount": 100, "unit": "g" },
           { "name": "poivrons sautés",        "amount": 100, "unit": "g" },
           { "name": "pain complet",           "amount": 120,  "unit": "g" }
         ],
-        "déjeuner": [
+        "Déjeuner": [
           { "name": "viande hachée (maigre)", "amount": 250, "unit": "g" },
           { "name": "quinoa cuit",            "amount": 140, "unit": "g" },
           { "name": "riz complet cuit",            "amount": 100, "unit": "g" },
@@ -3122,7 +3122,7 @@
           { "name": "yaourt nature",          "amount": 160, "unit": "g" },
           { "name": "fruits secs",            "amount": 55,  "unit": "g" }
         ],
-        "dîner": [
+        "Dîner": [
           { "name": "filet de poulet grillé", "amount": 200, "unit": "g" },
           { "name": "riz complet cuit",            "amount": 300, "unit": "g" },
           { "name": "haricots verts vapeur",  "amount": 160, "unit": "g" },
@@ -3133,7 +3133,7 @@
     {
       "day": "J5",
       "meals": {
-        "petit-déjeuner": [
+        "Petit-Déjeuner": [
           { "name": "fromage blanc 0 %",        "amount": 160, "unit": "g" },
           { "name": "granola sans sucre ajouté","amount": 60,  "unit": "g" },
           { "name": "fruit rouge",                    "amount": 60,   "unit": "g" },
@@ -3141,7 +3141,7 @@
           { "name": "pain complet (cuit)",  "amount": 80, "unit": "g" }
 
         ],
-        "déjeuner": [
+        "Déjeuner": [
           { "name": "viande hachée (maigre)",   "amount": 200, "unit": "g" },
           { "name": "riz cuit",              "amount": 200, "unit": "g" },
           { "name": "pomme de terre",           "amount": 100, "unit": "g" },
@@ -3152,7 +3152,7 @@
           { "name": "jus",                      "amount": 200, "unit": "ml" },
           { "name": "fruits secs",              "amount": 60,  "unit": "g" }
         ],
-        "dîner": [
+        "Dîner": [
           { "name": "saumon grillé",            "amount": 180, "unit": "g" },
           { "name": "pomme de terre",           "amount": 220, "unit": "g" },
           { "name": "courgettes grillées",      "amount": 160, "unit": "g" },
@@ -3164,7 +3164,7 @@
     {
       "day": "J6",
       "meals": {
-        "Petit-déjeuner": [
+        "Petit-Déjeuner": [
           { "name": "flocons d'avoine",     "amount": 90,  "unit": "g" },
           { "name": "œuf",                  "amount": 3,   "unit": "unité" },
           { "name": "avocat",               "amount": 65,  "unit": "g" },
@@ -3192,7 +3192,7 @@
     {
       "day": "J7",
       "meals": {
-        "Petit-déjeuner": [
+        "Petit-Déjeuner": [
           { "name": "pain complet",         "amount": 120,  "unit": "g" },
           { "name": "jambon de dinde",      "amount": 60,  "unit": "g" },
           { "name": "œuf",                  "amount": 4,   "unit": "unité" },
@@ -3223,7 +3223,7 @@
     {
       "day": "J1",
      "meals": {
-        "Petit-déjeuner": [
+        "Petit-Déjeuner": [
         { "name": "flocons d'avoine", "amount": 100,"unit": "g" },
         { "name": "œuf",                "amount": 4,   "unit": "unité" },
         { "name": "raisin sec", "amount": 40,"unit": "g" },
@@ -3251,7 +3251,7 @@
     {
       "day": "J2",
       "meals": {
-        "Petit-déjeuner": [
+        "Petit-Déjeuner": [
           { "name": "flocons d'avoine", "amount": 100,  "unit": "g" },
           { "name": "lait demi-écrémé", "amount": 160, "unit": "ml" },
           { "name": "œuf",               "amount": 3,   "unit": "unité" },
@@ -3280,7 +3280,7 @@
     {
       "day": "J3",
       "meals": {
-        "Petit-déjeuner": [
+        "Petit-Déjeuner": [
           { "name": "pâtes cuit ",              "amount": 200, "unit": "g" },
           { "name": "pomme",                       "amount": 1,   "unit": "unité" },
           { "name": "huile d'olive",               "amount": 2,   "unit": "c.c." },
@@ -3308,13 +3308,13 @@
     {
       "day": "J4",
       "meals": {
-        "petit-déjeuner": [
+        "Petit-Déjeuner": [
           { "name": "œuf",                    "amount": 4,   "unit": "unité" },
           { "name": "champignons sautés",     "amount": 100, "unit": "g" },
           { "name": "poivrons sautés",        "amount": 100, "unit": "g" },
           { "name": "pain complet",           "amount": 120,  "unit": "g" }
         ],
-        "déjeuner": [
+        "Déjeuner": [
           { "name": "viande hachée (maigre)", "amount": 250, "unit": "g" },
           { "name": "quinoa cuit",            "amount": 140, "unit": "g" },
           { "name": "riz complet cuit",            "amount": 100, "unit": "g" },
@@ -3325,7 +3325,7 @@
           { "name": "yaourt nature",          "amount": 160, "unit": "g" },
           { "name": "fruits secs",            "amount": 55,  "unit": "g" }
         ],
-        "dîner": [
+        "Dîner": [
           { "name": "filet de poulet grillé", "amount": 200, "unit": "g" },
           { "name": "riz complet cuit",            "amount": 300, "unit": "g" },
           { "name": "haricots verts vapeur",  "amount": 160, "unit": "g" },
@@ -3336,7 +3336,7 @@
     {
       "day": "J5",
       "meals": {
-        "petit-déjeuner": [
+        "Petit-Déjeuner": [
           { "name": "fromage blanc 0 %",        "amount": 160, "unit": "g" },
           { "name": "granola sans sucre ajouté","amount": 60,  "unit": "g" },
           { "name": "fruit rouge",                    "amount": 60,   "unit": "g" },
@@ -3344,7 +3344,7 @@
           { "name": "pain complet (cuit)",  "amount": 80, "unit": "g" }
 
         ],
-        "déjeuner": [
+        "Déjeuner": [
           { "name": "viande hachée (maigre)",   "amount": 200, "unit": "g" },
           { "name": "riz cuit",              "amount": 200, "unit": "g" },
           { "name": "pomme de terre",           "amount": 100, "unit": "g" },
@@ -3355,7 +3355,7 @@
           { "name": "jus",                      "amount": 200, "unit": "ml" },
           { "name": "fruits secs",              "amount": 60,  "unit": "g" }
         ],
-        "dîner": [
+        "Dîner": [
           { "name": "saumon grillé",            "amount": 180, "unit": "g" },
           { "name": "pomme de terre",           "amount": 220, "unit": "g" },
           { "name": "courgettes grillées",      "amount": 160, "unit": "g" },
@@ -3367,7 +3367,7 @@
     {
       "day": "J6",
       "meals": {
-        "Petit-déjeuner": [
+        "Petit-Déjeuner": [
           { "name": "flocons d'avoine",     "amount": 90,  "unit": "g" },
           { "name": "œuf",                  "amount": 3,   "unit": "unité" },
           { "name": "avocat",               "amount": 65,  "unit": "g" },
@@ -3395,7 +3395,7 @@
     {
       "day": "J7",
       "meals": {
-        "Petit-déjeuner": [
+        "Petit-Déjeuner": [
           { "name": "pain complet",         "amount": 120,  "unit": "g" },
           { "name": "jambon de dinde",      "amount": 60,  "unit": "g" },
           { "name": "œuf",                  "amount": 4,   "unit": "unité" },
@@ -3426,7 +3426,7 @@
       {
           "day": "J1",
         "meals": {
-            "Petit-déjeuner": [
+            "Petit-Déjeuner": [
             { "name": "flocons d'avoine",   "amount": 100,"unit": "g" },
             { "name": "œuf",                "amount": 3,   "unit": "unité" },
             { "name": "raisin sec",         "amount": 30,"unit": "g" },
@@ -3458,7 +3458,7 @@
         {
           "day": "J2",
           "meals": {
-            "Petit-déjeuner": [
+            "Petit-Déjeuner": [
               { "name": "flocons d'avoine", "amount": 100,  "unit": "g" },
               { "name": "lait demi-écrémé", "amount": 160, "unit": "ml" },
               { "name": "œuf",               "amount": 3,   "unit": "unité" },
@@ -3490,7 +3490,7 @@
         {
           "day": "J3",
           "meals": {
-            "Petit-déjeuner": [
+            "Petit-Déjeuner": [
               { "name": "pâtes cuit ",              "amount": 200, "unit": "g" },
               { "name": "huile d'olive",               "amount": 2,   "unit": "c.c." },
               { "name": "thon (en conserve, égoutté)", "amount": 125, "unit": "g" }
@@ -3521,7 +3521,7 @@
         {
           "day": "J4",
           "meals": {
-            "petit-déjeuner": [
+            "Petit-Déjeuner": [
               { "name": "œuf",                    "amount": 4,   "unit": "unité" },
               { "name": "champignons sautés",     "amount": 100, "unit": "g" },
               { "name": "poivrons sautés",        "amount": 100, "unit": "g" },
@@ -3531,7 +3531,7 @@
               { "name": "pain complet",          "amount": 60, "unit": "g" },
               { "name": "avocat écrasé",            "amount": 30,  "unit": "g" }
             ],
-            "déjeuner": [
+            "Déjeuner": [
               { "name": "viande hachée (maigre)", "amount": 250, "unit": "g" },
               { "name": "quinoa cuit",            "amount": 140, "unit": "g" },
               { "name": "riz complet cuit",            "amount": 100, "unit": "g" },
@@ -3542,7 +3542,7 @@
               { "name": "yaourt nature",          "amount": 160, "unit": "g" },
               { "name": "fruits secs",            "amount": 55,  "unit": "g" }
             ],
-            "dîner": [
+            "Dîner": [
               { "name": "filet de poulet grillé", "amount": 200, "unit": "g" },
               { "name": "riz complet cuit",            "amount": 300, "unit": "g" },
               { "name": "haricots verts vapeur",  "amount": 160, "unit": "g" },
@@ -3553,7 +3553,7 @@
         {
           "day": "J5",
           "meals": {
-            "petit-déjeuner": [
+            "Petit-Déjeuner": [
               { "name": "fromage blanc 0 %",        "amount": 160, "unit": "g" },
               { "name": "granola sans sucre ajouté","amount": 60,  "unit": "g" },
               { "name": "fruit rouge",                    "amount": 60,   "unit": "g" },
@@ -3565,7 +3565,7 @@
               { "name": "jus",                      "amount": 200, "unit": "ml" },
               { "name": "fruits secs",              "amount": 60,  "unit": "g" }
             ],
-            "déjeuner": [
+            "Déjeuner": [
               { "name": "viande hachée (maigre)",   "amount": 200, "unit": "g" },
               { "name": "riz cuit",              "amount": 200, "unit": "g" },
               { "name": "pomme de terre",           "amount": 100, "unit": "g" },
@@ -3576,7 +3576,7 @@
               { "name": "jus",                      "amount": 100, "unit": "ml" },
               { "name": "fruits secs",              "amount": 50,  "unit": "g" }
             ],
-            "dîner": [
+            "Dîner": [
               { "name": "saumon grillé",            "amount": 180, "unit": "g" },
               { "name": "pomme de terre",           "amount": 220, "unit": "g" },
               { "name": "courgettes grillées",      "amount": 160, "unit": "g" },
@@ -3588,7 +3588,7 @@
         {
           "day": "J6",
           "meals": {
-            "Petit-déjeuner": [
+            "Petit-Déjeuner": [
               { "name": "flocons d'avoine",     "amount": 90,  "unit": "g" },
               { "name": "œuf",                  "amount": 3,   "unit": "unité" },
               { "name": "avocat",               "amount": 65,  "unit": "g" },
@@ -3620,7 +3620,7 @@
         {
           "day": "J7",
           "meals": {
-            "Petit-déjeuner": [
+            "Petit-Déjeuner": [
               { "name": "pain complet",         "amount": 120,  "unit": "g" },
               { "name": "jambon de dinde",      "amount": 60,  "unit": "g" },
               { "name": "œuf",                  "amount": 3,   "unit": "unité" },
@@ -3655,7 +3655,7 @@
     {
       "day": "J1",
       "meals": {
-        "Petit-déjeuner": [
+        "Petit-Déjeuner": [
           { "name": "flocons d'avoine",   "amount": 100,"unit": "g" },
           { "name": "œuf",                "amount": 4,   "unit": "unité" },
           { "name": "raisin sec",         "amount": 30,"unit": "g" },
@@ -3687,7 +3687,7 @@
       {
         "day": "J2",
         "meals": {
-          "Petit-déjeuner": [
+          "Petit-Déjeuner": [
             { "name": "flocons d'avoine", "amount": 100,  "unit": "g" },
             { "name": "lait demi-écrémé", "amount": 160, "unit": "ml" },
             { "name": "œuf",               "amount": 4,   "unit": "unité" },
@@ -3719,7 +3719,7 @@
       {
         "day": "J3",
         "meals": {
-          "Petit-déjeuner": [
+          "Petit-Déjeuner": [
             { "name": "pâtes cuit ",              "amount": 200, "unit": "g" },
             { "name": "huile d'olive",               "amount": 2,   "unit": "c.c." },
             { "name": "thon (en conserve, égoutté)", "amount": 125, "unit": "g" }
@@ -3750,7 +3750,7 @@
       {
         "day": "J4",
         "meals": {
-          "petit-déjeuner": [
+          "Petit-Déjeuner": [
             { "name": "œuf",                    "amount": 4,   "unit": "unité" },
             { "name": "champignons sautés",     "amount": 100, "unit": "g" },
             { "name": "poivrons sautés",        "amount": 100, "unit": "g" },
@@ -3760,7 +3760,7 @@
             { "name": "pain complet",          "amount": 60, "unit": "g" },
             { "name": "avocat écrasé",            "amount": 30,  "unit": "g" }
           ],
-          "déjeuner": [
+          "Déjeuner": [
             { "name": "viande hachée (maigre)", "amount": 250, "unit": "g" },
             { "name": "quinoa cuit",            "amount": 140, "unit": "g" },
             { "name": "riz complet cuit",            "amount": 100, "unit": "g" },
@@ -3771,7 +3771,7 @@
             { "name": "yaourt nature",          "amount": 160, "unit": "g" },
             { "name": "fruits secs",            "amount": 55,  "unit": "g" }
           ],
-          "dîner": [
+          "Dîner": [
             { "name": "filet de poulet grillé", "amount": 250, "unit": "g" },
             { "name": "riz complet cuit",            "amount": 300, "unit": "g" },
             { "name": "haricots verts vapeur",  "amount": 160, "unit": "g" },
@@ -3782,7 +3782,7 @@
       {
         "day": "J5",
         "meals": {
-          "petit-déjeuner": [
+          "Petit-Déjeuner": [
             { "name": "fromage blanc 0 %",        "amount": 160, "unit": "g" },
             { "name": "granola sans sucre ajouté","amount": 60,  "unit": "g" },
             { "name": "fruit rouge",                    "amount": 60,   "unit": "g" },
@@ -3794,7 +3794,7 @@
             { "name": "jus",                      "amount": 200, "unit": "ml" },
             { "name": "fruits secs",              "amount": 60,  "unit": "g" }
           ],
-          "déjeuner": [
+          "Déjeuner": [
             { "name": "viande hachée (maigre)",   "amount": 200, "unit": "g" },
             { "name": "riz cuit",              "amount": 200, "unit": "g" },
             { "name": "pomme de terre",           "amount": 100, "unit": "g" },
@@ -3805,7 +3805,7 @@
             { "name": "jus",                      "amount": 100, "unit": "ml" },
             { "name": "fruits secs",              "amount": 50,  "unit": "g" }
           ],
-          "dîner": [
+          "Dîner": [
             { "name": "saumon grillé",            "amount": 180, "unit": "g" },
             { "name": "pomme de terre",           "amount": 220, "unit": "g" },
             { "name": "courgettes grillées",      "amount": 160, "unit": "g" },
@@ -3817,7 +3817,7 @@
       {
         "day": "J6",
         "meals": {
-          "Petit-déjeuner": [
+          "Petit-Déjeuner": [
             { "name": "flocons d'avoine",     "amount": 90,  "unit": "g" },
             { "name": "œuf",                  "amount": 3,   "unit": "unité" },
             { "name": "avocat",               "amount": 65,  "unit": "g" },
@@ -3849,7 +3849,7 @@
       {
         "day": "J7",
         "meals": {
-          "Petit-déjeuner": [
+          "Petit-Déjeuner": [
             { "name": "pain complet",         "amount": 120,  "unit": "g" },
             { "name": "jambon de dinde",      "amount": 60,  "unit": "g" },
             { "name": "œuf",                  "amount": 3,   "unit": "unité" },
@@ -3883,7 +3883,7 @@
     {
       "day": "J1",
       "meals": {
-        "Petit-déjeuner": [
+        "Petit-Déjeuner": [
           { "name": "flocons d'avoine",        "amount": 100, "unit": "g" },
           { "name": "œuf",                     "amount": 4,   "unit": "unité" },
           { "name": "raisin sec",              "amount": 30,  "unit": "g" },
@@ -3915,7 +3915,7 @@
       {
         "day": "J2",
         "meals": {
-          "Petit-déjeuner": [
+          "Petit-Déjeuner": [
             { "name": "flocons d'avoine", "amount": 100,  "unit": "g" },
             { "name": "lait demi-écrémé", "amount": 160, "unit": "ml" },
             { "name": "œuf",               "amount": 4,   "unit": "unité" },
@@ -3947,7 +3947,7 @@
       {
         "day": "J3",
         "meals": {
-          "Petit-déjeuner": [
+          "Petit-Déjeuner": [
             { "name": "pâtes cuit ",              "amount": 200, "unit": "g" },
             { "name": "huile d'olive",               "amount": 2,   "unit": "c.c." },
             { "name": "thon (en conserve, égoutté)", "amount": 125, "unit": "g" }
@@ -3978,7 +3978,7 @@
       {
         "day": "J4",
         "meals": {
-          "petit-déjeuner": [
+          "Petit-Déjeuner": [
             { "name": "œuf",                    "amount": 4,   "unit": "unité" },
             { "name": "champignons sautés",     "amount": 100, "unit": "g" },
             { "name": "poivrons sautés",        "amount": 100, "unit": "g" },
@@ -3988,7 +3988,7 @@
             { "name": "pain complet",          "amount": 60, "unit": "g" },
             { "name": "avocat écrasé",            "amount": 30,  "unit": "g" }
           ],
-          "déjeuner": [
+          "Déjeuner": [
             { "name": "viande hachée (maigre)", "amount": 250, "unit": "g" },
             { "name": "quinoa cuit",            "amount": 140, "unit": "g" },
             { "name": "riz complet cuit",            "amount": 100, "unit": "g" },
@@ -3999,7 +3999,7 @@
             { "name": "yaourt nature",          "amount": 160, "unit": "g" },
             { "name": "fruits secs",            "amount": 55,  "unit": "g" }
           ],
-          "dîner": [
+          "Dîner": [
             { "name": "filet de poulet grillé", "amount": 300, "unit": "g" },
             { "name": "riz complet cuit",            "amount": 300, "unit": "g" },
             { "name": "haricots verts vapeur",  "amount": 160, "unit": "g" },
@@ -4010,7 +4010,7 @@
       {
         "day": "J5",
         "meals": {
-          "petit-déjeuner": [
+          "Petit-Déjeuner": [
             { "name": "fromage blanc 0 %",        "amount": 160, "unit": "g" },
             { "name": "granola sans sucre ajouté","amount": 60,  "unit": "g" },
             { "name": "fruit rouge",               "amount": 60,   "unit": "g" },
@@ -4021,7 +4021,7 @@
             { "name": "jus",                      "amount": 200, "unit": "ml" },
             { "name": "fruits secs",              "amount": 60,  "unit": "g" }
           ],
-          "déjeuner": [
+          "Déjeuner": [
             { "name": "viande hachée (maigre)","amount": 200, "unit": "g" },
             { "name": "riz cuit",              "amount": 200, "unit": "g" },
             { "name": "pomme de terre",        "amount": 150, "unit": "g" },
@@ -4032,7 +4032,7 @@
             { "name": "jus",                      "amount": 100, "unit": "ml" },
             { "name": "fruits secs",              "amount": 50,  "unit": "g" }
           ],
-          "dîner": [
+          "Dîner": [
             { "name": "saumon grillé",            "amount": 220, "unit": "g" },
             { "name": "pomme de terre",           "amount": 220, "unit": "g" },
             { "name": "courgettes grillées",      "amount": 160, "unit": "g" },
@@ -4044,7 +4044,7 @@
       {
         "day": "J6",
         "meals": {
-          "Petit-déjeuner": [
+          "Petit-Déjeuner": [
             { "name": "flocons d'avoine",     "amount": 90,  "unit": "g" },
             { "name": "œuf",                  "amount": 3,   "unit": "unité" },
             { "name": "avocat",               "amount": 65,  "unit": "g" },
@@ -4076,7 +4076,7 @@
       {
         "day": "J7",
         "meals": {
-          "Petit-déjeuner": [
+          "Petit-Déjeuner": [
             { "name": "pain complet",         "amount": 120,  "unit": "g" },
             { "name": "jambon de dinde",      "amount": 60,  "unit": "g" },
             { "name": "œuf",                  "amount": 3,   "unit": "unité" },
@@ -4110,7 +4110,7 @@
     {
       "day": "J1",
       "meals": {
-        "Petit-déjeuner": [
+        "Petit-Déjeuner": [
           { "name": "flocons d'avoine",        "amount": 100, "unit": "g" },
           { "name": "œuf",                     "amount": 4,   "unit": "unité" },
           { "name": "raisin sec",              "amount": 30,  "unit": "g" },
@@ -4142,7 +4142,7 @@
       {
         "day": "J2",
         "meals": {
-          "Petit-déjeuner": [
+          "Petit-Déjeuner": [
             { "name": "flocons d'avoine", "amount": 100,  "unit": "g" },
             { "name": "lait demi-écrémé", "amount": 160, "unit": "ml" },
             { "name": "œuf",               "amount": 4,   "unit": "unité" },
@@ -4174,7 +4174,7 @@
       {
         "day": "J3",
         "meals": {
-          "Petit-déjeuner": [
+          "Petit-Déjeuner": [
             { "name": "pâtes cuit ",              "amount": 200, "unit": "g" },
             { "name": "huile d'olive",               "amount": 2,   "unit": "c.c." },
             { "name": "thon (en conserve, égoutté)", "amount": 125, "unit": "g" }
@@ -4205,7 +4205,7 @@
       {
         "day": "J4",
         "meals": {
-          "petit-déjeuner": [
+          "Petit-Déjeuner": [
             { "name": "œuf",                    "amount": 4,   "unit": "unité" },
             { "name": "champignons sautés",     "amount": 100, "unit": "g" },
             { "name": "poivrons sautés",        "amount": 100, "unit": "g" },
@@ -4215,7 +4215,7 @@
             { "name": "pain complet",          "amount": 60, "unit": "g" },
             { "name": "avocat écrasé",            "amount": 30,  "unit": "g" }
           ],
-          "déjeuner": [
+          "Déjeuner": [
             { "name": "viande hachée (maigre)", "amount": 250, "unit": "g" },
             { "name": "quinoa cuit",            "amount": 140, "unit": "g" },
             { "name": "riz complet cuit",            "amount": 100, "unit": "g" },
@@ -4226,7 +4226,7 @@
             { "name": "yaourt nature",          "amount": 160, "unit": "g" },
             { "name": "fruits secs",            "amount": 55,  "unit": "g" }
           ],
-          "dîner": [
+          "Dîner": [
             { "name": "filet de poulet grillé", "amount": 300, "unit": "g" },
             { "name": "riz complet cuit",            "amount": 300, "unit": "g" },
             { "name": "haricots verts vapeur",  "amount": 160, "unit": "g" },
@@ -4237,7 +4237,7 @@
       {
         "day": "J5",
         "meals": {
-          "petit-déjeuner": [
+          "Petit-Déjeuner": [
             { "name": "fromage blanc 0 %",        "amount": 160, "unit": "g" },
             { "name": "granola sans sucre ajouté","amount": 60,  "unit": "g" },
             { "name": "fruit rouge",               "amount": 60,   "unit": "g" },
@@ -4248,7 +4248,7 @@
             { "name": "jus",                      "amount": 200, "unit": "ml" },
             { "name": "fruits secs",              "amount": 60,  "unit": "g" }
           ],
-          "déjeuner": [
+          "Déjeuner": [
             { "name": "viande hachée (maigre)","amount": 200, "unit": "g" },
             { "name": "riz cuit",              "amount": 200, "unit": "g" },
             { "name": "pomme de terre",        "amount": 150, "unit": "g" },
@@ -4259,7 +4259,7 @@
             { "name": "jus",                      "amount": 100, "unit": "ml" },
             { "name": "fruits secs",              "amount": 50,  "unit": "g" }
           ],
-          "dîner": [
+          "Dîner": [
             { "name": "saumon grillé",            "amount": 220, "unit": "g" },
             { "name": "pomme de terre",           "amount": 220, "unit": "g" },
             { "name": "courgettes grillées",      "amount": 160, "unit": "g" },
@@ -4271,7 +4271,7 @@
       {
         "day": "J6",
         "meals": {
-          "Petit-déjeuner": [
+          "Petit-Déjeuner": [
             { "name": "flocons d'avoine",     "amount": 100,  "unit": "g" },
             { "name": "œuf",                  "amount": 4,   "unit": "unité" },
             { "name": "avocat",               "amount": 65,  "unit": "g" },
@@ -4303,7 +4303,7 @@
       {
         "day": "J7",
         "meals": {
-          "Petit-déjeuner": [
+          "Petit-Déjeuner": [
             { "name": "pain complet",         "amount": 120,  "unit": "g" },
             { "name": "jambon de dinde",      "amount": 60,  "unit": "g" },
             { "name": "œuf",                  "amount": 3,   "unit": "unité" },
@@ -4337,7 +4337,7 @@
     {
       "day": "J1",
       "meals": {
-        "Petit-déjeuner": [
+        "Petit-Déjeuner": [
           { "name": "flocons d'avoine",        "amount": 100, "unit": "g" },
           { "name": "œuf",                     "amount": 4,   "unit": "unité" },
           { "name": "raisin sec",              "amount": 30,  "unit": "g" },
@@ -4369,7 +4369,7 @@
       {
         "day": "J2",
         "meals": {
-          "Petit-déjeuner": [
+          "Petit-Déjeuner": [
             { "name": "flocons d'avoine", "amount": 100,  "unit": "g" },
             { "name": "lait demi-écrémé", "amount": 160, "unit": "ml" },
             { "name": "œuf",               "amount": 4,   "unit": "unité" },
@@ -4401,7 +4401,7 @@
       {
         "day": "J3",
         "meals": {
-          "Petit-déjeuner": [
+          "Petit-Déjeuner": [
             { "name": "pâtes cuit ",              "amount": 200, "unit": "g" },
             { "name": "huile d'olive",               "amount": 2,   "unit": "c.c." },
             { "name": "thon (en conserve, égoutté)", "amount": 150, "unit": "g" }
@@ -4432,7 +4432,7 @@
       {
         "day": "J4",
         "meals": {
-          "petit-déjeuner": [
+          "Petit-Déjeuner": [
             { "name": "œuf",                    "amount": 4,   "unit": "unité" },
             { "name": "champignons sautés",     "amount": 100, "unit": "g" },
             { "name": "poivrons sautés",        "amount": 100, "unit": "g" },
@@ -4442,7 +4442,7 @@
             { "name": "pain complet",          "amount": 60, "unit": "g" },
             { "name": "avocat écrasé",            "amount": 30,  "unit": "g" }
           ],
-          "déjeuner": [
+          "Déjeuner": [
             { "name": "viande hachée (maigre)", "amount": 250, "unit": "g" },
             { "name": "quinoa cuit",            "amount": 190, "unit": "g" },
             { "name": "riz complet cuit",            "amount": 200, "unit": "g" },
@@ -4453,7 +4453,7 @@
             { "name": "yaourt nature",          "amount": 160, "unit": "g" },
             { "name": "fruits secs",            "amount": 55,  "unit": "g" }
           ],
-          "dîner": [
+          "Dîner": [
             { "name": "filet de poulet grillé", "amount": 300, "unit": "g" },
             { "name": "riz complet cuit",            "amount": 300, "unit": "g" },
             { "name": "haricots verts vapeur",  "amount": 160, "unit": "g" },
@@ -4464,7 +4464,7 @@
       {
         "day": "J5",
         "meals": {
-          "petit-déjeuner": [
+          "Petit-Déjeuner": [
             { "name": "fromage blanc 0 %",        "amount": 160, "unit": "g" },
             { "name": "granola sans sucre ajouté","amount": 60,  "unit": "g" },
             { "name": "fruit rouge",               "amount": 60,   "unit": "g" },
@@ -4475,7 +4475,7 @@
             { "name": "jus",                      "amount": 200, "unit": "ml" },
             { "name": "fruits secs",              "amount": 60,  "unit": "g" }
           ],
-          "déjeuner": [
+          "Déjeuner": [
             { "name": "viande hachée (maigre)","amount": 250, "unit": "g" },
             { "name": "riz cuit",              "amount": 200, "unit": "g" },
             { "name": "pomme de terre",        "amount": 200, "unit": "g" },
@@ -4486,7 +4486,7 @@
             { "name": "jus",                      "amount": 100, "unit": "ml" },
             { "name": "fruits secs",              "amount": 50,  "unit": "g" }
           ],
-          "dîner": [
+          "Dîner": [
             { "name": "saumon grillé",            "amount": 220, "unit": "g" },
             { "name": "pomme de terre",           "amount": 220, "unit": "g" },
             { "name": "courgettes grillées",      "amount": 160, "unit": "g" },
@@ -4498,7 +4498,7 @@
       {
         "day": "J6",
         "meals": {
-          "Petit-déjeuner": [
+          "Petit-Déjeuner": [
             { "name": "flocons d'avoine",     "amount": 100,  "unit": "g" },
             { "name": "œuf",                  "amount": 4,   "unit": "unité" },
             { "name": "avocat",               "amount": 80,  "unit": "g" },
@@ -4530,7 +4530,7 @@
       {
         "day": "J7",
         "meals": {
-          "Petit-déjeuner": [
+          "Petit-Déjeuner": [
             { "name": "pain complet",         "amount": 120,  "unit": "g" },
             { "name": "jambon de dinde",      "amount": 60,  "unit": "g" },
             { "name": "œuf",                  "amount": 3,   "unit": "unité" },
@@ -4565,7 +4565,7 @@
     {
       "day": "J1",
       "meals": {
-        "Petit-déjeuner": [
+        "Petit-Déjeuner": [
           { "name": "flocons d'avoine",        "amount": 100, "unit": "g" },
           { "name": "œuf",                     "amount": 4,   "unit": "unité" },
           { "name": "raisin sec",              "amount": 40,  "unit": "g" },
@@ -4597,7 +4597,7 @@
       {
         "day": "J2",
         "meals": {
-          "Petit-déjeuner": [
+          "Petit-Déjeuner": [
             { "name": "flocons d'avoine", "amount": 100,  "unit": "g" },
             { "name": "lait demi-écrémé", "amount": 160, "unit": "ml" },
             { "name": "œuf",               "amount": 4,   "unit": "unité" },
@@ -4629,7 +4629,7 @@
       {
         "day": "J3",
         "meals": {
-          "Petit-déjeuner": [
+          "Petit-Déjeuner": [
             { "name": "pâtes cuit ",              "amount": 200, "unit": "g" },
             { "name": "huile d'olive",               "amount": 2,   "unit": "c.c." },
             { "name": "thon (en conserve, égoutté)", "amount": 150, "unit": "g" }
@@ -4660,7 +4660,7 @@
       {
         "day": "J4",
         "meals": {
-          "petit-déjeuner": [
+          "Petit-Déjeuner": [
             { "name": "œuf",                    "amount": 4,   "unit": "unité" },
             { "name": "champignons sautés",     "amount": 100, "unit": "g" },
             { "name": "poivrons sautés",        "amount": 100, "unit": "g" },
@@ -4670,7 +4670,7 @@
             { "name": "pain complet",          "amount": 60, "unit": "g" },
             { "name": "avocat écrasé",            "amount": 30,  "unit": "g" }
           ],
-          "déjeuner": [
+          "Déjeuner": [
             { "name": "viande hachée (maigre)", "amount": 300, "unit": "g" },
             { "name": "quinoa cuit",            "amount": 200, "unit": "g" },
             { "name": "riz complet cuit",            "amount": 200, "unit": "g" },
@@ -4681,7 +4681,7 @@
             { "name": "yaourt nature",          "amount": 160, "unit": "g" },
             { "name": "fruits secs",            "amount": 55,  "unit": "g" }
           ],
-          "dîner": [
+          "Dîner": [
             { "name": "filet de poulet grillé", "amount": 300, "unit": "g" },
             { "name": "riz complet cuit",            "amount": 300, "unit": "g" },
             { "name": "haricots verts vapeur",  "amount": 160, "unit": "g" },
@@ -4692,7 +4692,7 @@
       {
         "day": "J5",
         "meals": {
-          "petit-déjeuner": [
+          "Petit-Déjeuner": [
             { "name": "fromage blanc 0 %",        "amount": 160, "unit": "g" },
             { "name": "granola sans sucre ajouté","amount": 60,  "unit": "g" },
             { "name": "fruit rouge",               "amount": 60,   "unit": "g" },
@@ -4703,7 +4703,7 @@
             { "name": "jus",                      "amount": 200, "unit": "ml" },
             { "name": "fruits secs",              "amount": 60,  "unit": "g" }
           ],
-          "déjeuner": [
+          "Déjeuner": [
             { "name": "viande hachée (maigre)","amount": 300, "unit": "g" },
             { "name": "riz cuit",              "amount": 200, "unit": "g" },
             { "name": "pomme de terre",        "amount": 200, "unit": "g" },
@@ -4714,7 +4714,7 @@
             { "name": "jus",                      "amount": 100, "unit": "ml" },
             { "name": "fruits secs",              "amount": 50,  "unit": "g" }
           ],
-          "dîner": [
+          "Dîner": [
             { "name": "saumon grillé",            "amount": 220, "unit": "g" },
             { "name": "pomme de terre",           "amount": 300, "unit": "g" },
             { "name": "courgettes grillées",      "amount": 160, "unit": "g" },
@@ -4726,7 +4726,7 @@
       {
         "day": "J6",
         "meals": {
-          "petit-déjeuner": [
+          "Petit-Déjeuner": [
             { "name": "flocons d'avoine",     "amount": 110,  "unit": "g" },
             { "name": "œuf",                  "amount": 4,   "unit": "unité" },
             { "name": "avocat",               "amount": 80,  "unit": "g" },
@@ -4757,7 +4757,7 @@
       {
         "day": "J7",
         "meals": {
-          "Petit-déjeuner": [
+          "Petit-Déjeuner": [
             { "name": "pain complet",         "amount": 120,  "unit": "g" },
             { "name": "jambon de dinde",      "amount": 60,  "unit": "g" },
             { "name": "œuf",                  "amount": 4,   "unit": "unité" },
@@ -4792,7 +4792,7 @@
     {
       "day": "J1",
         "meals": {
-          "Petit-déjeuner": [
+          "Petit-Déjeuner": [
             { "name": "flocons d'avoine",        "amount": 120, "unit": "g" },
             { "name": "œuf",                     "amount": 4,   "unit": "unité" },
             { "name": "raisin sec",              "amount": 40,  "unit": "g" },
@@ -4824,7 +4824,7 @@
         {
           "day": "J2",
           "meals": {
-            "Petit-déjeuner": [
+            "Petit-Déjeuner": [
               { "name": "flocons d'avoine", "amount": 100,  "unit": "g" },
               { "name": "lait demi-écrémé", "amount": 160, "unit": "ml" },
               { "name": "œuf",               "amount": 4,   "unit": "unité" },
@@ -4856,7 +4856,7 @@
         {
           "day": "J3",
           "meals": {
-            "Petit-déjeuner": [
+            "Petit-Déjeuner": [
               { "name": "pâtes cuit ",              "amount": 250, "unit": "g" },
               { "name": "huile d'olive",               "amount": 2,   "unit": "c.c." },
               { "name": "thon (en conserve, égoutté)", "amount": 150, "unit": "g" }
@@ -4887,7 +4887,7 @@
         {
           "day": "J4",
           "meals": {
-            "petit-déjeuner": [
+            "Petit-Déjeuner": [
               { "name": "œuf",                    "amount": 4,   "unit": "unité" },
               { "name": "champignons sautés",     "amount": 100, "unit": "g" },
               { "name": "poivrons sautés",        "amount": 100, "unit": "g" },
@@ -4897,7 +4897,7 @@
               { "name": "pain complet",          "amount": 60, "unit": "g" },
               { "name": "avocat écrasé",            "amount": 30,  "unit": "g" }
             ],
-            "déjeuner": [
+            "Déjeuner": [
               { "name": "viande hachée (maigre)", "amount": 300, "unit": "g" },
               { "name": "quinoa cuit",            "amount": 250, "unit": "g" },
               { "name": "riz complet cuit",            "amount": 200, "unit": "g" },
@@ -4908,7 +4908,7 @@
               { "name": "yaourt nature",          "amount": 160, "unit": "g" },
               { "name": "fruits secs",            "amount": 70,  "unit": "g" }
             ],
-            "dîner": [
+            "Dîner": [
               { "name": "filet de poulet grillé", "amount": 300, "unit": "g" },
               { "name": "riz complet cuit",            "amount": 300, "unit": "g" },
               { "name": "haricots verts vapeur",  "amount": 160, "unit": "g" },
@@ -4919,7 +4919,7 @@
         {
           "day": "J5",
           "meals": {
-            "petit-déjeuner": [
+            "Petit-Déjeuner": [
               { "name": "fromage blanc 0 %",        "amount": 160, "unit": "g" },
               { "name": "granola sans sucre ajouté","amount": 60,  "unit": "g" },
               { "name": "fruit rouge",               "amount": 60,   "unit": "g" },
@@ -4930,7 +4930,7 @@
               { "name": "jus",                      "amount": 200, "unit": "ml" },
               { "name": "fruits secs",              "amount": 60,  "unit": "g" }
             ],
-            "déjeuner": [
+            "Déjeuner": [
               { "name": "viande hachée (maigre)","amount": 300, "unit": "g" },
               { "name": "riz cuit",              "amount": 200, "unit": "g" },
               { "name": "pomme de terre",        "amount": 200, "unit": "g" },
@@ -4941,7 +4941,7 @@
               { "name": "jus",                      "amount": 100, "unit": "ml" },
               { "name": "fruits secs",              "amount": 50,  "unit": "g" }
             ],
-            "dîner": [
+            "Dîner": [
               { "name": "saumon grillé",            "amount": 220, "unit": "g" },
               { "name": "pomme de terre",           "amount": 300, "unit": "g" },
               { "name": "courgettes grillées",      "amount": 160, "unit": "g" },
@@ -4953,7 +4953,7 @@
         {
           "day": "J6",
           "meals": {
-            "Petit-déjeuner": [
+            "Petit-Déjeuner": [
               { "name": "flocons d'avoine",     "amount": 110,  "unit": "g" },
               { "name": "œuf",                  "amount": 4,   "unit": "unité" },
               { "name": "avocat",               "amount": 80,  "unit": "g" },
@@ -4984,7 +4984,7 @@
         {
           "day": "J7",
           "meals": {
-            "Petit-déjeuner": [
+            "Petit-Déjeuner": [
               { "name": "pain complet",         "amount": 120,  "unit": "g" },
               { "name": "jambon de dinde",      "amount": 60,  "unit": "g" },
               { "name": "œuf",                  "amount": 4,   "unit": "unité" },

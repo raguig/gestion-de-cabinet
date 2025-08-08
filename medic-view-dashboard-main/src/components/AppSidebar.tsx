@@ -10,6 +10,7 @@ import {
 import { Sidebar, SidebarContent, useSidebar } from "@/components/ui/sidebar";
 import { useAuth } from "@/context/AuthContext";
 import { useLanguage } from "@/context/LanguageContext";
+import { useMemo } from "react";
 
 // Translation object for sidebar
 const sidebarTranslations = {
@@ -29,9 +30,12 @@ const sidebarTranslations = {
 
 export default function AppSidebar() {
   const { state } = useSidebar();
-  const { logout, user } = useAuth();
+  const { logout, user, loading } = useAuth();
   const { language } = useLanguage();
   const isCollapsed = state === "collapsed";
+
+  // Add debug logging
+  
 
   // Helper function to get translation (same pattern as DoctorDashboard)
   const getT = (obj: { fr: string; en: string } | undefined) => {
@@ -60,20 +64,21 @@ export default function AppSidebar() {
       url: "/profile",
       icon: User,
     },
-    {
-      title: getT(sidebarTranslations.navigation.administration),
-      url: "/admin",
-      icon: Shield,
-    },
+    // Make admin route conditional
+    ...(user?.isAdmin
+      ? [
+          {
+            title: getT(sidebarTranslations.navigation.administration),
+            url: "/admin",
+            icon: Shield,
+          },
+        ]
+      : []),
   ];
 
-  const filteredNavigation = navigation.filter((item) => {
-    // Only show admin link if user is admin
-    if (item.url === "/admin") {
-      return user?.isAdmin;
-    }
-    return true;
-  });
+  if (loading) {
+    return null; // or a loading spinner
+  }
 
   return (
     <Sidebar className="w-64 min-h-screen h-full border-none bg-gradient-to-b from-background to-muted/20">
@@ -101,7 +106,7 @@ export default function AppSidebar() {
 
         {/* Navigation */}
         <nav className="space-y-3 flex-grow">
-          {filteredNavigation.map((item) => (
+          {navigation.map((item) => (
             <NavLink
               key={item.url}
               to={item.url}

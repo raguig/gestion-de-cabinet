@@ -252,7 +252,7 @@ const Appointments = () => {
 
       setAppointments(sanitizedAppointments);
     } catch (error) {
-      console.error("Error fetching appointments:", error);
+     
       toast({
         title: "Erreur",
         description: t.errors.loadError,
@@ -385,7 +385,7 @@ const Appointments = () => {
         setIsDialogOpen(false);
       }
     } catch (error) {
-      console.error("Error saving appointment:", error);
+     
       toast({
         title: "Erreur",
         description: error.response?.data?.message || t.errors.genericError,
@@ -410,7 +410,7 @@ const Appointments = () => {
         description: t.success.appointmentDeleted,
       });
     } catch (error) {
-      console.error("Error deleting appointment:", error);
+     
       toast({
         title: "Erreur",
         description: t.errors.deleteError,
@@ -465,7 +465,7 @@ const Appointments = () => {
         description: statusMessages[newStatus],
       });
     } catch (error) {
-      console.error("Error updating appointment status:", error);
+      
       toast({
         title: "Erreur",
         description: t.errors.statusUpdateError,
@@ -652,7 +652,7 @@ const Appointments = () => {
 
                     <div className="grid grid-cols-2 gap-6">
                       <div className="space-y-3">
-                        <Label className="text-sm font-semibold text-slate-700">
+                        <Label className="text-sm font-semibold text-slate-700 dark:text-slate-300">
                           {t.date}
                         </Label>
                         <Popover>
@@ -660,11 +660,16 @@ const Appointments = () => {
                             <Button
                               variant="outline"
                               className={cn(
-                                "w-full justify-start text-left font-normal rounded-xl border-slate-200 hover:border-blue-500",
-                                !formData.date && "text-muted-foreground"
+                                "w-full justify-start text-left font-normal rounded-xl",
+                                "border-slate-200 dark:border-slate-700",
+                                "bg-white dark:bg-gray-800",
+                                "hover:border-blue-500 dark:hover:border-blue-400",
+                                "text-slate-900 dark:text-slate-100",
+                                !formData.date &&
+                                  "text-muted-foreground dark:text-slate-400"
                               )}
                             >
-                              <CalendarIcon className="mr-2 h-4 w-4 text-slate-400" />
+                              <CalendarIcon className="mr-2 h-4 w-4 text-slate-400 dark:text-slate-500" />
                               {formData.date ? (
                                 format(formData.date, "PPP", { locale })
                               ) : (
@@ -673,7 +678,7 @@ const Appointments = () => {
                             </Button>
                           </PopoverTrigger>
                           <PopoverContent
-                            className="w-auto p-0 bg-white shadow-2xl border-0 rounded-2xl"
+                            className="w-auto p-0 bg-white dark:bg-gray-800 shadow-2xl dark:shadow-gray-900/50 border-0 rounded-2xl"
                             align="start"
                           >
                             <Calendar
@@ -683,7 +688,7 @@ const Appointments = () => {
                                 setFormData((prev) => ({ ...prev, date }))
                               }
                               initialFocus
-                              className="pointer-events-auto rounded-2xl"
+                              className="pointer-events-auto rounded-2xl dark:bg-gray-800 dark:text-slate-100"
                               locale={locale}
                             />
                           </PopoverContent>
@@ -693,12 +698,17 @@ const Appointments = () => {
                       <div className="space-y-3">
                         <Label
                           htmlFor="time"
-                          className="text-sm font-semibold text-slate-700"
+                          className="text-sm font-semibold text-slate-700 dark:text-slate-200"
                         >
                           {t.time}
                         </Label>
-                        <div className="relative">
-                          <Clock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 h-4 w-4" />
+                        <div
+                          className="relative group cursor-pointer"
+                          onClick={() =>
+                            document.getElementById("time")?.showPicker?.()
+                          }
+                        >
+                          <Clock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 dark:text-slate-400 h-4 w-4 pointer-events-none z-10" />
                           <Input
                             id="time"
                             type="time"
@@ -709,7 +719,32 @@ const Appointments = () => {
                                 time: e.target.value,
                               }))
                             }
-                            className="pl-10 border-slate-200 focus:border-blue-500 focus:ring-blue-500 rounded-xl"
+                            className={cn(
+                              "pl-10 rounded-xl w-full cursor-pointer",
+                              "border-slate-200 dark:border-slate-700",
+                              "hover:border-slate-300 dark:hover:border-slate-600",
+                              "focus:border-primary dark:focus:border-primary",
+                              "focus:ring-2 focus:ring-primary/20 dark:focus:ring-primary/20",
+                              "bg-white dark:bg-gray-800",
+                              "text-slate-900 dark:text-slate-100",
+                              "placeholder:text-slate-400 dark:placeholder:text-slate-500",
+                              "[&::-webkit-calendar-picker-indicator]:dark:invert",
+                              "[&::-webkit-calendar-picker-indicator]:opacity-0",
+                              "[&::-webkit-calendar-picker-indicator]:absolute",
+                              "[&::-webkit-calendar-picker-indicator]:left-0",
+                              "[&::-webkit-calendar-picker-indicator]:right-0",
+                              "[&::-webkit-calendar-picker-indicator]:bottom-0",
+                              "[&::-webkit-calendar-picker-indicator]:top-0",
+                              "[&::-webkit-calendar-picker-indicator]:cursor-pointer"
+                            )}
+                            style={{
+                              colorScheme:
+                                document.documentElement.classList.contains(
+                                  "dark"
+                                )
+                                  ? "dark"
+                                  : "light",
+                            }}
                           />
                         </div>
                       </div>
@@ -922,15 +957,15 @@ const Appointments = () => {
       {/* Appointments List */}
       <div className="space-y-4">
         {filteredAppointments.length === 0 ? (
-          <Card className="bg-white/80 backdrop-blur-sm border-white/20 shadow-lg rounded-2xl">
+          <Card className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm border-white/20 dark:border-gray-700/20 shadow-lg dark:shadow-gray-900/30 rounded-2xl">
             <CardContent className="flex flex-col items-center justify-center py-16">
-              <div className="bg-gradient-to-br from-slate-100 to-slate-200 p-6 rounded-2xl mb-6">
-                <CalendarIcon className="h-12 w-12 text-slate-400" />
+              <div className="bg-gradient-to-br from-slate-100 to-slate-200 dark:from-gray-700 dark:to-gray-800 p-6 rounded-2xl mb-6">
+                <CalendarIcon className="h-12 w-12 text-slate-400 dark:text-gray-500" />
               </div>
-              <h3 className="text-xl font-semibold text-slate-600 mb-2">
+              <h3 className="text-xl font-semibold text-slate-600 dark:text-gray-300 mb-2">
                 {t.noAppointmentsFound}
               </h3>
-              <p className="text-slate-500 text-center max-w-md">
+              <p className="text-slate-500 dark:text-gray-400 text-center max-w-md">
                 {searchTerm || filterStatus !== "all"
                   ? t.searchMessage
                   : t.noAppointmentsMessage}

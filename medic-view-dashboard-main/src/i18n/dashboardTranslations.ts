@@ -14,7 +14,7 @@ export const dashboardTranslations = {
     upcomingAppointments: { fr: "Rendez-vous à venir", en: "Upcoming Appointments" },
     recentPlans: { fr: "Plans Alimentaires Récents", en: "Recent Diet Plans" },
     patientAlerts: { fr: "Alertes Patients", en: "Patient Alerts" },
-    calorieTrend: { fr: "Tendance Calorique", en: "Calorie Trend" },
+    calorieTrend: { fr: "Tendance Calorique Par Jour", en: "Calorie Trend Per Day" },
     calorieTrendDesc: { fr: "Comparaison moyenne des calories cibles vs réelles", en: "Average target vs actual calories comparison" },
     nutrientAdherence: { fr: "Adhérence Nutritionnelle", en: "Nutrient Adherence" },
     patientAverages: { fr: "Moyennes patients", en: "Patient averages" },
@@ -50,5 +50,23 @@ export const dashboardTranslations = {
     fiber: { fr: "Fibres", en: "Fiber" },
     vitaminD: { fr: "Vitamine D", en: "Vitamin D" },
     iron: { fr: "Fer", en: "Iron" },
+  },
+  empty: {
+    appointments: {
+      fr: "Aucun rendez-vous à venir",
+      en: "No upcoming appointments"
+    },
+    plans: {
+      fr: "Aucun plan alimentaire récent",
+      en: "No recent diet plans"
+    },
+    chart: {
+      fr: "Aucune donnée de tendance calorique disponible",
+      en: "No calorie trend data available"
+    },
+    patients: {
+      fr: "Aucune donnée de progression patient disponible",
+      en: "No patient progress data available"
+    }
   },
 };

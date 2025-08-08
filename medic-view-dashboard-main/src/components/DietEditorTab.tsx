@@ -13,9 +13,7 @@ export function DietEditorTab({
   visitId,
   onDietAssigned,
 }: DietEditorTabProps) {
-  console.log("patient in DietEditorTab: ", patient);
   const calorieintake = patient?.latestVisit[0]?.calorieintake; // Fallback to 0 if undefined
-  console.log("calorieintake: ", calorieintake);
   return (
     <DietEditorSlide
       language={language}

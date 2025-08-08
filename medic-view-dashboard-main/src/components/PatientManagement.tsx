@@ -32,6 +32,7 @@ import axios from "axios"; // Add this import
 import { PatientForm } from "./PatientForm"; // Import the PatientForm component
 import { useNavigate } from "react-router-dom";
 import { useLanguage } from "@/context/LanguageContext";
+import { toast } from "sonner";
 
 export type Language = "fr" | "en";
 export type Gender = "M" | "F";
@@ -57,6 +58,23 @@ export interface Patient {
   bmi: number;
   age: number;
 }
+
+// Initialize empty patient for new entries
+const emptyPatient = {
+  firstName: "",
+  lastName: "",
+  gender: "M" as Gender,
+  birthDate: "",
+  height: 0,
+  weight: 0,
+  bf: 0,
+  healthScore: 0,
+  activityLevel: "moderee" as ActivityLevel,
+  goal: "maintenance" as Goal,
+  rhythm: 0,
+  pathalogie: "",
+  allergie: "",
+};
 
 export function PatientManagement() {
   const [currentDoctor, setCurrentDoctor] = useState<string | null>(null);
@@ -119,7 +137,6 @@ export function PatientManagement() {
           doctorId: doctorId, // Add this parameter
         },
       });
-      console.log("Fetched patients:", res.data);
 
       const mapped = res.data.map((p: any) => ({
         id: p._id,
@@ -138,9 +155,9 @@ export function PatientManagement() {
             ? "moderee"
             : "elevee",
         goal:
-          p.goal === "weight loss"
+          p.latestVisit.goal === "weight loss"
             ? "perte"
-            : p.goal === "muscle gain"
+            : p.latestVisit.goal === "muscle gain"
             ? "gain"
             : "maintenance",
         rhythm: Number(p.rythm),
@@ -153,10 +170,8 @@ export function PatientManagement() {
         allergie: p.allergie || "",
         doctorId: p.doctor, // Add this field
       }));
-      console.log("Mapped patients:", mapped);
       setPatients(mapped);
     } catch (err) {
-      console.error("Failed to fetch patients", err);
     }
   };
   useEffect(() => {
@@ -217,6 +232,10 @@ export function PatientManagement() {
       faible: { fr: "Faible", en: "Low" },
       moderee: { fr: "Modérée", en: "Moderate" },
       elevee: { fr: "Élevée", en: "High" },
+      requiredField: {
+        fr: "Ce champ est obligatoire",
+        en: "This field is required",
+      },
     };
     return texts[key]?.[language] || key;
   };
@@ -282,14 +301,19 @@ export function PatientManagement() {
       !newPatient.height ||
       !newPatient.weight
     ) {
-      alert("Please fill in all required fields.");
+      toast.error(getText("requiredField"), {
+        className:
+          "bg-red-50 dark:bg-red-900 border border-red-200 dark:border-red-800",
+        descriptionClassName: "text-red-800 dark:text-red-200",
+        style: {
+          color: "rgb(185 28 28)", // text-red-700
+        },
+      });
       return;
     }
 
     try {
-      // Send patient and initial visit data to the backend
-      const token = localStorage.getItem("token"); // Get the token from localStorage
-
+      const token = localStorage.getItem("token");
       await axios.post(
         `${API_URL}/add`,
         {
@@ -328,32 +352,118 @@ export function PatientManagement() {
       // Refresh the patient list
       fetchPatients();
       setShowAddForm(false);
+
+      // Success toast
+      toast.success(
+        language === "fr"
+          ? "Patient ajouté avec succès!"
+          : "Patient added successfully!",
+        {
+          className:
+            "bg-green-50 dark:bg-green-900 border border-green-200 dark:border-green-800",
+          descriptionClassName: "text-green-800 dark:text-green-200",
+          style: {
+            color: "rgb(21 128 61)", // text-green-700
+          },
+        }
+      );
     } catch (err) {
-      console.error("Error adding patient:", err);
-      alert("An error occurred while adding the patient.");
+      // Error toast
+      toast.error(
+        language === "fr"
+          ? "Erreur lors de l'ajout du patient."
+          : "Error adding patient.",
+        {
+          className:
+            "bg-red-50 dark:bg-red-900 border border-red-200 dark:border-red-800",
+          descriptionClassName: "text-red-800 dark:text-red-200",
+          style: {
+            color: "rgb(185 28 28)", // text-red-700
+          },
+        }
+      );
     }
   };
 
   // --- Delete patient (DELETE) ---
   const handleDeletePatient = async (id: string) => {
-    const token = localStorage.getItem("token"); // Get the token from localStorage
+    // Add confirmation toast
+    toast.custom((t) => (
+      <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 max-w-sm mx-auto">
+        <h3 className="text-lg font-semibold mb-4">
+          {language === "fr" ? "Confirmer la suppression" : "Confirm deletion"}
+        </h3>
+        <p className="text-gray-600 dark:text-gray-300 mb-6">
+          {language === "fr"
+            ? "Êtes-vous sûr de vouloir supprimer ce patient ?"
+            : "Are you sure you want to delete this patient?"}
+        </p>
+        <div className="flex justify-end gap-3">
+          <Button
+            variant="ghost"
+            onClick={() => toast.dismiss(t)}
+            className="hover:bg-gray-100 dark:hover:bg-gray-700"
+          >
+            {language === "fr" ? "Annuler" : "Cancel"}
+          </Button>
+          <Button
+            variant="destructive"
+            onClick={async () => {
+              try {
+                const token = localStorage.getItem("token");
+                await axios.delete(`${API_URL}/delete/${id}`, {
+                  headers: {
+                    Authorization: `Bearer ${token}`,
+                  },
+                });
+                setPatients((prev) => prev.filter((p) => p.id !== id));
+                toast.dismiss(t);
 
-    try {
-      await axios.delete(`${API_URL}/delete/${id}`, {
-        headers: {
-          Authorization: `Bearer ${token}`, // Include the token in the request headers
-        },
-      });
-      setPatients((prev) => prev.filter((p) => p.id !== id));
-    } catch (err) {
-      alert("Erreur lors de la suppression du patient.");
-    }
+                // Success toast
+                toast.success(
+                  language === "fr"
+                    ? "Patient supprimé avec succès!"
+                    : "Patient deleted successfully!",
+                  {
+                    className:
+                      "bg-green-50 dark:bg-green-900 border border-green-200 dark:border-green-800",
+                    descriptionClassName: "text-green-800 dark:text-green-200",
+                    style: {
+                      color: "rgb(21 128 61)",
+                    },
+                  }
+                );
+              } catch (err) {
+                toast.dismiss(t);
+                // Error toast
+                toast.error(
+                  language === "fr"
+                    ? "Erreur lors de la suppression du patient."
+                    : "Error deleting patient.",
+                  {
+                    className:
+                      "bg-red-50 dark:bg-red-900 border border-red-200 dark:border-red-800",
+                    descriptionClassName: "text-red-800 dark:text-red-200",
+                    style: {
+                      color: "rgb(185 28 28)",
+                    },
+                  }
+                );
+              }
+            }}
+            className="bg-red-600 hover:bg-red-700 text-white"
+          >
+            {language === "fr" ? "Supprimer" : "Delete"}
+          </Button>
+        </div>
+      </div>
+    ));
   };
 
   // --- Update patient (PUT) ---
   const handleEditPatient = async (updatedPatient: Patient) => {
-    const token = localStorage.getItem("token"); // Get the token from localStorage
     try {
+      const token = localStorage.getItem("token");
       await axios.put(
         `${API_URL}/update/${updatedPatient.id}`,
         {
@@ -388,8 +498,36 @@ export function PatientManagement() {
       );
       fetchPatients();
       setEditingPatient(null);
+
+      // Success toast
+      toast.success(
+        language === "fr"
+          ? "Patient modifié avec succès!"
+          : "Patient updated successfully!",
+        {
+          className:
+            "bg-green-50 dark:bg-green-900 border border-green-200 dark:border-green-800",
+          descriptionClassName: "text-green-800 dark:text-green-200",
+          style: {
+            color: "rgb(21 128 61)",
+          },
+        }
+      );
     } catch (err) {
-      alert("Erreur lors de la modification du patient.");
+      // Error toast
+      toast.error(
+        language === "fr"
+          ? "Erreur lors de la modification du patient."
+          : "Error updating patient.",
+        {
+          className:
+            "bg-red-50 dark:bg-red-900 border border-red-200 dark:border-red-800",
+          descriptionClassName: "text-red-800 dark:text-red-200",
+          style: {
+            color: "rgb(185 28 28)",
+          },
+        }
+      );
     }
   };
 
@@ -799,8 +937,8 @@ export function PatientManagement() {
 
         {/* Add Patient Modal */}
         {showAddForm && (
-          <div className="fixed inset-0 z-[100] bg-black/70 backdrop-blur-sm flex items-center justify-center p-0 m-0 w-screen h-screen">
-            <Card className="w-full max-w-2xl max-h-[90vh] overflow-hidden border-0 shadow-2xl shadow-black/20 bg-white/95 dark:bg-slate-900/95 backdrop-blur-xl rounded-3xl animate-in zoom-in-95 duration-300">
+          <div className="fixed inset-0 z-[100]  backdrop-blur-md flex items-center justify-center p-4">
+            <Card className="w-full max-w-2xl max-h-[90vh] overflow-hidden border-0 shadow-2xl shadow-black/20 bg-white/95 dark:bg-gray-900/95 backdrop-blur-xl rounded-3xl animate-in zoom-in-95 duration-300">
               <CardHeader className="bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-950/50 dark:to-indigo-950/50 border-b border-slate-200/50 dark:border-slate-700/50 p-8">
                 <div className="flex items-center justify-between">
                   <CardTitle className="text-2xl font-bold bg-gradient-to-r from-slate-700 to-slate-900 dark:from-slate-200 dark:to-slate-400 bg-clip-text text-transparent">
@@ -823,6 +961,7 @@ export function PatientManagement() {
                   onSubmit={handleAddPatient}
                   onCancel={() => setShowAddForm(false)}
                   getText={getText}
+                  isEdit={false}
                 />
               </CardContent>
             </Card>
@@ -831,8 +970,8 @@ export function PatientManagement() {
 
         {/* Edit Patient Modal */}
         {editingPatient && (
-          <div className="fixed inset-0 z-[100] bg-black/70 backdrop-blur-sm flex items-center justify-center p-0 m-0 w-screen h-screen">
-            <Card className="w-full max-w-2xl max-h-[90vh] overflow-hidden border-0 shadow-2xl shadow-black/20 bg-white/95 dark:bg-slate-900/95 backdrop-blur-xl rounded-3xl animate-in zoom-in-95 duration-300">
+          <div className="fixed inset-0 z-[100]  backdrop-blur-md flex items-center justify-center p-4">
+            <Card className="w-full max-w-2xl max-h-[90vh] overflow-hidden border-0 shadow-2xl shadow-black/20 bg-white/95 dark:bg-gray-900/95 backdrop-blur-xl rounded-3xl animate-in zoom-in-95 duration-300">
               <CardHeader className="bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-950/50 dark:to-indigo-950/50 border-b border-slate-200/50 dark:border-slate-700/50 p-8">
                 <div className="flex items-center justify-between">
                   <CardTitle className="text-2xl font-bold bg-gradient-to-r from-slate-700 to-slate-900 dark:from-slate-200 dark:to-slate-400 bg-clip-text text-transparent">
@@ -850,12 +989,12 @@ export function PatientManagement() {
               </CardHeader>
               <CardContent className="p-8 overflow-y-auto max-h-[calc(90vh-120px)]">
                 <PatientForm
-                  patient={editingPatient} // Pass the full patient object, including bf and healthScore
+                  patient={editingPatient}
                   onChange={setEditingPatient}
                   onSubmit={() => handleEditPatient(editingPatient)}
                   onCancel={() => setEditingPatient(null)}
                   getText={getText}
-                  isEdit
+                  isEdit={true}
                 />
               </CardContent>
             </Card>
@@ -864,8 +1003,8 @@ export function PatientManagement() {
 
         {/* View Patient Modal */}
         {viewingPatient && (
-          <div className="fixed inset-0 z-[100] bg-black/70 backdrop-blur-sm flex items-center justify-center p-0 m-0 w-screen h-screen">
-            <Card className="w-full max-w-2xl max-h-[90vh] overflow-hidden border-0 shadow-2xl shadow-black/20 bg-white/95 dark:bg-slate-900/95 backdrop-blur-xl rounded-3xl animate-in zoom-in-95 duration-300">
+          <div className="fixed inset-0 z-[100] bg-black/60 backdrop-blur-md flex items-center justify-center p-4">
+            <Card className="w-full max-w-2xl max-h-[90vh] overflow-hidden border-0 shadow-2xl shadow-black/20 bg-white/95 dark:bg-gray-900/95 backdrop-blur-xl rounded-3xl animate-in zoom-in-95 duration-300">
               <CardHeader className="bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-950/50 dark:to-indigo-950/50 border-b border-slate-200/50 dark:border-slate-700/50 p-8">
                 <div className="flex items-center justify-between">
                   <CardTitle className="text-2xl font-bold bg-gradient-to-r from-slate-700 to-slate-900 dark:from-slate-200 dark:to-slate-400 bg-clip-text text-transparent">

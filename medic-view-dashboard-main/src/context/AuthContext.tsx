@@ -16,15 +16,6 @@ export const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
-  useEffect(() => {
-    const token = localStorage.getItem("token");
-    if (token) {
-      verifyToken(token);
-    } else {
-      setLoading(false);
-    }
-  }, []);
-
   const verifyToken = async (token) => {
     try {
       const response = await fetch("http://localhost:8000/api/auth/me", {
@@ -37,18 +28,32 @@ export const AuthProvider = ({ children }) => {
 
       if (response.ok) {
         const userData = await response.json();
-        setUser(userData);
+        // Ensure isAdmin is explicitly set
+        setUser({
+          ...userData,
+          isAdmin: Boolean(userData.isAdmin),
+        });
         localStorage.setItem("token", token);
       } else {
         localStorage.removeItem("token");
+        setUser(null);
       }
     } catch (error) {
-      console.error("Token verification failed:", error);
       localStorage.removeItem("token");
+      setUser(null);
     } finally {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      verifyToken(token);
+    } else {
+      setLoading(false);
+    }
+  }, []);
 
   const login = async (email, password) => {
     try {
@@ -63,9 +68,13 @@ export const AuthProvider = ({ children }) => {
       const data = await response.json();
 
       if (response.ok) {
-        setUser(data);
+        // Ensure isAdmin is explicitly set
+        setUser({
+          ...data,
+          isAdmin: Boolean(data.isAdmin),
+        });
         localStorage.setItem("token", data.token);
-        localStorage.setItem("doctorId", data.id); // Add this line
+        localStorage.setItem("doctorId", data.id);
         navigate("/");
         return { success: true, data };
       } else {
@@ -86,7 +95,7 @@ export const AuthProvider = ({ children }) => {
     user,
     login,
     logout,
-    loading,
+    loading, // Make sure loading is included in the context value
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

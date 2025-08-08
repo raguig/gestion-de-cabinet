@@ -9,6 +9,8 @@ import type {
   ActivityLevel,
   Goal,
 } from "./PatientManagement.tsx";
+import { useState, useEffect } from "react";
+import { cn } from "@/lib/utils";
 
 interface PatientFormProps {
   patient: Partial<Patient>;
@@ -27,40 +29,108 @@ export function PatientForm({
   getText,
   isEdit = false,
 }: PatientFormProps) {
+  // Add validation state
+  const [errors, setErrors] = useState<Record<string, boolean>>({});
+
+  // Reset form when opening for a new patient (not editing)
+  useEffect(() => {
+    if (!isEdit) {
+      onChange({
+        firstName: "",
+        lastName: "",
+        gender: "M",
+        birthDate: "",
+        height: 0,
+        weight: 0,
+        bf: 0,
+        healthScore: 0,
+        activityLevel: "moderee",
+        goal: "maintenance",
+        rhythm: 0,
+        pathalogie: "",
+        allergie: "",
+      });
+    }
+  }, [isEdit]);
+
+  // Modify the form submission
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+
+    // Check required fields
+    const newErrors: Record<string, boolean> = {};
+    if (!patient.firstName?.trim()) newErrors.firstName = true;
+    if (!patient.lastName?.trim()) newErrors.lastName = true;
+    if (!patient.birthDate) newErrors.birthDate = true;
+    if (!patient.height) newErrors.height = true;
+    if (!patient.weight) newErrors.weight = true;
+    if (!patient.rhythm) newErrors.rhythm = true;
+    // If there are errors, show them and don't submit
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
+      return;
+    }
+
+    // Clear any existing errors and submit
+    setErrors({});
+    onSubmit();
+  };
+
+  // Update input fields to show errors
   return (
-    <form
-      onSubmit={(e) => {
-        e.preventDefault();
-        onSubmit();
-      }}
-      className="space-y-8"
-    >
+    <form onSubmit={handleSubmit} className="space-y-8">
       {/* Personal Information Section */}
       <div className="space-y-6">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div className="space-y-2">
             <label className="text-sm font-semibold">
-              {getText("firstName")}
+              {getText("firstName")} <span className="text-red-500">*</span>
             </label>
             <Input
               value={patient.firstName || ""}
-              onChange={(e) =>
-                onChange({ ...patient, firstName: e.target.value })
-              }
+              onChange={(e) => {
+                onChange({ ...patient, firstName: e.target.value });
+                if (errors.firstName) {
+                  setErrors({ ...errors, firstName: false });
+                }
+              }}
               placeholder="Prénom du patient"
+              className={cn(
+                errors.firstName &&
+                  "border-red-500 focus:ring-red-500 dark:border-red-500",
+                "transition-colors"
+              )}
             />
+            {errors.firstName && (
+              <p className="text-xs text-red-500 mt-1">
+                {getText("requiredField")}
+              </p>
+            )}
           </div>
           <div className="space-y-2">
             <label className="text-sm font-semibold">
-              {getText("lastName")}
+              {getText("lastName")} <span className="text-red-500">*</span>
             </label>
             <Input
               value={patient.lastName || ""}
-              onChange={(e) =>
-                onChange({ ...patient, lastName: e.target.value })
-              }
+              onChange={(e) => {
+                onChange({ ...patient, lastName: e.target.value });
+                if (errors.lastName) {
+                  setErrors({ ...errors, lastName: false });
+                }
+              }}
               placeholder="Nom de famille"
+              className={cn(
+                errors.lastName &&
+                  "border-red-500 focus:ring-red-500 dark:border-red-500",
+                "transition-colors"
+              )}
             />
+            {errors.lastName && (
+              <p className="text-xs text-red-500 mt-1">
+                {getText("requiredField")}
+              </p>
+            )}
           </div>
 
           <div className="space-y-2">
@@ -80,15 +150,28 @@ export function PatientForm({
           </div>
           <div className="space-y-2 md:col-span-2">
             <label className="text-sm font-semibold">
-              {getText("birthDate")}
+              {getText("birthDate")} <span className="text-red-500">*</span>
             </label>
             <Input
               type="date"
               value={patient.birthDate || ""}
-              onChange={(e) =>
-                onChange({ ...patient, birthDate: e.target.value })
-              }
+              onChange={(e) => {
+                onChange({ ...patient, birthDate: e.target.value });
+                if (errors.birthDate) {
+                  setErrors({ ...errors, birthDate: false });
+                }
+              }}
+              className={cn(
+                errors.birthDate &&
+                  "border-red-500 focus:ring-red-500 dark:border-red-500",
+                "transition-colors"
+              )}
             />
+            {errors.birthDate && (
+              <p className="text-xs text-red-500 mt-1">
+                {getText("requiredField")}
+              </p>
+            )}
           </div>
         </div>
       </div>
@@ -97,26 +180,56 @@ export function PatientForm({
       <div className="space-y-6">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div className="space-y-2">
-            <label className="text-sm font-semibold">{getText("height")}</label>
+            <label className="text-sm font-semibold">
+              {getText("height")} <span className="text-red-500">*</span>
+            </label>
             <Input
               type="number"
               value={patient.height || ""}
-              onChange={(e) =>
-                onChange({ ...patient, height: Number(e.target.value) })
-              }
+              onChange={(e) => {
+                onChange({ ...patient, height: Number(e.target.value) });
+                if (errors.height) {
+                  setErrors({ ...errors, height: false });
+                }
+              }}
               placeholder="170"
+              className={cn(
+                errors.height &&
+                  "border-red-500 focus:ring-red-500 dark:border-red-500",
+                "transition-colors"
+              )}
             />
+            {errors.height && (
+              <p className="text-xs text-red-500 mt-1">
+                {getText("requiredField")}
+              </p>
+            )}
           </div>
           <div className="space-y-2">
-            <label className="text-sm font-semibold">{getText("weight")}</label>
+            <label className="text-sm font-semibold">
+              {getText("weight")} <span className="text-red-500">*</span>
+            </label>
             <Input
               type="number"
               value={patient.weight || ""}
-              onChange={(e) =>
-                onChange({ ...patient, weight: Number(e.target.value) })
-              }
+              onChange={(e) => {
+                onChange({ ...patient, weight: Number(e.target.value) });
+                if (errors.weight) {
+                  setErrors({ ...errors, weight: false });
+                }
+              }}
               placeholder="70"
+              className={cn(
+                errors.weight &&
+                  "border-red-500 focus:ring-red-500 dark:border-red-500",
+                "transition-colors"
+              )}
             />
+            {errors.weight && (
+              <p className="text-xs text-red-500 mt-1">
+                {getText("requiredField")}
+              </p>
+            )}
           </div>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -216,7 +329,7 @@ export function PatientForm({
           </div>
           <div className="space-y-2">
             <label className="text-sm font-semibold">
-              {getText("rhythmWeek")}
+              {getText("rhythmWeek")} <span className="text-red-500">*</span>
             </label>
             <Input
               type="number"
@@ -224,11 +337,24 @@ export function PatientForm({
               min="0"
               max="1.5"
               value={patient.rhythm || ""}
-              onChange={(e) =>
-                onChange({ ...patient, rhythm: Number(e.target.value) })
-              }
+              onChange={(e) => {
+                onChange({ ...patient, rhythm: Number(e.target.value) });
+                if (errors.rhythm) {
+                  setErrors({ ...errors, rhythm: false });
+                }
+              }}
               placeholder="0.5"
+              className={cn(
+                errors.rhythm &&
+                  "border-red-500 focus:ring-red-500 dark:border-red-500",
+                "transition-colors"
+              )}
             />
+            {errors.rhythm && (
+              <p className="text-xs text-red-500 mt-1">
+                {getText("requiredField")}
+              </p>
+            )}
           </div>
         </div>
       </div>
