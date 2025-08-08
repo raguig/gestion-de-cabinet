@@ -127,7 +127,6 @@ export const getDashboardStats = async (req, res) => {
 
     res.json(dashboardData);
   } catch (error) {
-    console.error('Dashboard Error:', error);
     res.status(500).json({ message: "Error fetching dashboard data" });
   }
 };

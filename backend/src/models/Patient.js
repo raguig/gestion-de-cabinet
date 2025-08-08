@@ -13,11 +13,6 @@ const patientSchema = new mongoose.Schema({
     required: true,
     enum: ['sedentary', 'light', 'moderate', 'active', 'very active'],
   },
-  goal: {
-    type: String,
-    required: true,
-    enum: ['weight loss', 'muscle gain', 'maintenance'],
-  },
   lastmeasurement: { type: Date, required: true },
   pathalogie: { type: String },
   allergie: { type: String },

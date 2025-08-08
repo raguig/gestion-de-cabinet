@@ -17,7 +17,6 @@ export const getAppointments = async (req, res) => {
 
     res.status(200).json(appointments);
   } catch (error) {
-    console.error("Error fetching appointments:", error);
     res.status(500).json({
       message: "Erreur lors de la récupération des rendez-vous",
       error: error.message
@@ -36,7 +35,6 @@ export const getAppointmentById = async (req, res) => {
     }
     res.status(200).json(appointment);
   } catch (error) {
-    console.error("Error fetching appointment:", error);
     res.status(500).json({ message: "Server error." });
   }
 };
@@ -71,7 +69,6 @@ export const createAppointment = async (req, res) => {
       appointment: savedAppointment
     });
   } catch (error) {
-    console.error("Error creating appointment:", error);
     res.status(500).json({
       success: false,
       message: "Erreur lors de la création du rendez-vous",
@@ -113,7 +110,6 @@ export const updateAppointment = async (req, res) => {
       appointment: updatedAppointment 
     });
   } catch (error) {
-    console.error("Error updating appointment:", error);
     res.status(500).json({ 
       success: false,
       message: "Erreur lors de la modification du rendez-vous",
@@ -135,7 +131,6 @@ export const deleteAppointment = async (req, res) => {
     await appointment.deleteOne();
     res.status(200).json({ message: "Appointment deleted successfully." });
   } catch (error) {
-    console.error("Error deleting appointment:", error);
     res.status(500).json({ message: "Server error." });
   }
 };

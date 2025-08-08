@@ -11,7 +11,13 @@ const patientVisitSchema = new mongoose.Schema({
   calorieintake: { type: Number },
   healthScore: { type: Number },
   rythm: { type: Number },
-  diet: { type: mongoose.Schema.Types.ObjectId, ref: "DietPlan", default: null }, // New field
+   goal: {
+    type: String,
+    required: true,
+    enum: ['weight loss', 'muscle gain', 'maintenance'],
+  },
+  diet: { type: mongoose.Schema.Types.ObjectId, ref: "DietPlan", default: null },
+  training: { type: mongoose.Schema.Types.ObjectId, ref: "TrainingPlan", default: null }, // New field
 }, { timestamps: true });
 
 const PatientVisit = mongoose.model("PatientVisit", patientVisitSchema);

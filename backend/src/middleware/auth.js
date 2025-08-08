@@ -24,7 +24,6 @@ export const protect = async (req, res, next) => {
 
       next();
     } catch (error) {
-      console.error("Not authorized, token failed", error);
       return res.status(401).json({ message: "Not authorized, token failed" });
     }
   } else {
@@ -34,12 +33,16 @@ export const protect = async (req, res, next) => {
 
 export const requireAdmin = async (req, res, next) => {
   try {
-    if (!req.user.isAdmin) {
-      return res.status(403).json({ 
-        message: "Access denied. Admin privileges required." 
-      });
-    }
-    next();
+    // First run the protect middleware
+    await protect(req, res, async () => {
+      // Then check if user is admin
+      if (!req.user?.isAdmin) {
+        return res.status(403).json({ 
+          message: "Access denied. Admin privileges required." 
+        });
+      }
+      next();
+    });
   } catch (error) {
     res.status(500).json({ message: "Server error" });
   }

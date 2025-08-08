@@ -7,15 +7,15 @@ import {
   deleteDoctor,
   getDoctorStats,
 } from "../controller/doctorController.js";
-import { requireAdmin } from "../middleware/auth.js";
+import { protect,requireAdmin } from "../middleware/auth.js";
 
 const router = express.Router();
 
-router.post("/", addDoctor);
-router.get("/", getDoctors);
-router.get("/:id", getDoctorById);
-router.put("/:id", updateDoctor);
-router.delete("/:id", deleteDoctor);
-router.get('/:id/stats', getDoctorStats);
+router.post("/",requireAdmin, addDoctor);
+router.get("/",requireAdmin, getDoctors);
+router.get("/:id",protect, getDoctorById);
+router.put("/:id", requireAdmin,updateDoctor);
+router.delete("/:id", requireAdmin,deleteDoctor);
+router.get('/:id/stats',protect, getDoctorStats);
 
 export default router;

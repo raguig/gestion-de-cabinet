@@ -30,7 +30,6 @@ export const addDoctor = async (req, res) => {
         message: "Un docteur avec cet email existe déjà" 
       });
     }
-    console.log(firstname, lastname, email, phone, specialty, password);
     // Create new doctor
     const newDoctor = new Doctor({
       firstname,
@@ -56,7 +55,6 @@ export const addDoctor = async (req, res) => {
     });
 
   } catch (error) {
-    console.error("Server error:", error);
     res.status(500).json({ 
       message: "Erreur serveur", 
       error: error.message 
@@ -88,7 +86,6 @@ const getPatientCounts = async () => {
       }, {})
     };
   } catch (error) {
-    console.error("Error getting patient counts:", error);
     return { total: 0, perDoctor: {} };
   }
 };
@@ -98,7 +95,7 @@ const getPatientCounts = async () => {
 // @access  Public
 export const getDoctors = async (req, res) => {
   try {
-    const doctors = await Doctor.find({});
+    const doctors = await Doctor.find({isAdmin: false});
     const patientCounts = await getPatientCounts();
 
     // Map doctors with their patient counts
@@ -235,6 +232,9 @@ export const deleteDoctor = async (req, res) => {
   }
 
   try {
+
+const deletedPatients = await Patient.deleteMany({ doctor: id });
+    const deletedAppointments = await Appointment.deleteMany({ doctor: id });
     const doctor = await Doctor.findByIdAndDelete(id);
 
     if (doctor) {

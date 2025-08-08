@@ -37,7 +37,7 @@ export const addPatient = async (req, res) => {
       height,
      
       activityLevel,
-      goal,
+      
       lastmeasurement,
       pathalogie,
       allergie,
@@ -77,6 +77,7 @@ export const addPatient = async (req, res) => {
       calorieintake: parseFloat(calorie_regime.toFixed(1)),
       healthScore,
       rythm,
+      goal: goal,
     });
 
     await initialVisit.save();
@@ -87,7 +88,6 @@ export const addPatient = async (req, res) => {
       visit: initialVisit,
     });
   } catch (error) {
-    console.error('Add Patient Error:', error);
     res.status(500).json({ message: 'Server error.' });
   }
 };
@@ -111,7 +111,6 @@ export const deletePatient = async (req, res) => {
 
     res.status(200).json({ message: "Patient and associated visits deleted successfully." });
   } catch (error) {
-    console.error("Delete Patient Error:", error);
     res.status(500).json({ message: "Server error." });
   }
 };
@@ -166,7 +165,7 @@ export const updatePatient = async (req, res) => {
         if (weight) latestVisit.weight = weight;
         if (bf) latestVisit.bf = bf;
         if (healthScore) latestVisit.healthScore = healthScore;
-
+        if (goal) latestVisit.goal = goal;
         // Update calculated fields
         latestVisit.bmi = height ? parseFloat((weight / (height / 100) ** 2).toFixed(1)) : latestVisit.bmi;
         latestVisit.basemetabolisme = metabolismebase ? parseFloat(metabolismebase.toFixed(1)) : latestVisit.basemetabolisme;
@@ -194,7 +193,6 @@ export const updatePatient = async (req, res) => {
 
     res.status(200).json({ message: "Patient updated successfully.", updatedPatient });
   } catch (error) {
-    console.error("Update Patient Error:", error);
     res.status(500).json({ message: "Server error." });
   }
 };
@@ -230,7 +228,6 @@ export const getPatients = async (req, res) => {
 export const getPatientById = async (req, res) => {
   try {
     const { id } = req.params; // Extract patient ID from URL
-    console.log("Fetching patient with ID:", id); // Debugging log
 
     // Find the patient by ID
     const patient = await Patient.findById(id);
@@ -262,33 +259,28 @@ export const getPatientById = async (req, res) => {
 
     res.status(200).json(patientData);
   } catch (error) {
-    console.error("Get Patient By ID Error:", error);
     res.status(500).json({ message: "Server error." });
   }
 };
 export const getPatientVisits = async (req, res) => {
   try {
-    const { id } = req.params;
-
-    const visits = await PatientVisit.find({ patient: id }).sort({ visitDate: 1 }).populate("diet"); // Sort visits by visitDate in ascending order and populate diet details
-    if (!visits || visits.length === 0) {
-      return res.status(404).json({ message: "No visits found for this patient." });
-    }
-
-    res.status(200).json(visits);
+    const visits = await PatientVisit.find({ patient: req.params.id })
+      .populate('diet')
+      .populate('training')
+      .sort({ createdAt: 1 });
+    res.json(visits);
   } catch (error) {
-    console.error("Get Patient Visits Error:", error);
-    res.status(500).json({ message: "Server error." });
+    res.status(500).json({ message: error.message });
   }
 };
 
 export const addPatientVisit = async (req, res) => {
   try {
     const { id } = req.params;
-    const { weight, bf, healthScore, rythm } = req.body;
+    const { weight, bf, healthScore, rythm, goal } = req.body;
 
     // Validate required fields
-    if (!weight || !bf || !healthScore || !rythm) {
+    if (!weight || !bf || !healthScore || !rythm || !goal) {
       return res.status(400).json({ message: "Weight, body fat, health score, and rythm are required." });
     }
 
@@ -316,10 +308,12 @@ export const addPatientVisit = async (req, res) => {
     const difficite_calorique = (rythm * 7700) / 7;
 
     let calorie_regime = metabolismeactive;
-    if (patient.goal === "perte" || patient.goal === "weight loss") {
+    if (goal === "perte" || goal === "weight loss") {
       calorie_regime = metabolismeactive - difficite_calorique;
-    } else if (patient.goal === "gain" || patient.goal === "muscle gain") {
+    } else if (goal === "gain" || goal === "muscle gain") {
       calorie_regime = metabolismeactive + difficite_calorique;
+    }else{
+      calorie_regime = metabolismeactive + 0;
     }
 
     const bmi = patient.height ? parseFloat((weight / (patient.height / 100) ** 2).toFixed(1)) : null;
@@ -334,7 +328,8 @@ export const addPatientVisit = async (req, res) => {
       activemetabolisme: parseFloat(metabolismeactive.toFixed(1)),
       calorieintake: parseFloat(calorie_regime.toFixed(1)),
       healthScore,
-      rythm
+      rythm,
+      goal: goal,
     });
 
     await newVisit.save();
@@ -349,7 +344,7 @@ export const addPatientVisit = async (req, res) => {
       latestVisit, // Return the updated latest visit
     });
   } catch (error) {
-    console.error("Error in addPatientVisit:", error);
+    
     res.status(500).json({ message: "Server error." });
   }
 };
@@ -368,7 +363,7 @@ export const assignDietToVisit = async (req, res) => {
 
     res.status(200).json({ message: "Diet assigned successfully.", visit });
   } catch (error) {
-    console.error("Error in assignDietToVisit:", error);
+
     res.status(500).json({ message: "Server error." });
   }
 };
@@ -376,7 +371,6 @@ export const assignDietToVisit = async (req, res) => {
 export const addDietPlan = async (req, res) => {
   try {
     const { name, meals } = req.body;
-    console.log("Adding diet plan with name:", req.body); // Debugging log
     if (!name || !meals ) {
       return res.status(400).json({ message: "All fields are required." });
     }
@@ -394,7 +388,7 @@ export const addDietPlan = async (req, res) => {
       dietPlan: savedDietPlan,
     });
   } catch (error) {
-    console.error("Error in addDietPlan:", error);
+    
     res.status(500).json({ message: "Server error." });
   }
 };

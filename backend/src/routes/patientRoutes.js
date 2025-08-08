@@ -10,8 +10,9 @@ import {
   assignDietToVisit,
   addDietPlan
 } from "../controller/patientController.js";
-
+import TrainingPlan from "../models/TrainingPlan.js";
 import { protect } from "../middleware/auth.js";
+import PatientVisit from '../models/PatientVisit.js';
 
 const router = express.Router();
 
@@ -26,4 +27,65 @@ router.post("/:id/visits", protect, addPatientVisit); // Add a new visit for a s
 router.put("/visits/:visitId/assign-diet", protect, assignDietToVisit); // Assign diet to a visit
 
 router.post("/diets", protect, addDietPlan); // Add a new diet plan
+router.post('/trainings',protect, async (req, res) => {
+  try {
+       
+
+    const trainingPlan = new TrainingPlan(req.body);
+    await trainingPlan.save();
+    res.status(201).json({ trainingPlan });
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+  }
+});
+
+// Assign training to visit
+router.put('/visits/:visitId/assign-training',protect, async (req, res) => {
+  try {
+    const visit = await PatientVisit.findById(req.params.visitId);
+    if (!visit) {
+      return res.status(404).json({ message: 'Visit not found' });
+    }
+    
+    visit.training = req.body.trainingId;
+    await visit.save();
+    
+    res.json({ message: 'Training plan assigned successfully', visit });
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+  }
+});
 export default router;
+
+
+router.delete('/visits/:visitId/diet', protect, async (req, res) => {
+  try {
+    const visit = await PatientVisit.findById(req.params.visitId);
+    if (!visit) {
+      return res.status(404).json({ message: 'Visit not found' });
+    }
+    
+    visit.diet = null; // Remove the diet reference
+    await visit.save();
+    
+    res.json({ message: 'Diet removed successfully', visit });
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+  }
+});
+
+router.delete('/visits/:visitId/training', protect, async (req, res) => {
+  try {
+    const visit = await PatientVisit.findById(req.params.visitId);
+    if (!visit) {
+      return res.status(404).json({ message: 'Visit not found' });
+    }
+   
+    visit.training = null; // Remove the diet reference
+    await visit.save();
+    
+    res.json({ message: 'Training Plan removed successfully', visit });
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+  }
+});
