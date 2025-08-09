@@ -121,7 +121,7 @@ export function PatientManagement() {
   });
 
   // --- API URL ---
-  const API_URL = "import.meta.env.VITE_BACKEND_URL/api/patients"; // Adjust if needed
+  const API_URL = `${import.meta.env.VITE_BACKEND_URL}/api/patients`; // Adjust if needed
 
   // --- Fetch patients from backend ---
   const fetchPatients = async () => {
@@ -129,7 +129,7 @@ export function PatientManagement() {
       const token = localStorage.getItem("token");
       const doctorId = localStorage.getItem("doctorId"); // Add this line
 
-      const res = await axios.get("import.meta.env.VITE_BACKEND_URL/api/patients", {
+      const res = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/patients`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },

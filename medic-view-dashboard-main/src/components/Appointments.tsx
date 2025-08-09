@@ -228,7 +228,7 @@ const Appointments = () => {
       }
 
       const response = await axios.get(
-        "import.meta.env.VITE_BACKEND_URL/api/appointments",
+        `${import.meta.env.VITE_BACKEND_URL}/api/appointments`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -252,7 +252,6 @@ const Appointments = () => {
 
       setAppointments(sanitizedAppointments);
     } catch (error) {
-     
       toast({
         title: "Erreur",
         description: t.errors.loadError,
@@ -351,7 +350,7 @@ const Appointments = () => {
 
       if (editingAppointment) {
         response = await axios.put(
-          `import.meta.env.VITE_BACKEND_URL/api/appointments/${editingAppointment.id}`,
+          `${import.meta.env.VITE_BACKEND_URL}/api/appointments/${editingAppointment.id}`,
           appointmentData,
           {
             headers: {
@@ -362,7 +361,7 @@ const Appointments = () => {
         );
       } else {
         response = await axios.post(
-          "import.meta.env.VITE_BACKEND_URL/api/appointments",
+          `${import.meta.env.VITE_BACKEND_URL}/api/appointments`,
           appointmentData,
           {
             headers: {
@@ -385,7 +384,6 @@ const Appointments = () => {
         setIsDialogOpen(false);
       }
     } catch (error) {
-     
       toast({
         title: "Erreur",
         description: error.response?.data?.message || t.errors.genericError,
@@ -399,18 +397,20 @@ const Appointments = () => {
   const handleDelete = async (id: string) => {
     try {
       const token = localStorage.getItem("token");
-      await axios.delete(`import.meta.env.VITE_BACKEND_URL/api/appointments/${id}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      await axios.delete(
+        `${import.meta.env.VITE_BACKEND_URL}/api/appointments/${id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
       setAppointments((prev) => prev.filter((apt) => apt.id !== id));
       toast({
         title: t.success.appointmentDeleted.split(" ")[0],
         description: t.success.appointmentDeleted,
       });
     } catch (error) {
-     
       toast({
         title: "Erreur",
         description: t.errors.deleteError,
@@ -439,7 +439,7 @@ const Appointments = () => {
       };
 
       await axios.put(
-        `import.meta.env.VITE_BACKEND_URL/api/appointments/${appointmentId}`,
+        `${import.meta.env.VITE_BACKEND_URL}/api/appointments/${appointmentId}`,
         appointmentData,
         {
           headers: {
@@ -465,7 +465,6 @@ const Appointments = () => {
         description: statusMessages[newStatus],
       });
     } catch (error) {
-      
       toast({
         title: "Erreur",
         description: t.errors.statusUpdateError,

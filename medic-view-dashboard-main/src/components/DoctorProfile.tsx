@@ -98,10 +98,10 @@ const DoctorProfile = () => {
 
         // Fetch both doctor data and stats concurrently
         const [doctorResponse, statsResponse] = await Promise.all([
-          axios.get(`import.meta.env.VITE_BACKEND_URL/api/doctors/${doctorId}`, {
+          axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/doctors/${doctorId}`, {
             headers: { Authorization: `Bearer ${token}` },
           }),
-          axios.get(`import.meta.env.VITE_BACKEND_URL/api/doctors/${doctorId}/stats`, {
+          axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/doctors/${doctorId}/stats`, {
             headers: { Authorization: `Bearer ${token}` },
           }),
         ]);
