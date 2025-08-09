@@ -181,7 +181,7 @@ const Admin = () => {
       setLoading(true);
       const token = localStorage.getItem("token");
       const response = await fetch(
-        "https://projet-amine-back.vercel.app/api/doctors",
+        "https://projet-amine-back-q6mpanbk2-raguigs-projects.vercel.app/api/doctors",
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -238,8 +238,8 @@ const Admin = () => {
       };
 
       const url = editingDoctor
-        ? `https://projet-amine-back.vercel.app/api/doctors/${editingDoctor.id}`
-        : "https://projet-amine-back.vercel.app/api/doctors";
+        ? `https://projet-amine-back-q6mpanbk2-raguigs-projects.vercel.app/api/doctors/${editingDoctor.id}`
+        : "https://projet-amine-back-q6mpanbk2-raguigs-projects.vercel.app/api/doctors";
 
       const response = await fetch(url, {
         method: editingDoctor ? "PUT" : "POST",
@@ -296,7 +296,7 @@ const Admin = () => {
     try {
       const token = localStorage.getItem("token");
       const response = await fetch(
-        `https://projet-amine-back.vercel.app/api/doctors/${doctorId}`,
+        `https://projet-amine-back-q6mpanbk2-raguigs-projects.vercel.app/api/doctors/${doctorId}`,
         {
           method: "DELETE",
           headers: {
