@@ -22,6 +22,7 @@ export function MetricCard({
     red: "bg-medical-red/10 text-medical-red border-medical-red/20",
     green: "bg-medical-green/10 text-medical-green border-medical-green/20",
     orange: "bg-medical-orange/10 text-medical-orange border-medical-orange/20",
+    purple: "bg-medical-purple/10 text-medical-purple border-medical-purple/20",
   };
 
   return (
