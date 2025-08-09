@@ -61,33 +61,33 @@ export const AuthProvider = ({ children }) => {
   const login = async (email, password) => {
     try {
       const response = await fetch(
-        `${import.meta.env.VITE_BACKEND_URL}api/auth/login`,
+        `${import.meta.env.VITE_BACKEND_URL}/api/auth/login`,
         {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
-          credentials: "include",
+
           body: JSON.stringify({ email, password }),
         }
       );
 
-      const data = await response.json();
-
-      if (response.ok) {
-        // Ensure isAdmin is explicitly set
-        setUser({
-          ...data,
-          isAdmin: Boolean(data.isAdmin),
-        });
-        localStorage.setItem("token", data.token);
-        localStorage.setItem("doctorId", data.id);
-        navigate("/");
-        return { success: true, data };
-      } else {
-        return { success: false, message: data.message };
+      if (!response.ok) {
+        const errorData = await response.json();
+        return { success: false, message: errorData.message || "Login failed" };
       }
+
+      const data = await response.json();
+      setUser({
+        ...data,
+        isAdmin: Boolean(data.isAdmin),
+      });
+      localStorage.setItem("token", data.token);
+      localStorage.setItem("doctorId", data.id);
+      navigate("/");
+      return { success: true, data };
     } catch (error) {
+      console.error("Login error:", error);
       return { success: false, message: "Network error occurred" };
     }
   };
