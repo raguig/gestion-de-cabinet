@@ -61,7 +61,7 @@ export const AuthProvider = ({ children }) => {
   const login = async (email, password) => {
     try {
       const response = await fetch(
-        `${import.meta.env.VITE_BACKEND_URL}/api/auth/login`,
+        `${import.meta.env.VITE_BACKEND_URL}api/auth/login`,
         {
           method: "POST",
           headers: {
