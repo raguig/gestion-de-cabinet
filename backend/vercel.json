@@ -18,7 +18,7 @@
         },
         {
           "key": "Access-Control-Allow-Origin",
-          "value": "https://gestion-cabinet-front-p4pjjejnr-raguigs-projects.vercel.app"
+          "value": "*"
         },
         {
           "key": "Access-Control-Allow-Methods",
