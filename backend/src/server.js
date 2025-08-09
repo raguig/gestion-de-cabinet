@@ -21,7 +21,8 @@ const allowedOrigins = [
     'https://gestion-cabinet-front-raguigs-projects.vercel.app',
     'https://amine-front.vercel.app',
     'https://amine-front-i3vxtnnds-raguigs-projects.vercel.app',
-    'http://localhost:3000'
+    'http://localhost:3000',
+    'https://projet-amine-front.vercel.app'
 ];
 
 app.use(cors({
