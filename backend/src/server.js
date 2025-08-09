@@ -13,7 +13,7 @@ dotenv.config();
 
 const app = express();
 
-// Update allowedOrigins to include your Vercel frontend URL
+// Update allowedOrigins to include your local API URL
 const allowedOrigins = [
     'https://prod-front.vercel.app',
     'https://prod-front-n2ifynuv4-raguigs-projects.vercel.app',
@@ -22,19 +22,23 @@ const allowedOrigins = [
     'https://amine-front.vercel.app',
     'https://amine-front-i3vxtnnds-raguigs-projects.vercel.app',
     'http://localhost:3000',
+    'http://localhost:5173',
     'https://projet-amine-front.vercel.app',
-    'https://projet-amine-front-4qq0rhguo-raguigs-projects.vercel.app'
+    'https://projet-amine-front-4qq0rhguo-raguigs-projects.vercel.app',
+    process.env.VITE_API_URL // Add the API URL from environment variables
 ];
 
 app.use(cors({
-  origin: function(origin, callback) {
-    if (!origin || allowedOrigins.includes(origin)) {
-      callback(null, true);
-    } else {
-      callback(new Error('Not allowed by CORS'));
-    }
-  },
-  credentials: true
+    origin: function(origin, callback) {
+        if (!origin || allowedOrigins.includes(origin)) {
+            callback(null, true);
+        } else {
+            callback(new Error('Not allowed by CORS'));
+        }
+    },
+    credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization']
 }));
 
 app.use(express.json());

@@ -98,10 +98,10 @@ const DoctorProfile = () => {
 
         // Fetch both doctor data and stats concurrently
         const [doctorResponse, statsResponse] = await Promise.all([
-          axios.get(`https://projet-amine-back-q6mpanbk2-raguigs-projects.vercel.app/api/doctors/${doctorId}`, {
+          axios.get(`import.meta.env.VITE_BACKEND_URL/api/doctors/${doctorId}`, {
             headers: { Authorization: `Bearer ${token}` },
           }),
-          axios.get(`https://projet-amine-back-q6mpanbk2-raguigs-projects.vercel.app/api/doctors/${doctorId}/stats`, {
+          axios.get(`import.meta.env.VITE_BACKEND_URL/api/doctors/${doctorId}/stats`, {
             headers: { Authorization: `Bearer ${token}` },
           }),
         ]);

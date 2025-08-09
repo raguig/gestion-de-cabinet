@@ -260,7 +260,7 @@ export function OverviewTab({
     try {
       const token = localStorage.getItem("token");
       const response = await fetch(
-        `https://projet-amine-back-q6mpanbk2-raguigs-projects.vercel.app/api/patients/${patient._id}/visits`,
+        `import.meta.env.VITE_BACKEND_URL/api/patients/${patient._id}/visits`,
         {
           method: "POST",
           headers: {
@@ -337,7 +337,7 @@ export function OverviewTab({
               try {
                 const token = localStorage.getItem("token");
                 await fetch(
-                  `https://projet-amine-back-q6mpanbk2-raguigs-projects.vercel.app/api/patients/visits/${currentVisit._id}/training`,
+                  `import.meta.env.VITE_BACKEND_URL/api/patients/visits/${currentVisit._id}/training`,
                   {
                     method: "DELETE",
                     headers: {
@@ -402,7 +402,7 @@ export function OverviewTab({
               try {
                 const token = localStorage.getItem("token");
                 await fetch(
-                  `https://projet-amine-back-q6mpanbk2-raguigs-projects.vercel.app/api/patients/visits/${currentVisit._id}/diet`,
+                  `import.meta.env.VITE_BACKEND_URL/api/patients/visits/${currentVisit._id}/diet`,
                   {
                     method: "DELETE",
                     headers: {

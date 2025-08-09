@@ -30,13 +30,13 @@ export default function PatientDetail() {
       // Fetch both patient and visits data concurrently
       const [patientRes, visitsRes] = await Promise.all([
         axios.get(
-          `https://projet-amine-back-q6mpanbk2-raguigs-projects.vercel.app/api/patients/${id}`,
+          `import.meta.env.VITE_BACKEND_URL/api/patients/${id}`,
           {
             headers: { Authorization: `Bearer ${token}` },
           }
         ),
         axios.get(
-          `https://projet-amine-back-q6mpanbk2-raguigs-projects.vercel.app/api/patients/visit/${id}`,
+          `import.meta.env.VITE_BACKEND_URL/api/patients/visit/${id}`,
           {
             headers: { Authorization: `Bearer ${token}` },
           }
@@ -74,13 +74,13 @@ export default function PatientDetail() {
       // Fetch both patient and visits data concurrently
       const [patientRes, visitsRes] = await Promise.all([
         axios.get(
-          `https://projet-amine-back-q6mpanbk2-raguigs-projects.vercel.app/api/patients/${id}`,
+          `import.meta.env.VITE_BACKEND_URL/api/patients/${id}`,
           {
             headers: { Authorization: `Bearer ${token}` },
           }
         ),
         axios.get(
-          `https://projet-amine-back-q6mpanbk2-raguigs-projects.vercel.app/api/patients/visit/${id}`,
+          `import.meta.env.VITE_BACKEND_URL/api/patients/visit/${id}`,
           {
             headers: { Authorization: `Bearer ${token}` },
           }

@@ -19,7 +19,7 @@ export const AuthProvider = ({ children }) => {
   const verifyToken = async (token) => {
     try {
       const response = await fetch(
-        "https://projet-amine-back-q6mpanbk2-raguigs-projects.vercel.app/api/auth/me",
+        "import.meta.env.VITE_BACKEND_URL/api/auth/me",
         {
           method: "GET",
           headers: {
@@ -61,7 +61,7 @@ export const AuthProvider = ({ children }) => {
   const login = async (email, password) => {
     try {
       const response = await fetch(
-        "https://projet-amine-back-q6mpanbk2-raguigs-projects.vercel.app/api/auth/login",
+        "import.meta.env.VITE_BACKEND_URL/api/auth/login",
         {
           method: "POST",
           headers: {
