@@ -100,7 +100,7 @@ export function DoctorDashboard() {
           throw new Error("No authentication token found");
         }
 
-        const response = await axios.get("http://localhost:8000/api/stats", {
+        const response = await axios.get("https://amine-back.vercel.app/api/stats", {
           headers: {
             Authorization: `Bearer ${token}`,
           },

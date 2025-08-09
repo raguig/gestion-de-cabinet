@@ -24,8 +24,11 @@ const AppRoutes = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+      <div className="min-h-screen flex items-center justify-center p-4">
+        <div className="flex flex-col items-center space-y-4">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+          <p className="text-sm text-gray-600 dark:text-gray-400">Loading...</p>
+        </div>
       </div>
     );
   }
@@ -67,9 +70,14 @@ const App = () => {
         <AuthProvider>
           <LanguageProvider>
             <TooltipProvider>
-              <Toaster />
-              <Sonner />
-              <AppRoutes />
+              <div className="min-h-screen bg-background font-sans antialiased">
+                <Toaster />
+                <Sonner
+                  position="top-center"
+                  className="max-w-[90vw] sm:max-w-md"
+                />
+                <AppRoutes />
+              </div>
             </TooltipProvider>
           </LanguageProvider>
         </AuthProvider>

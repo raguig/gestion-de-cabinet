@@ -1,32 +1,49 @@
 import express from 'express';
 import { connectDB } from './config/db.js';
 import dotenv from 'dotenv';
+import cors from 'cors';
+
 import patientRoutes from './routes/patientRoutes.js';
 import authRoutes from './routes/auth.js';
 import appointmentRoutes from './routes/appointmentRoutes.js';
-import cors from 'cors';
 import doctorRoutes from "./routes/doctorRoutes.js";
 import dashboardRoutes from "./routes/dashboardRoutes.js";
 
 dotenv.config();
-const app= express();
-const PORT= process.env.PORT || 8000;
+
+const app = express();
+
+// Update allowedOrigins to include your Vercel frontend URL
+const allowedOrigins = [
+    'https://prod-front.vercel.app',
+    'https://prod-front-n2ifynuv4-raguigs-projects.vercel.app',
+    'https://gestion-cabinet-front-dbb7aqeiw-raguigs-projects.vercel.app',
+    'https://gestion-cabinet-front-raguigs-projects.vercel.app',
+    'https://amine-front.vercel.app',
+    'http://localhost:3000'
+];
 
 app.use(cors({
-    origin: 'http://localhost:8080', 
-    credentials: true
+  origin: function(origin, callback) {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
+  credentials: true
 }));
+
 app.use(express.json());
 
+// Update routes to remove /api prefix
+app.use('/auth', authRoutes);
+app.use('/patients', patientRoutes);
+app.use('/appointments', appointmentRoutes);
+app.use('/doctors', doctorRoutes);
+app.use('/', dashboardRoutes);
 
-app.use('/api/auth',authRoutes);
-app.use('/api/patients/',patientRoutes);
-app.use("/api/appointments", appointmentRoutes);
-app.use("/api/doctors", doctorRoutes);
-app.use("/api/", dashboardRoutes);
+// Connect to database immediately
+connectDB();
 
-connectDB().then(()=>{  
-app.listen(PORT,()=>{
-    console.log("Server is running on port:", PORT);
-});
-});
+export default app;

@@ -1,10 +1,12 @@
 {
-  "name": "clm-back-end",
+  "name": "gestion-cabinet-back-end",
   "version": "1.0.0",
   "main": "src/server.js",
   "scripts": {
-    "build": "vite build",
-    "start": "vite preview"
+    "start": "node src/server.js",
+    "dev": "nodemon src/server.js",
+    "build": "mkdir -p dist && cp -r src/* dist/",
+    "vercel-build": "npm run build"
   },
   "type": "module",
   "keywords": [],
@@ -19,7 +21,8 @@
     "dotenv": "^17.1.0",
     "express": "^5.1.0",
     "jsonwebtoken": "^9.0.2",
-    "mongoose": "^8.16.2"
+    "mongoose": "^8.16.2",
+    "serverless-http": "^3.2.0"
   },
   "devDependencies": {
     "nodemon": "^3.1.10"

@@ -29,12 +29,18 @@ export default function PatientDetail() {
     try {
       // Fetch both patient and visits data concurrently
       const [patientRes, visitsRes] = await Promise.all([
-        axios.get(`http://localhost:8000/api/patients/${id}`, {
-          headers: { Authorization: `Bearer ${token}` },
-        }),
-        axios.get(`http://localhost:8000/api/patients/visit/${id}`, {
-          headers: { Authorization: `Bearer ${token}` },
-        }),
+        axios.get(
+          `https://amine-back.vercel.app/api/patients/${id}`,
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        ),
+        axios.get(
+          `https://amine-back.vercel.app/api/patients/visit/${id}`,
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        ),
       ]);
 
       setPatient(patientRes.data);
@@ -67,12 +73,18 @@ export default function PatientDetail() {
     try {
       // Fetch both patient and visits data concurrently
       const [patientRes, visitsRes] = await Promise.all([
-        axios.get(`http://localhost:8000/api/patients/${id}`, {
-          headers: { Authorization: `Bearer ${token}` },
-        }),
-        axios.get(`http://localhost:8000/api/patients/visit/${id}`, {
-          headers: { Authorization: `Bearer ${token}` },
-        }),
+        axios.get(
+          `https://amine-back.vercel.app/api/patients/${id}`,
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        ),
+        axios.get(
+          `https://amine-back.vercel.app/api/patients/visit/${id}`,
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        ),
       ]);
 
       setPatient(patientRes.data);

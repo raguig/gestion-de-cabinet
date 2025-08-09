@@ -103,7 +103,6 @@ const adminTranslations = {
       en: "Adjust your search criteria",
     },
     patient: { fr: "patient", en: "patient" },
-    patients: { fr: "patients", en: "patients" },
   },
   messages: {
     doctorAdded: { fr: "Docteur ajouté", en: "Doctor added" },
@@ -181,12 +180,15 @@ const Admin = () => {
     try {
       setLoading(true);
       const token = localStorage.getItem("token");
-      const response = await fetch("http://localhost:8000/api/doctors", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
-      });
+      const response = await fetch(
+        "https://amine-back.vercel.app/api/doctors",
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
       if (!response.ok) {
         throw new Error("Failed to fetch doctors");
       }
@@ -236,8 +238,8 @@ const Admin = () => {
       };
 
       const url = editingDoctor
-        ? `http://localhost:8000/api/doctors/${editingDoctor.id}`
-        : "http://localhost:8000/api/doctors";
+        ? `https://amine-back.vercel.app/api/doctors/${editingDoctor.id}`
+        : "https://amine-back.vercel.app/api/doctors";
 
       const response = await fetch(url, {
         method: editingDoctor ? "PUT" : "POST",
@@ -294,7 +296,7 @@ const Admin = () => {
     try {
       const token = localStorage.getItem("token");
       const response = await fetch(
-        `http://localhost:8000/api/doctors/${doctorId}`,
+        `https://amine-back.vercel.app/api/doctors/${doctorId}`,
         {
           method: "DELETE",
           headers: {

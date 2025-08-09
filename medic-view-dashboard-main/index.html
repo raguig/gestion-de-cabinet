@@ -2,18 +2,25 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     <title>medic-view-dashboard</title>
-    <meta name="description" content="Gestion de Cabinet" />
+    <meta name="description" content="Gestion de Cabinet - Medical Practice Management System" />
     <meta name="author" content="Gestion de Cabinet" />
-
-    <meta property="og:title" content="medic-view-dashboard" />
-    <meta property="og:description" content="Gestion de Cabinet" />
-    <meta property="og:type" content="website" />
-
+    <meta name="theme-color" content="#ffffff" />
     
+    <!-- Open Graph / Social Media -->
+    <meta property="og:title" content="medic-view-dashboard" />
+    <meta property="og:description" content="Gestion de Cabinet - Medical Practice Management System" />
+    <meta property="og:type" content="website" />
+    
+    <!-- PWA Support -->
+    <link rel="manifest" href="/manifest.json" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    
+    <!-- Preconnect to API -->
+    <link rel="preconnect" href="https://backend-63fqrmk5w-raguigs-projects.vercel.app" />
   </head>
-
   <body>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>

@@ -2173,7 +2173,7 @@ export default function TrainingTab({
 
       // Create training plan
       const addTrainingResponse = await axios.post(
-        "http://localhost:8000/api/patients/trainings",
+        "https://amine-back.vercel.app/api/patients/trainings",
         trainingData,
         {
           headers: {
@@ -2187,7 +2187,7 @@ export default function TrainingTab({
 
       // Assign training to visit
       await axios.put(
-        `http://localhost:8000/api/patients/visits/${visitId}/assign-training`,
+        `https://amine-back.vercel.app/api/patients/visits/${visitId}/assign-training`,
         { trainingId: createdTraining._id },
         {
           headers: {
