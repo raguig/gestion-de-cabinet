@@ -228,7 +228,7 @@ const Appointments = () => {
       }
 
       const response = await axios.get(
-        `${import.meta.env.VITE_BACKEND_URL}/api/appointments`,
+        `${import.meta.env.VITE_BACKEND_URL}api/appointments`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -350,7 +350,7 @@ const Appointments = () => {
 
       if (editingAppointment) {
         response = await axios.put(
-          `${import.meta.env.VITE_BACKEND_URL}/api/appointments/${editingAppointment.id}`,
+          `${import.meta.env.VITE_BACKEND_URL}api/appointments/${editingAppointment.id}`,
           appointmentData,
           {
             headers: {
@@ -361,7 +361,7 @@ const Appointments = () => {
         );
       } else {
         response = await axios.post(
-          `${import.meta.env.VITE_BACKEND_URL}/api/appointments`,
+          `${import.meta.env.VITE_BACKEND_URL}api/appointments`,
           appointmentData,
           {
             headers: {
@@ -398,7 +398,7 @@ const Appointments = () => {
     try {
       const token = localStorage.getItem("token");
       await axios.delete(
-        `${import.meta.env.VITE_BACKEND_URL}/api/appointments/${id}`,
+        `${import.meta.env.VITE_BACKEND_URL}api/appointments/${id}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -439,7 +439,7 @@ const Appointments = () => {
       };
 
       await axios.put(
-        `${import.meta.env.VITE_BACKEND_URL}/api/appointments/${appointmentId}`,
+        `${import.meta.env.VITE_BACKEND_URL}api/appointments/${appointmentId}`,
         appointmentData,
         {
           headers: {
