@@ -429,7 +429,7 @@ export function DietEditorSlide({
       };
 
       const addDietResponse = await axios.post(
-        "https://amine-back.vercel.app/api/patients/diets",
+        "https://amine-back-lvdsgp24s-raguigs-projects.vercel.app/api/patients/diets",
         dietData,
         {
           headers: {
@@ -441,7 +441,7 @@ export function DietEditorSlide({
       const createdDiet = addDietResponse.data.dietPlan;
       // Assign the diet to the visit
       await axios.put(
-        `https://amine-back.vercel.app/api/patients/visits/${visitId}/assign-diet`,
+        `https://amine-back-lvdsgp24s-raguigs-projects.vercel.app/api/patients/visits/${visitId}/assign-diet`,
         { dietId: createdDiet._id },
         {
           headers: {
@@ -545,7 +545,7 @@ export function DietEditorSlide({
         meals: combinedMeals,
       };
       const addDietResponse = await axios.post(
-        "https://amine-back.vercel.app/api/patients/diets",
+        "https://amine-back-lvdsgp24s-raguigs-projects.vercel.app/api/patients/diets",
         dietData,
         {
           headers: {
@@ -557,7 +557,7 @@ export function DietEditorSlide({
       const createdDiet = addDietResponse.data.dietPlan;
       // Assign the diet to the visit
       await axios.put(
-        `https://amine-back.vercel.app/api/patients/visits/${visitId}/assign-diet`,
+        `https://amine-back-lvdsgp24s-raguigs-projects.vercel.app/api/patients/visits/${visitId}/assign-diet`,
         { dietId: createdDiet._id },
         {
           headers: {
@@ -622,7 +622,7 @@ export function DietEditorSlide({
       }
 
       const addDietResponse = await axios.post(
-        "https://amine-back.vercel.app/api/patients/diets",
+        "https://amine-back-lvdsgp24s-raguigs-projects.vercel.app/api/patients/diets",
         newDietForm,
         {
           headers: {
@@ -635,7 +635,7 @@ export function DietEditorSlide({
 
       // Assign the diet to the visit
       await axios.put(
-        `https://amine-back.vercel.app/api/patients/visits/${visitId}/assign-diet`,
+        `https://amine-back-lvdsgp24s-raguigs-projects.vercel.app/api/patients/visits/${visitId}/assign-diet`,
         { dietId: createdDiet._id },
         {
           headers: {

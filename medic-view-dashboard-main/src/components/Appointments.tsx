@@ -228,7 +228,7 @@ const Appointments = () => {
       }
 
       const response = await axios.get(
-        "https://amine-back.vercel.app/api/appointments",
+        "https://amine-back-lvdsgp24s-raguigs-projects.vercel.app/api/appointments",
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -351,7 +351,7 @@ const Appointments = () => {
 
       if (editingAppointment) {
         response = await axios.put(
-          `https://amine-back.vercel.app/api/appointments/${editingAppointment.id}`,
+          `https://amine-back-lvdsgp24s-raguigs-projects.vercel.app/api/appointments/${editingAppointment.id}`,
           appointmentData,
           {
             headers: {
@@ -362,7 +362,7 @@ const Appointments = () => {
         );
       } else {
         response = await axios.post(
-          "https://amine-back.vercel.app/api/appointments",
+          "https://amine-back-lvdsgp24s-raguigs-projects.vercel.app/api/appointments",
           appointmentData,
           {
             headers: {
@@ -399,7 +399,7 @@ const Appointments = () => {
   const handleDelete = async (id: string) => {
     try {
       const token = localStorage.getItem("token");
-      await axios.delete(`https://amine-back.vercel.app/api/appointments/${id}`, {
+      await axios.delete(`https://amine-back-lvdsgp24s-raguigs-projects.vercel.app/api/appointments/${id}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -439,7 +439,7 @@ const Appointments = () => {
       };
 
       await axios.put(
-        `https://amine-back.vercel.app/api/appointments/${appointmentId}`,
+        `https://amine-back-lvdsgp24s-raguigs-projects.vercel.app/api/appointments/${appointmentId}`,
         appointmentData,
         {
           headers: {

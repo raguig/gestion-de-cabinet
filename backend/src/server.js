@@ -20,6 +20,7 @@ const allowedOrigins = [
     'https://gestion-cabinet-front-dbb7aqeiw-raguigs-projects.vercel.app',
     'https://gestion-cabinet-front-raguigs-projects.vercel.app',
     'https://amine-front.vercel.app',
+    'https://amine-front-i3vxtnnds-raguigs-projects.vercel.app',
     'http://localhost:3000'
 ];
 
