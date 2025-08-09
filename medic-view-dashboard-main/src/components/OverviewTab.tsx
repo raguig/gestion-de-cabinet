@@ -515,7 +515,7 @@ export function OverviewTab({
               title={t.bmi}
               value={currentVisit?.bmi ?? t.noData}
               unit=""
-              color="purple"
+              color={getBMIColor(currentVisit?.bmi)}
               icon={<TrendingUp className="h-6 w-6" />}
             />
 
