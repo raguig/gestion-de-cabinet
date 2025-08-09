@@ -337,7 +337,9 @@ export function OverviewTab({
               try {
                 const token = localStorage.getItem("token");
                 await fetch(
-                  `${import.meta.env.VITE_BACKEND_URL}api/patients/visits/${currentVisit._id}/training`,
+                  `${import.meta.env.VITE_BACKEND_URL}api/patients/visits/${
+                    currentVisit._id
+                  }/training`,
                   {
                     method: "DELETE",
                     headers: {
@@ -402,7 +404,9 @@ export function OverviewTab({
               try {
                 const token = localStorage.getItem("token");
                 await fetch(
-                  `${import.meta.env.VITE_BACKEND_URL}api/patients/visits/${currentVisit._id}/diet`,
+                  `${import.meta.env.VITE_BACKEND_URL}api/patients/visits/${
+                    currentVisit._id
+                  }/diet`,
                   {
                     method: "DELETE",
                     headers: {
@@ -510,10 +514,9 @@ export function OverviewTab({
             <MetricCard
               title={t.bmi}
               value={currentVisit?.bmi ?? t.noData}
-              color={getBMIColor(bmi)}
+              unit=""
+              color="purple"
               icon={<TrendingUp className="h-6 w-6" />}
-              subtitle={bmiCategory || t.noData}
-              clinicalNote={t.clinicalNotes.bmiNote}
             />
 
             <MetricCard
