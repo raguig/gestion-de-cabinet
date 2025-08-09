@@ -5,7 +5,7 @@ interface MetricCardProps {
   value: string;
   unit?: string;
   icon?: React.ReactNode;
-  color?: "blue" | "teal" | "yellow" | "red" | "green" | "orange";
+  color?: "blue" | "teal" | "yellow" | "red" | "green" | "orange" | "purple";
 }
 
 export function MetricCard({
