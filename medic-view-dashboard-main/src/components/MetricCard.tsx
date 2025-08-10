@@ -6,6 +6,8 @@ interface MetricCardProps {
   unit?: string;
   icon?: React.ReactNode;
   color?: "blue" | "teal" | "yellow" | "red" | "green" | "orange" | "purple";
+  subtitle?: string;
+  clinicalNote?: string;
 }
 
 export function MetricCard({
@@ -14,6 +16,8 @@ export function MetricCard({
   unit,
   icon,
   color = "blue",
+  subtitle,
+  clinicalNote,
 }: MetricCardProps) {
   const colorClasses = {
     blue: "bg-medical-blue/10 text-medical-blue border-medical-blue/20",
@@ -27,24 +31,55 @@ export function MetricCard({
 
   return (
     <Card
-      className={`p-4 border ${colorClasses[color]} transition-all hover:shadow-hover`}
+      className={`relative overflow-hidden ${colorClasses[color]} transition-all duration-300 hover:shadow-lg hover:scale-102 group`}
     >
-      <div className="flex items-center justify-between">
-        <div className="flex-1">
-          <p className="text-sm font-medium text-muted-foreground mb-1">
+      <div className="p-4 sm:p-5 flex flex-col sm:flex-row items-start sm:items-center gap-3">
+        {/* Icon container - Responsive sizing and positioning */}
+        {icon && (
+          <div className="flex-shrink-0 w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 rounded-full bg-current/10 flex items-center justify-center transition-transform group-hover:scale-110">
+            <div className="w-5 h-5 sm:w-6 sm:h-6 md:w-7 md:h-7 text-current">
+              {icon}
+            </div>
+          </div>
+        )}
+
+        {/* Content container - Flexible layout */}
+        <div className="flex-1 min-w-0">
+          {/* Title - Responsive text size */}
+          <h3 className="text-xs sm:text-sm md:text-base font-medium text-muted-foreground truncate mb-1">
             {title}
-          </p>
-          <div className="flex items-baseline space-x-1">
-            <span className="text-2xl font-bold text-foreground">{value}</span>
+          </h3>
+
+          {/* Value and Unit - Responsive sizing */}
+          <div className="flex items-baseline flex-wrap gap-1">
+            <span className="text-lg sm:text-xl md:text-2xl font-bold text-foreground truncate">
+              {value}
+            </span>
             {unit && (
-              <span className="text-sm font-medium text-muted-foreground">
+              <span className="text-xs sm:text-sm md:text-base font-medium text-muted-foreground">
                 {unit}
               </span>
             )}
           </div>
+
+          {/* Optional subtitle */}
+          {subtitle && (
+            <p className="text-xs sm:text-sm text-muted-foreground mt-1">
+              {subtitle}
+            </p>
+          )}
+
+          {/* Optional clinical note */}
+          {clinicalNote && (
+            <p className="text-xs italic text-muted-foreground mt-2 hidden sm:block">
+              {clinicalNote}
+            </p>
+          )}
         </div>
-        {icon && <div className="ml-3 opacity-60">{icon}</div>}
       </div>
+
+      {/* Decorative gradient overlay */}
+      <div className="absolute inset-0 bg-gradient-to-br from-transparent to-current/5 pointer-events-none" />
     </Card>
   );
 }
