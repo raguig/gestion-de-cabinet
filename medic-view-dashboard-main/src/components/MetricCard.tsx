@@ -31,55 +31,49 @@ export function MetricCard({
 
   return (
     <Card
-      className={`relative overflow-hidden ${colorClasses[color]} transition-all duration-300 hover:shadow-lg hover:scale-102 group`}
+      className={`${colorClasses[color]} transition-all duration-300 hover:shadow-lg transform hover:scale-102 min-w-[200px] h-full`}
     >
-      <div className="p-4 sm:p-5 flex flex-col sm:flex-row items-start sm:items-center gap-3">
-        {/* Icon container - Responsive sizing and positioning */}
-        {icon && (
-          <div className="flex-shrink-0 w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 rounded-full bg-current/10 flex items-center justify-center transition-transform group-hover:scale-110">
-            <div className="w-5 h-5 sm:w-6 sm:h-6 md:w-7 md:h-7 text-current">
-              {icon}
-            </div>
-          </div>
-        )}
-
-        {/* Content container - Flexible layout */}
-        <div className="flex-1 min-w-0">
-          {/* Title - Responsive text size */}
-          <h3 className="text-xs sm:text-sm md:text-base font-medium text-muted-foreground truncate mb-1">
-            {title}
-          </h3>
-
-          {/* Value and Unit - Responsive sizing */}
-          <div className="flex items-baseline flex-wrap gap-1">
-            <span className="text-lg sm:text-xl md:text-2xl font-bold text-foreground truncate">
-              {value}
-            </span>
-            {unit && (
-              <span className="text-xs sm:text-sm md:text-base font-medium text-muted-foreground">
-                {unit}
-              </span>
+      <div className="p-4 sm:p-5 flex flex-col h-full">
+        <div className="flex items-start justify-between gap-3 mb-2">
+          {/* Title and subtitle */}
+          <div className="flex-1 min-w-0">
+            <h3 className="text-sm sm:text-base font-medium text-muted-foreground truncate">
+              {title}
+            </h3>
+            {subtitle && (
+              <p className="text-xs text-muted-foreground mt-0.5 truncate">
+                {subtitle}
+              </p>
             )}
           </div>
 
-          {/* Optional subtitle */}
-          {subtitle && (
-            <p className="text-xs sm:text-sm text-muted-foreground mt-1">
-              {subtitle}
-            </p>
-          )}
-
-          {/* Optional clinical note */}
-          {clinicalNote && (
-            <p className="text-xs italic text-muted-foreground mt-2 hidden sm:block">
-              {clinicalNote}
-            </p>
+          {/* Icon container with responsive sizing */}
+          {icon && (
+            <div className="flex-shrink-0 w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-current/10 flex items-center justify-center">
+              <div className="w-4 h-4 sm:w-5 sm:h-5">{icon}</div>
+            </div>
           )}
         </div>
-      </div>
 
-      {/* Decorative gradient overlay */}
-      <div className="absolute inset-0 bg-gradient-to-br from-transparent to-current/5 pointer-events-none" />
+        {/* Value and unit with responsive sizing */}
+        <div className="mt-2 flex items-baseline flex-wrap gap-1">
+          <span className="text-xl sm:text-2xl md:text-3xl font-bold text-foreground">
+            {value}
+          </span>
+          {unit && (
+            <span className="text-sm sm:text-base text-muted-foreground">
+              {unit}
+            </span>
+          )}
+        </div>
+
+        {/* Clinical note with responsive visibility */}
+        {clinicalNote && (
+          <p className="mt-2 text-xs italic text-muted-foreground hidden sm:block">
+            {clinicalNote}
+          </p>
+        )}
+      </div>
     </Card>
   );
 }
