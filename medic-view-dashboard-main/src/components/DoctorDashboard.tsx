@@ -265,7 +265,7 @@ export function DoctorDashboard() {
           </Card>
 
           {/* Recent Diet Plans */}
-          <Card className="shadow-sm hover:shadow-md transition-shadow duration-200">
+         {/* <Card className="shadow-sm hover:shadow-md transition-shadow duration-200">
             <CardHeader className="pb-4">
               <div className="flex items-center gap-3">
                 <div className="p-2 rounded-lg bg-success/10">
@@ -319,7 +319,7 @@ export function DoctorDashboard() {
                 />
               )}
             </CardContent>
-          </Card>
+          </Card>*/}
 
           {/* Patient Alerts */}
           {/* <Card className="shadow-sm hover:shadow-md transition-shadow duration-200">
