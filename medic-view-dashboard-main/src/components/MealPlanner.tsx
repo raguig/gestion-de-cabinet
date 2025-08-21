@@ -65,12 +65,6 @@ const mealPlannerTranslations = {
     fats: { fr: "Lipides", en: "Fats" },
     carbs: { fr: "Glucides", en: "Carbs" },
   },
-  actions: {
-    generate: { fr: "Générer le régime", en: "Generate Diet" },
-    save: { fr: "Enregistrer le régime", en: "Save Diet" },
-    clearDay: { fr: "Vider jour", en: "Clear Day" },
-    download: { fr: "Télécharger PDF", en: "Download PDF" },
-  },
   messages: {
     saved: { fr: "Plan alimentaire enregistré", en: "Meal plan saved" },
     generated: { fr: "Régime généré", en: "Diet generated" },
@@ -149,9 +143,6 @@ const mealPlannerTranslations = {
     save: { fr: "Enregistrer le régime", en: "Save Diet" },
     clearDay: { fr: "Vider jour", en: "Clear Day" },
     download: { fr: "Télécharger PDF", en: "Download PDF" },
-  },
-  messages: {
-    dayCleared: { fr: "Jour vidé", en: "Day cleared" },
   },
   dailyTotal: {
     title: { fr: "Total jour", en: "Daily total" },
