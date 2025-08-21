@@ -16,42 +16,53 @@ dotenv.config();
 
 const app = express();
 
-// ✅ CORS
-app.use(
-  cors({
-    origin: [
-      "https://projet-amine-front.vercel.app",
-      "http://localhost:3000",
-      "http://localhost:5173"
-    ],
-    credentials: true,
-    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"],
-  
-  })
-);
+// ✅ Enhanced CORS configuration
+const corsOptions = {
+  origin: [
+    "https://projet-amine-front.vercel.app",
+    "http://localhost:3000",
+    "http://localhost:5173"
+  ],
+  credentials: true,
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"],
+  allowedHeaders: [
+    "Content-Type", 
+    "Authorization", 
+    "X-Requested-With",
+    "Accept",
+    "Origin"
+  ],
+  preflightContinue: false,
+  optionsSuccessStatus: 204
+};
+
+app.use(cors(corsOptions));
+
+// Explicit preflight handler for all routes
+app.options('*', cors(corsOptions));
 
 app.use(express.json());
 
 // ✅ Routes
-app.use("/auth", authRoutes);
-app.use("/patients", patientRoutes);
-app.use("/appointments", appointmentRoutes);
-app.use("/doctors", doctorRoutes);
-app.use("/", dashboardRoutes);
-app.use("/ai", aiRoutes);
-app.use("/mealplanner", mealPlannerRoutes);
+app.use("/api/auth", authRoutes);
+app.use("/api/patients", patientRoutes);
+app.use("/api/appointments", appointmentRoutes);
+app.use("/api/doctors", doctorRoutes);
+app.use("/api", dashboardRoutes);
+app.use("/api/ai", aiRoutes);
+app.use("/api/mealplanner", mealPlannerRoutes);
 
 // ✅ Connect DB once on cold start
 connectDB().then(() => {
   initializeSubscriptionCron();
-
+  
   const checkInactivePatients = async () => {
     try {
       const patients = await Patient.find({
         status: "en cours",
         status: { $nin: ["abandonne"] },
       });
-
+      
       for (const patient of patients) {
         await Patient.checkInactiveStatus(patient._id);
       }
@@ -59,7 +70,7 @@ connectDB().then(() => {
       console.error("Error checking inactive patients:", error);
     }
   };
-
+  
   setInterval(checkInactivePatients, 24 * 60 * 60 * 1000);
   checkInactivePatients();
 }).catch(err => {
