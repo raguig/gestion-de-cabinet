@@ -14,36 +14,20 @@ import Patient from './models/Patient.js';
 
 dotenv.config();
 
-
 const app = express();
 
-// Update allowedOrigins to include your local API URL
-const allowedOrigins = [
-    'https://prod-front.vercel.app',
-    'https://prod-front-n2ifynuv4-raguigs-projects.vercel.app',
-    'https://gestion-cabinet-front-dbb7aqeiw-raguigs-projects.vercel.app',
-    'https://gestion-cabinet-front-raguigs-projects.vercel.app',
-    'https://amine-front.vercel.app',
-    'https://amine-front-i3vxtnnds-raguigs-projects.vercel.app',
-    'http://localhost:3000',
-    'http://localhost:5173',
-    'https://projet-amine-front.vercel.app',
-    'https://projet-amine-front-4qq0rhguo-raguigs-projects.vercel.app',
-    process.env.VITE_API_URL // Add the API URL from environment variables
-];
-
-app.use(cors({
-    origin: function(origin, callback) {
-        if (!origin || allowedOrigins.includes(origin)) {
-            callback(null, true);
-        } else {
-            callback(new Error('Not allowed by CORS'));
-        }
-    },
+// CORS must be added before routes
+app.use(
+  cors({
+    origin: "https://projet-amine-front.vercel.app",
     credentials: true,
-    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization']
-}));
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+  })
+);
+
+// Respond to preflight immediately
+app.options("*", (req, res) => res.sendStatus(204));
 
 app.use(express.json());
 
