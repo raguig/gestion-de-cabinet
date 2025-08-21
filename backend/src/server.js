@@ -35,7 +35,6 @@ const corsOptions = {
   preflightContinue: false,
   optionsSuccessStatus: 204
 };
-
 app.use((req, res, next) => {
   const allowedOrigins = [
     "https://projet-amine-front.vercel.app",
@@ -44,21 +43,26 @@ app.use((req, res, next) => {
   ];
   
   const origin = req.headers.origin;
+  
+  // Always set CORS headers
   if (allowedOrigins.includes(origin)) {
     res.setHeader('Access-Control-Allow-Origin', origin);
   }
   
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS, PATCH');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With, Accept, Origin');
   res.setHeader('Access-Control-Allow-Credentials', 'true');
+  res.setHeader('Access-Control-Max-Age', '86400'); // 24 hours
   
+  // Handle preflight requests
   if (req.method === 'OPTIONS') {
-    res.sendStatus(204);
-  } else {
-    next();
+    console.log(`Preflight request from ${origin} for ${req.url}`);
+    return res.status(204).end();
   }
+  
+  console.log(`${req.method} ${req.url} from ${origin}`);
+  next();
 });
-
 
 
 app.use(express.json());

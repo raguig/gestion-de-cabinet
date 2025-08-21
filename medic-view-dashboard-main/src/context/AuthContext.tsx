@@ -26,6 +26,7 @@ export const AuthProvider = ({ children }) => {
             Authorization: `Bearer ${token}`,
             "Content-Type": "application/json",
           },
+          credentials: "include",
         }
       );
 
@@ -67,6 +68,7 @@ export const AuthProvider = ({ children }) => {
           headers: {
             "Content-Type": "application/json",
           },
+          credentials: "include",
 
           body: JSON.stringify({ email, password }),
         }
@@ -86,6 +88,7 @@ export const AuthProvider = ({ children }) => {
           headers: {
             Authorization: `Bearer ${data.token}`,
           },
+          credentials: "include",
         }
       );
 
