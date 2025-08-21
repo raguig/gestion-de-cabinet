@@ -1,4 +1,9 @@
-import serverless from "serverless-http";
-import app from "../src/server.js";
+import app from '../src/server.js';
 
-export default serverless(app);
+// Add error handling
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+  res.status(500).json({ message: 'Something went wrong!' });
+});
+
+export default app;
