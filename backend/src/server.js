@@ -32,14 +32,16 @@ app.use(cors({
 
 app.use(express.json());
 
+app.get("/", (req, res) => res.json({ ok: true }));
+
 // ✅ Routes
-app.use("/api/auth", authRoutes);
-app.use("/api/patients", patientRoutes);
-app.use("/api/appointments", appointmentRoutes);
-app.use("/api/doctors", doctorRoutes);
-app.use("/api", dashboardRoutes);
-app.use("/api/ai", aiRoutes);
-app.use("/api/mealplanner", mealPlannerRoutes);
+app.use("/auth", authRoutes);
+app.use("/patients", patientRoutes);
+app.use("/appointments", appointmentRoutes);
+app.use("/doctors", doctorRoutes);
+app.use("/", dashboardRoutes);
+app.use("/ai", aiRoutes);
+app.use("/mealplanner", mealPlannerRoutes);
 
 // ✅ Connect DB once on cold start
 connectDB().then(() => {
