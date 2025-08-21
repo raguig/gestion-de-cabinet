@@ -41,14 +41,49 @@ const profileTranslations = {
     en: "Authentication required",
   },
   errorOccurred: { fr: "Une erreur s'est produite", en: "An error occurred" },
+  subscription: {
+    title: { fr: "Utilisation de l'abonnement", en: "Subscription Usage" },
+    features: {
+      appointments: { fr: "Rendez-vous", en: "Appointments" },
+      nutritionPlans: { fr: "Plans nutritionnels", en: "Nutrition Plans" },
+      workoutPlans: { fr: "Plans d'entraînement", en: "Workout Plans" },
+      aiDiets: { fr: "Régimes IA", en: "AI Diets" },
+    },
+    remaining: { fr: "restants", en: "remaining" },
+    unlimited: { fr: "Illimité", en: "Unlimited" },
+    tier: {
+      fr: "Niveau d'abonnement:",
+      en: "Subscription Tier:",
+    },
+    expires: {
+      fr: "Expire le:",
+      en: "Expires on:",
+    },
+  },
 };
 
 interface DoctorData {
-  fullName: string;
+  firstname: string;
+  lastname: string;
   email: string;
   phone: string;
   specialty: string;
   patientsCount: number;
+}
+
+interface SubscriptionUsage {
+  appointments: number;
+  nutritionPlans: number;
+  workoutPlans: number;
+  aiDiets: number;
+}
+
+interface SubscriptionData {
+  tier: string;
+  isAnnual: boolean;
+  endDate: string;
+  monthlyUsage: SubscriptionUsage;
+  limits: SubscriptionUsage;
 }
 
 const DoctorProfile = () => {
@@ -61,8 +96,8 @@ const DoctorProfile = () => {
       icon: Users,
       label: { fr: "Total Patients", en: "Total Patients" },
       value: 0,
-      color: "text-blue-600",
-      bgColor: "bg-blue-50",
+      color: "text-primary",
+      bgColor: "bg-primary/10",
     },
     {
       icon: Calendar,
@@ -75,10 +110,11 @@ const DoctorProfile = () => {
       icon: Clock,
       label: { fr: "Patients ce mois", en: "Patients this month" },
       value: 0,
-      color: "text-purple-600",
-      bgColor: "bg-purple-50",
+      color: "text-primary",
+      bgColor: "bg-primary/10",
     },
   ]);
+  const [subscriptionData, setSubscriptionData] = useState<SubscriptionData | null>(null);
 
   // Helper function to get translated text
   const getT = (obj: { fr: string; en: string } | undefined) => {
@@ -98,12 +134,18 @@ const DoctorProfile = () => {
 
         // Fetch both doctor data and stats concurrently
         const [doctorResponse, statsResponse] = await Promise.all([
-          axios.get(`${import.meta.env.VITE_BACKEND_URL}api/doctors/${doctorId}`, {
-            headers: { Authorization: `Bearer ${token}` },
-          }),
-          axios.get(`${import.meta.env.VITE_BACKEND_URL}api/doctors/${doctorId}/stats`, {
-            headers: { Authorization: `Bearer ${token}` },
-          }),
+          axios.get(
+            `${import.meta.env.VITE_BACKEND_URL}api/doctors/${doctorId}`,
+            {
+              headers: { Authorization: `Bearer ${token}` },
+            }
+          ),
+          axios.get(
+            `${import.meta.env.VITE_BACKEND_URL}api/doctors/${doctorId}/stats`,
+            {
+              headers: { Authorization: `Bearer ${token}` },
+            }
+          ),
         ]);
 
         setDoctorData(doctorResponse.data);
@@ -114,8 +156,8 @@ const DoctorProfile = () => {
             icon: Users,
             label: profileTranslations.stats.totalPatients,
             value: statsResponse.data.totalPatients,
-            color: "text-blue-600",
-            bgColor: "bg-blue-50",
+            color: "text-primary",
+            bgColor: "bg-primary/10",
           },
           {
             icon: Calendar,
@@ -128,8 +170,8 @@ const DoctorProfile = () => {
             icon: Clock,
             label: profileTranslations.stats.monthlyPatients,
             value: statsResponse.data.monthlyPatients,
-            color: "text-purple-600",
-            bgColor: "bg-purple-50",
+            color: "text-primary",
+            bgColor: "bg-primary/10",
           },
         ]);
       } catch (err) {
@@ -145,6 +187,25 @@ const DoctorProfile = () => {
 
     fetchDoctorData();
   }, [language]); // Re-fetch when language changes
+
+  useEffect(() => {
+    const fetchSubscriptionData = async () => {
+      try {
+        const token = localStorage.getItem("token");
+        const response = await axios.get(
+          `${import.meta.env.VITE_BACKEND_URL}api/doctors/subscription/usage`,
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
+        setSubscriptionData(response.data);
+      } catch (error) {
+        console.error("Error fetching subscription data:", error);
+      }
+    };
+
+    fetchSubscriptionData();
+  }, []);
 
   if (isLoading) {
     return (
@@ -176,12 +237,93 @@ const DoctorProfile = () => {
     return null;
   }
 
+  const SubscriptionUsageCard = () => {
+    if (!subscriptionData) return null;
+
+    const features = [
+      "appointments",
+      "nutritionPlans",
+      "workoutPlans",
+      "aiDiets",
+    ] as const;
+
+    return (
+      <div className="lg:col-span-3 mt-8">
+        <div className="backdrop-blur-sm bg-white/80 dark:bg-slate-800/80 border border-slate-200/50 dark:border-slate-700/50 shadow-xl rounded-2xl p-6">
+          <div className="space-y-6">
+            <div className="flex justify-between items-center">
+              <h3 className="text-xl font-bold text-slate-800 dark:text-white">
+                {getT(profileTranslations.subscription.title)}
+              </h3>
+              <div className="space-y-1 text-right">
+                <p className="text-sm text-slate-600 dark:text-slate-400">
+                  {getT(profileTranslations.subscription.tier)}{" "}
+                  <span className="font-semibold text-primary capitalize">
+                    {subscriptionData.tier}
+                  </span>
+                </p>
+                <p className="text-sm text-slate-600 dark:text-slate-400">
+                  {getT(profileTranslations.subscription.expires)}{" "}
+                  <span className="font-semibold text-primary">
+                    {new Date(subscriptionData.endDate).toLocaleDateString(
+                      language === "fr" ? "fr-FR" : "en-US"
+                    )}
+                  </span>
+                </p>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+              {features.map((feature) => {
+                const used = subscriptionData.monthlyUsage[feature];
+                const limit = subscriptionData.limits[feature];
+                const remaining = limit === Infinity ? Infinity : limit - used;
+                const percentage = limit === Infinity ? 0 : (used / limit) * 100;
+
+                return (
+                  <div
+                    key={feature}
+                    className="bg-slate-50 dark:bg-slate-700/50 rounded-xl p-4 space-y-3"
+                  >
+                    <h4 className="text-sm font-medium text-slate-600 dark:text-slate-300">
+                      {getT(profileTranslations.subscription.features[feature])}
+                    </h4>
+                    <div className="space-y-2">
+                      <div className="flex justify-between text-sm">
+                        <span className="text-slate-600 dark:text-slate-400">
+                          {used} / {limit === Infinity ? "∞" : limit}
+                        </span>
+                        <span className="font-medium text-primary">
+                          {remaining === Infinity
+                            ? getT(profileTranslations.subscription.unlimited)
+                            : `${remaining} ${getT(profileTranslations.subscription.remaining)}`}
+                        </span>
+                      </div>
+                      {limit !== Infinity && (
+                        <div className="h-2 bg-slate-200 dark:bg-slate-600 rounded-full">
+                          <div
+                            className="h-full bg-primary rounded-full transition-all duration-300"
+                            style={{ width: `${Math.min(percentage, 100)}%` }}
+                          />
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  };
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50  to-slate-100 p-6 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900">
-      <div className="max-w-6xl mx-auto space-y-8">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 p-6 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900">
+      <div className="p-8 space-y-8 bg-gray-50 dark:bg-gray-900 min-h-screen">
         {/* Header */}
         <div className="text-center space-y-4">
-          <h1 className="text-4xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+          <h1 className="text-4xl font-bold bg-gradient-to-r from-primary to-primary/80 bg-clip-text text-transparent">
             {getT(profileTranslations.header.title)}
           </h1>
           <p className="text-slate-600 dark:text-slate-300 text-lg">
@@ -195,12 +337,12 @@ const DoctorProfile = () => {
             <div className="backdrop-blur-sm bg-white/80 dark:bg-slate-800/80 border border-slate-200/50 dark:border-slate-700/50 shadow-xl rounded-2xl">
               <div className="p-6 pb-6">
                 <div className="flex items-center space-x-6">
-                  <div className="h-24 w-24 rounded-2xl bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center shadow-lg">
+                  <div className="h-24 w-24 rounded-2xl bg-gradient-to-br from-primary to-primary/80 flex items-center justify-center shadow-lg">
                     <User className="h-12 w-12 text-white" />
                   </div>
                   <div className="flex-1 space-y-2">
                     <h2 className="text-3xl font-bold text-slate-800 dark:text-white">
-                      Dr. {doctorData.fullName}
+                      Dr. {doctorData.firstname} {doctorData.lastname}
                     </h2>
                     <div className="inline-flex items-center px-4 py-1 rounded-full text-sm font-medium bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-300">
                       {doctorData.specialty ||
@@ -215,8 +357,8 @@ const DoctorProfile = () => {
                 <div className="grid grid-cols-2 gap-6">
                   <div className="space-y-6">
                     <div className="flex items-center space-x-4 p-4 rounded-xl bg-slate-50 dark:bg-slate-700/50 transition-colors">
-                      <div className="h-12 w-12 rounded-lg bg-blue-100 dark:bg-blue-900/50 flex items-center justify-center">
-                        <Mail className="h-6 w-6 text-blue-600 dark:text-blue-400" />
+                      <div className="h-12 w-12 rounded-lg bg-primary/10 flex items-center justify-center">
+                        <Mail className="h-6 w-6 text-primary" />
                       </div>
                       <div className="min-w-0 flex-1">
                         <p className="text-sm text-slate-500 dark:text-slate-400">
@@ -261,19 +403,19 @@ const DoctorProfile = () => {
                     <div
                       className={`h-14 w-14 rounded-xl flex items-center justify-center ${
                         index === 0
-                          ? "bg-blue-100 dark:bg-blue-900/50"
+                          ? "bg-primary/10 dark:bg-primary/20"
                           : index === 1
                           ? "bg-green-100 dark:bg-green-900/50"
-                          : "bg-purple-100 dark:bg-purple-900/50"
+                          : "bg-primary/10 dark:bg-primary/20"
                       }`}
                     >
                       <stat.icon
                         className={`h-7 w-7 ${
                           index === 0
-                            ? "text-blue-600 dark:text-blue-400"
+                            ? "text-primary dark:text-primary/80"
                             : index === 1
                             ? "text-green-600 dark:text-green-400"
-                            : "text-purple-600 dark:text-purple-400"
+                            : "text-primary dark:text-primary/80"
                         }`}
                       />
                     </div>
@@ -291,6 +433,9 @@ const DoctorProfile = () => {
             ))}
           </div>
         </div>
+
+        {/* Subscription Usage Card */}
+        <SubscriptionUsageCard />
       </div>
     </div>
   );

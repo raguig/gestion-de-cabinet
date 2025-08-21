@@ -13,6 +13,7 @@ import {
 import TrainingPlan from "../models/TrainingPlan.js";
 import { protect } from "../middleware/auth.js";
 import PatientVisit from '../models/PatientVisit.js';
+import { checkSubscriptionLimits } from '../middleware/subscriptionLimits.js';
 
 const router = express.Router();
 
@@ -26,8 +27,8 @@ router.post("/:id/visits", protect, addPatientVisit); // Add a new visit for a s
 
 router.put("/visits/:visitId/assign-diet", protect, assignDietToVisit); // Assign diet to a visit
 
-router.post("/diets", protect, addDietPlan); // Add a new diet plan
-router.post('/trainings',protect, async (req, res) => {
+router.post("/diets", protect,checkSubscriptionLimits('nutritionPlans'), addDietPlan); // Add a new diet plan
+router.post('/trainings',protect,checkSubscriptionLimits('workoutPlans'), async (req, res) => {
   try {
        
 
@@ -87,5 +88,25 @@ router.delete('/visits/:visitId/training', protect, async (req, res) => {
     res.json({ message: 'Training Plan removed successfully', visit });
   } catch (error) {
     res.status(400).json({ message: error.message });
+  }
+});
+
+// Add this route with your other routes
+router.get('/visits/:visitId/training', protect, async (req, res) => {
+  try {
+    const visit = await PatientVisit.findById(req.params.visitId)
+      .populate('training'); // Populate the training field
+    
+    if (!visit) {
+      return res.status(404).json({ message: 'Visit not found' });
+    }
+
+    if (!visit.training) {
+      return res.status(404).json({ message: 'No training plan assigned to this visit' });
+    }
+    
+    res.json({ trainingPlan: visit.training });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
   }
 });

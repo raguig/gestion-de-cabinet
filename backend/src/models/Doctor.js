@@ -1,5 +1,37 @@
 import mongoose from "mongoose";
 import bcrypt from "bcryptjs";
+
+const subscriptionSchema = new mongoose.Schema({
+  tier: {
+    type: String,
+    enum: ['essentiel', 'premium', 'pro'],
+    default: 'essentiel'
+  },
+  startDate: {
+    type: Date,
+    required: true,
+    default: Date.now
+  },
+  endDate: {
+    type: Date,
+    required: true
+  },
+  isAnnual: {
+    type: Boolean,
+    default: false
+  },
+  isActive: {
+    type: Boolean,
+    default: true
+  },
+  monthlyUsage: {
+    appointments: { type: Number, default: 0 },
+    nutritionPlans: { type: Number, default: 0 },
+    workoutPlans: { type: Number, default: 0 },
+    aiDiets: { type: Number, default: 0 }
+  }
+});
+
 const doctorSchema = new mongoose.Schema({
   firstname: { type: String, required: true },
   lastname: { type: String },
@@ -11,6 +43,15 @@ const doctorSchema = new mongoose.Schema({
   patientsCount: { 
     type: Number,
     default: 0
+  },
+  gender: { 
+    type: String, 
+    enum: ['male', 'female'],
+    required: true 
+  },
+  subscription: {
+    type: subscriptionSchema,
+    default: () => ({})
   }
 });
 

@@ -37,9 +37,9 @@ export function MetricCard({
         <div className="flex items-start justify-between gap-3 mb-2">
           {/* Title and subtitle */}
           <div className="flex-1 min-w-0">
-            <h3 className="text-sm sm:text-base font-medium text-muted-foreground truncate">
-              {title}
-            </h3>
+            <h3 className="text-sm lg:text-base font-semibold text-gray-900 break-words leading-tight mb-2">
+  {title}
+</h3>
             {subtitle && (
               <p className="text-xs text-muted-foreground mt-0.5 truncate">
                 {subtitle}

@@ -23,8 +23,8 @@ const appointmentSchema = new mongoose.Schema({
   },
   status: {
     type: String,
-    enum: ["scheduled", "completed", "cancelled"],
-    default: "scheduled",
+    enum: ["arrive", "termine", "reprogramme", "confirme"],
+    default: "confirme",
   },
   doctor: {
     type: mongoose.Schema.Types.ObjectId,

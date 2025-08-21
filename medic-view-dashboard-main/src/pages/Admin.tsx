@@ -8,6 +8,7 @@ import {
   Users,
   UserPlus,
   Activity,
+  CreditCard,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -20,6 +21,8 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { Progress } from "@/components/ui/progress";
+
 import {
   Dialog,
   DialogContent,
@@ -40,6 +43,15 @@ import { useForm } from "react-hook-form";
 import { toast } from "@/hooks/use-toast";
 import { useLanguage } from "@/context/LanguageContext";
 import { useAuth } from "@/context/AuthContext";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { CircleUserRound, UserCircle2 } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 // Define admin translations
 const adminTranslations = {
@@ -87,6 +99,38 @@ const adminTranslations = {
     phone: { fr: "Téléphone", en: "Phone" },
     password: { fr: "Mot de passe", en: "Password" },
     specialty: { fr: "Spécialité", en: "Specialty" },
+    gender: {
+      fr: "Genre",
+      en: "Gender",
+    },
+    male: {
+      fr: "Homme",
+      en: "Male",
+    },
+    female: {
+      fr: "Femme",
+      en: "Female",
+    },
+    subscription: {
+      fr: "Abonnement",
+      en: "Subscription",
+    },
+    tier: {
+      fr: "Pack",
+      en: "Pack",
+    },
+    billing: {
+      fr: "Facturation",
+      en: "Billing",
+    },
+    monthly: {
+      fr: "Mensuelle",
+      en: "Monthly",
+    },
+    annual: {
+      fr: "Annuelle",
+      en: "Annual",
+    },
   },
   table: {
     title: { fr: "Liste des Docteurs", en: "Doctors List" },
@@ -134,6 +178,60 @@ const adminTranslations = {
       en: "Unable to delete doctor.",
     },
   },
+  subscription: {
+    details: {
+      fr: "Détails de l'abonnement",
+      en: "Subscription Details",
+    },
+    usageTitle: {
+      fr: "Utilisation du mois",
+      en: "Monthly Usage",
+    },
+    timeRemaining: {
+      fr: "Temps restant",
+      en: "Time Remaining",
+    },
+    daysLeft: {
+      fr: "jours restants",
+      en: "days left",
+    },
+    features: {
+      appointments: {
+        fr: "Rendez-vous",
+        en: "Appointments",
+      },
+      nutritionPlans: {
+        fr: "Plans nutritionnels",
+        en: "Nutrition Plans",
+      },
+      workoutPlans: {
+        fr: "Programmes d'entraînement",
+        en: "Workout Plans",
+      },
+      aiDiets: {
+        fr: "Régimes IA",
+        en: "AI Diets",
+      },
+    },
+    billing: {
+      type: {
+        fr: "Type de facturation",
+        en: "Billing Type",
+      },
+      price: {
+        fr: "Prix",
+        en: "Price",
+      },
+      monthly: {
+        fr: "Mensuel",
+        en: "Monthly",
+      },
+      yearly: {
+        fr: "Annuel",
+        en: "Yearly",
+      },
+    },
+  },
 };
 
 interface Doctor {
@@ -146,7 +244,75 @@ interface Doctor {
   status: string;
   patientsCount: number;
   password?: string;
+  gender: "male" | "female";
+  subscription?: {
+    tier: "essentiel" | "premium" | "pro";
+    isAnnual: boolean;
+    isActive: boolean;
+    startDate: string;
+    endDate: string;
+    monthlyUsage: {
+      appointments: number;
+      nutritionPlans: number;
+      workoutPlans: number;
+      aiDiets: number;
+    };
+  };
 }
+
+const TIER_LIMITS = {
+  essentiel: {
+    appointments: 100,
+    nutritionPlans: 120,
+    workoutPlans: 80,
+    aiDiets: 60,
+  },
+  premium: {
+    appointments: 300,
+    nutritionPlans: 1300,
+    workoutPlans: 800,
+    aiDiets: 525,
+  },
+  pro: {
+    appointments: Infinity,
+    nutritionPlans: Infinity,
+    workoutPlans: Infinity,
+    aiDiets: Infinity,
+  },
+};
+
+const TIER_PRICES = {
+  essentiel: {
+    monthly: 750,
+    yearly: 7200,
+  },
+  premium: {
+    monthly: 1000,
+    yearly: 9996,
+  },
+  pro: {
+    monthly: 1625,
+    yearly: 15600,
+  },
+};
+
+const getTierColor = (tier: string) => {
+  switch (tier) {
+    case "premium":
+      return "text-amber-500 border-amber-500 bg-amber-500/10";
+    case "pro":
+      return "text-purple-500 border-purple-500 bg-purple-500/10";
+    default:
+      return "text-emerald-500 border-emerald-500 bg-emerald-500/10";
+  }
+};
+
+const getUsageColor = (percentage: number) => {
+  if (percentage >= 90) return "bg-red-500";
+  if (percentage >= 75) return "bg-amber-500";
+  if (percentage >= 50) return "bg-yellow-500";
+  return "bg-emerald-500";
+};
 
 const Admin = () => {
   const { language } = useLanguage();
@@ -157,6 +323,8 @@ const Admin = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [editingDoctor, setEditingDoctor] = useState<Doctor | null>(null);
+  const [showSubscriptionDetails, setShowSubscriptionDetails] = useState(false);
+  const [selectedDoctor, setSelectedDoctor] = useState<Doctor | null>(null);
 
   // Helper function to get translated text
   const getT = (obj: { fr: string; en: string } | undefined) => {
@@ -172,6 +340,12 @@ const Admin = () => {
       phone: "",
       specialty: "",
       password: "",
+      gender: "male",
+      subscription: {
+        tier: "essentiel",
+        isAnnual: false,
+        isActive: true,
+      },
     },
   });
 
@@ -229,12 +403,9 @@ const Admin = () => {
     try {
       const token = localStorage.getItem("token");
       const payload = {
-        firstname: data.firstname,
-        lastname: data.lastname,
-        email: data.email,
-        phone: data.phone,
-        specialty: data.specialty,
-        password: data.password,
+        ...data,
+        // Only include password if it's provided and we're adding a new doctor
+        ...((!editingDoctor && data.password) ? { password: data.password } : {})
       };
 
       const url = editingDoctor
@@ -280,7 +451,26 @@ const Admin = () => {
   };
 
   const handleEdit = (doctor: Doctor) => {
+    const subscription = doctor.subscription || {
+      tier: "essentiel",
+      isAnnual: false,
+      isActive: true,
+      startDate: new Date().toISOString(),
+      endDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(),
+      monthlyUsage: {
+        appointments: 0,
+        nutritionPlans: 0,
+        workoutPlans: 0,
+        aiDiets: 0,
+      },
+    };
+
     setEditingDoctor(doctor);
+    setSelectedDoctor({
+      ...doctor,
+      subscription,
+    });
+
     form.reset({
       firstname: doctor.firstname,
       lastname: doctor.lastname,
@@ -288,6 +478,12 @@ const Admin = () => {
       phone: doctor.phone,
       specialty: doctor.specialty,
       password: "",
+      gender: doctor.gender,
+      subscription: {
+        tier: subscription.tier,
+        isAnnual: subscription.isAnnual,
+        isActive: subscription.isActive,
+      },
     });
     setIsDialogOpen(true);
   };
@@ -327,13 +523,30 @@ const Admin = () => {
 
   const handleAddNew = () => {
     setEditingDoctor(null);
-    form.reset();
+    form.reset({
+      firstname: "",
+      lastname: "",
+      email: "",
+      phone: "",
+      specialty: "",
+      password: "",
+      gender: "male",
+      subscription: {
+        tier: "essentiel",
+        isAnnual: false,
+       
+      }, // You can keep a default value for gender or set it to undefined
+    });
     setIsDialogOpen(true);
   };
 
+  // Add validation patterns near the top of the file
+  const LETTERS_ONLY_PATTERN = /^[A-Za-zÀ-ÿ\s-]+$/;
+  const NUMBERS_ONLY_PATTERN = /^[0-9+]+$/;
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/30">
-      <div className="p-6 space-y-8 max-w-7xl mx-auto">
+      <div className="p-8 space-y-8 bg-gray-50 dark:bg-gray-900 min-h-screen">
         {/* Header */}
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-4">
@@ -440,7 +653,7 @@ const Admin = () => {
                 {getT(adminTranslations.buttons.addDoctor)}
               </Button>
             </DialogTrigger>
-            <DialogContent className="max-w-md">
+            <DialogContent className="sm:max-w-[600px] w-[95vw] max-h-[90vh] overflow-y-auto">
               <DialogHeader>
                 <DialogTitle>
                   {editingDoctor
@@ -449,110 +662,253 @@ const Admin = () => {
                 </DialogTitle>
               </DialogHeader>
               <Form {...form}>
-                <form
-                  onSubmit={form.handleSubmit(onSubmit)}
-                  className="space-y-4"
-                >
-                  <FormField
-                    control={form.control}
-                    name="firstname"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>
-                          {getT(adminTranslations.form.firstName)}
-                        </FormLabel>
-                        <FormControl>
-                          <Input placeholder="Jean" {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  <FormField
-                    control={form.control}
-                    name="lastname"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>
-                          {getT(adminTranslations.form.lastName)}
-                        </FormLabel>
-                        <FormControl>
-                          <Input placeholder="Dupont" {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  <FormField
-                    control={form.control}
-                    name="email"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>
-                          {getT(adminTranslations.form.email)}
-                        </FormLabel>
-                        <FormControl>
-                          <Input
-                            placeholder="jean.dupont@clinic.com"
-                            type="email"
-                            {...field}
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  <FormField
-                    control={form.control}
-                    name="phone"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>
-                          {getT(adminTranslations.form.phone)}
-                        </FormLabel>
-                        <FormControl>
-                          <Input placeholder="+33 1 23 45 67 89" {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  <FormField
-                    control={form.control}
-                    name="password"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>
-                          {getT(adminTranslations.form.password)}
-                        </FormLabel>
-                        <FormControl>
-                          <Input
-                            type="password"
-                            placeholder="••••••••"
-                            {...field}
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  <FormField
-                    control={form.control}
-                    name="specialty"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>
-                          {getT(adminTranslations.form.specialty)}
-                        </FormLabel>
-                        <FormControl>
-                          <Input placeholder="Cardiologie" {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
+                <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+                  {/* Personal Information Section */}
+                  <div className="space-y-4">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <FormField
+                        control={form.control}
+                        name="firstname"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>{getT(adminTranslations.form.firstName)}</FormLabel>
+                            <FormControl>
+                              <Input
+                                placeholder="Jean"
+                                maxLength={30}
+                                {...field}
+                                onChange={(e) => {
+                                  if (
+                                    e.target.value === "" ||
+                                    LETTERS_ONLY_PATTERN.test(e.target.value)
+                                  ) {
+                                    field.onChange(e);
+                                  }
+                                }}
+                                className="w-full"
+                              />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      <FormField
+                        control={form.control}
+                        name="lastname"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>{getT(adminTranslations.form.lastName)}</FormLabel>
+                            <FormControl>
+                              <Input
+                                placeholder="Dupont"
+                                maxLength={30}
+                                {...field}
+                                onChange={(e) => {
+                                  if (
+                                    e.target.value === "" ||
+                                    LETTERS_ONLY_PATTERN.test(e.target.value)
+                                  ) {
+                                    field.onChange(e);
+                                  }
+                                }}
+                                className="w-full"
+                              />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                    </div>
 
-                  <div className="flex gap-2 pt-4">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <FormField
+                        control={form.control}
+                        name="email"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>{getT(adminTranslations.form.email)}</FormLabel>
+                            <FormControl>
+                              <Input
+                                placeholder="jean.dupont@clinic.com"
+                                type="email"
+                                {...field}
+                                className="w-full"
+                              />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      <FormField
+                        control={form.control}
+                        name="phone"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>{getT(adminTranslations.form.phone)}</FormLabel>
+                            <FormControl>
+                              <Input
+                                placeholder="+33 1 23 45 67 89"
+                                maxLength={15}
+                                {...field}
+                                onChange={(e) => {
+                                  if (
+                                    e.target.value === "" ||
+                                    NUMBERS_ONLY_PATTERN.test(e.target.value)
+                                  ) {
+                                    field.onChange(e);
+                                  }
+                                }}
+                                className="w-full"
+                              />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <FormField
+                        control={form.control}
+                        name="specialty"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>{getT(adminTranslations.form.specialty)}</FormLabel>
+                            <FormControl>
+                              <Input
+                                placeholder="Cardiologie"
+                                maxLength={50}
+                                {...field}
+                                onChange={(e) => {
+                                  if (
+                                    e.target.value === "" ||
+                                    LETTERS_ONLY_PATTERN.test(e.target.value)
+                                  ) {
+                                    field.onChange(e);
+                                  }
+                                }}
+                                className="w-full"
+                              />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      <FormField
+                        control={form.control}
+                        name="gender"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>{getT(adminTranslations.form.gender)}</FormLabel>
+                            <Select
+                              onValueChange={field.onChange}
+                              defaultValue={field.value}
+                            >
+                              <FormControl>
+                                <SelectTrigger className="w-full">
+                                  <SelectValue
+                                    placeholder={getT(adminTranslations.form.gender)}
+                                  />
+                                </SelectTrigger>
+                              </FormControl>
+                              <SelectContent>
+                                <SelectItem value="male">
+                                  {getT(adminTranslations.form.male)}
+                                </SelectItem>
+                                <SelectItem value="female">
+                                  {getT(adminTranslations.form.female)}
+                                </SelectItem>
+                              </SelectContent>
+                            </Select>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                    </div>
+
+                    {/* Only show password field for new doctors */}
+                    
+                      <FormField
+                        control={form.control}
+                        name="password"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>{getT(adminTranslations.form.password)}</FormLabel>
+                            <FormControl>
+                              <Input
+                                type="password"
+                                placeholder="••••••••"
+                                {...field}
+                                className="w-full"
+                              />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                    
+
+                    {/* Subscription Section */}
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-4 border-t">
+                      <FormField
+                        control={form.control}
+                        name="subscription.tier"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>{getT(adminTranslations.form.tier)}</FormLabel>
+                            <Select
+                              onValueChange={field.onChange}
+                              defaultValue={field.value}
+                            >
+                              <FormControl>
+                                <SelectTrigger className="w-full">
+                                  <SelectValue placeholder="Select pack" />
+                                </SelectTrigger>
+                              </FormControl>
+                              <SelectContent>
+                                <SelectItem value="essentiel">Pack Essentiel</SelectItem>
+                                <SelectItem value="premium">Pack Premium</SelectItem>
+                                <SelectItem value="pro">Pack Pro</SelectItem>
+                              </SelectContent>
+                            </Select>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+
+                      <FormField
+                        control={form.control}
+                        name="subscription.isAnnual"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>{getT(adminTranslations.form.billing)}</FormLabel>
+                            <Select
+                              onValueChange={(value) => field.onChange(value === "true")}
+                              defaultValue={String(field.value)}
+                            >
+                              <FormControl>
+                                <SelectTrigger className="w-full">
+                                  <SelectValue placeholder="Select billing cycle" />
+                                </SelectTrigger>
+                              </FormControl>
+                              <SelectContent>
+                                <SelectItem value="false">
+                                  {getT(adminTranslations.form.monthly)}
+                                </SelectItem>
+                                <SelectItem value="true">
+                                  {getT(adminTranslations.form.annual)}
+                                </SelectItem>
+                              </SelectContent>
+                            </Select>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                    </div>
+                  </div>
+
+                  {/* Action Buttons */}
+                  <div className="flex flex-col sm:flex-row gap-2 pt-6">
                     <Button type="submit" className="flex-1">
                       {editingDoctor
                         ? getT(adminTranslations.buttons.edit)
@@ -569,6 +925,218 @@ const Admin = () => {
                   </div>
                 </form>
               </Form>
+            </DialogContent>
+          </Dialog>
+
+          <Dialog
+            open={showSubscriptionDetails}
+            onOpenChange={setShowSubscriptionDetails}
+          >
+            <DialogContent className="max-w-md">
+              <DialogHeader>
+                <DialogTitle className="flex items-center justify-between">
+                  <span>{getT(adminTranslations.subscription.details)}</span>
+                  <Badge
+                    variant="outline"
+                    className={cn(
+                      "px-3 py-1",
+                      getTierColor(
+                        selectedDoctor?.subscription?.tier || "essentiel"
+                      )
+                    )}
+                  >
+                    {selectedDoctor?.subscription?.tier.toUpperCase()}
+                  </Badge>
+                </DialogTitle>
+              </DialogHeader>
+
+              {selectedDoctor?.subscription && (
+                <div className="space-y-6">
+                  <div className="p-4 rounded-lg border bg-card/50">
+                    <div className="space-y-4">
+                      <div className="flex items-center justify-between">
+                        <span className="text-sm font-medium">
+                          {getT(adminTranslations.subscription.billing.type)}
+                        </span>
+                        <Badge
+                          variant="outline"
+                          className={cn(
+                            "px-2 py-0.5",
+                            selectedDoctor.subscription.isAnnual
+                              ? "bg-blue-500/10 text-blue-500 border-blue-500"
+                              : "bg-slate-500/10 text-slate-500 border-slate-500"
+                          )}
+                        >
+                          {selectedDoctor.subscription.isAnnual
+                            ? getT(
+                                adminTranslations.subscription.billing.yearly
+                              )
+                            : getT(
+                                adminTranslations.subscription.billing.monthly
+                              )}
+                        </Badge>
+                      </div>
+
+                      <div className="flex items-center justify-between">
+                        <span className="text-sm text-muted-foreground">
+                          {getT(adminTranslations.subscription.billing.price)}
+                        </span>
+                        <span className="text-2xl font-bold bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent">
+                          {selectedDoctor.subscription.isAnnual
+                            ? TIER_PRICES[selectedDoctor.subscription.tier]
+                                .yearly
+                            : TIER_PRICES[selectedDoctor.subscription.tier]
+                                .monthly}{" "}
+                          MAD
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="space-y-2">
+                    <h3 className="font-semibold">
+                      {getT(adminTranslations.subscription.usageTitle)}
+                    </h3>
+                    <div className="grid gap-3">
+                      {Object.entries(
+                        selectedDoctor.subscription.monthlyUsage
+                      ).map(([feature, usage]) => {
+                        const limit =
+                          TIER_LIMITS[selectedDoctor.subscription.tier][
+                            feature
+                          ];
+                        const remaining =
+                          limit === Infinity ? "∞" : limit - usage;
+                        const percentage =
+                          limit === Infinity ? 0 : (usage / limit) * 100;
+
+                        return (
+                          <div key={feature} className="space-y-1">
+                            <div className="flex items-center justify-between text-sm">
+                              <span className="text-muted-foreground">
+                                {getT(
+                                  adminTranslations.subscription.features[
+                                    feature
+                                  ]
+                                )}
+                              </span>
+                              <div className="flex items-center gap-2">
+                                <span className="text-muted-foreground">
+                                  {usage}/{limit === Infinity ? "∞" : limit}
+                                </span>
+                                <Badge
+                                  variant={
+                                    remaining === 0 ? "destructive" : "outline"
+                                  }
+                                >
+                                  {remaining === "∞"
+                                    ? "∞"
+                                    : `${remaining} left`}
+                                </Badge>
+                              </div>
+                            </div>
+                            <Progress
+                              value={percentage}
+                              className="h-2"
+                              indicatorClassName={cn(
+                                remaining === 0 && "bg-destructive",
+                                remaining === "∞" && "bg-primary"
+                              )}
+                            />
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+
+                  <div className="space-y-2">
+                    <h3 className="font-semibold">
+                      {getT(adminTranslations.subscription.timeRemaining)}
+                    </h3>
+                    <div className="space-y-2">
+                      {(() => {
+                        const endDate = new Date(
+                          selectedDoctor.subscription.endDate
+                        );
+                        const startDate = new Date(
+                          selectedDoctor.subscription.startDate
+                        );
+                        const now = new Date();
+                        const total = endDate.getTime() - startDate.getTime();
+                        const elapsed = now.getTime() - startDate.getTime();
+                        const percentage = ((total - elapsed) / total) * 100;
+                        const daysLeft = Math.max(
+                          0,
+                          Math.ceil(
+                            (endDate.getTime() - now.getTime()) /
+                              (1000 * 60 * 60 * 24)
+                          )
+                        );
+
+                        return (
+                          <>
+                            <div className="flex items-center justify-between text-sm">
+                              <span>
+                                {new Date(
+                                  selectedDoctor.subscription.startDate
+                                ).toLocaleDateString()}
+                              </span>
+                              <Badge
+                                variant={
+                                  daysLeft < 7 ? "destructive" : "outline"
+                                }
+                              >
+                                {daysLeft}{" "}
+                                {getT(adminTranslations.subscription.daysLeft)}
+                              </Badge>
+                              <span>
+                                {new Date(
+                                  selectedDoctor.subscription.endDate
+                                ).toLocaleDateString()}
+                              </span>
+                            </div>
+                            <Progress value={percentage} className="h-2" />
+                          </>
+                        );
+                      })()}
+                    </div>
+                  </div>
+
+                  <div className="space-y-4 pb-4">
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm font-medium">
+                        {getT(adminTranslations.subscription.billing.type)}
+                      </span>
+                      <Badge
+                        variant={
+                          selectedDoctor.subscription?.isAnnual
+                            ? "secondary"
+                            : "outline"
+                        }
+                      >
+                        {selectedDoctor.subscription?.isAnnual
+                          ? getT(adminTranslations.subscription.billing.yearly)
+                          : getT(
+                              adminTranslations.subscription.billing.monthly
+                            )}
+                      </Badge>
+                    </div>
+
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm font-medium">
+                        {getT(adminTranslations.subscription.billing.price)}
+                      </span>
+                      <span className="text-lg font-bold">
+                        {selectedDoctor.subscription?.isAnnual
+                          ? TIER_PRICES[selectedDoctor.subscription.tier].yearly
+                          : TIER_PRICES[selectedDoctor.subscription.tier]
+                              .monthly}{" "}
+                        MAD
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              )}
             </DialogContent>
           </Dialog>
         </div>
@@ -627,7 +1195,16 @@ const Admin = () => {
                         className="hover:bg-muted/20 transition-colors border-border/30"
                       >
                         <TableCell className="font-medium py-4">
-                          {doctor.firstname} {doctor.lastname}
+                          <div className="flex items-center gap-2">
+                            <div className="h-8 w-8 rounded-lg bg-primary/10 flex items-center justify-center">
+                              {doctor.gender === "female" ? (
+                                <CircleUserRound className="h-4 w-4 text-primary" />
+                              ) : (
+                                <UserCircle2 className="h-4 w-4 text-primary" />
+                              )}
+                            </div>
+                            {doctor.firstname} {doctor.lastname}
+                          </div>
                         </TableCell>
                         <TableCell className="text-muted-foreground">
                           {doctor.email}
@@ -656,12 +1233,71 @@ const Admin = () => {
                             </span>
                           </div>
                         </TableCell>
+                        <TableCell>
+                          <div className="flex flex-col space-y-2">
+                            <div className="flex items-center gap-2">
+                              <Badge
+                                variant="outline"
+                                className={cn(
+                                  "bg-background/50",
+                                  doctor.subscription?.tier === "premium" &&
+                                    "border-primary text-primary",
+                                  doctor.subscription?.tier === "pro" &&
+                                    "border-secondary text-secondary"
+                                )}
+                              >
+                                {doctor.subscription?.tier
+                                  ?.charAt(0)
+                                  .toUpperCase() +
+                                  doctor.subscription?.tier?.slice(1) ||
+                                  "Essentiel"}
+                              </Badge>
+                              <Badge
+                                variant={
+                                  doctor.subscription?.isAnnual
+                                    ? "secondary"
+                                    : "outline"
+                                }
+                              >
+                                {doctor.subscription?.isAnnual
+                                  ? getT(adminTranslations.form.annual)
+                                  : getT(adminTranslations.form.monthly)}
+                              </Badge>
+                            </div>
+
+                            {doctor.subscription?.endDate && (
+                              <div className="text-xs space-y-2">
+                                <div className="flex items-center justify-between">
+                                  <span className="text-muted-foreground">
+                                    {new Date(
+                                      doctor.subscription.startDate
+                                    ).toLocaleDateString()}
+                                  </span>
+                                  <span className="text-muted-foreground">
+                                    →
+                                  </span>
+                                  <span className="text-muted-foreground">
+                                    {new Date(
+                                      doctor.subscription.endDate
+                                    ).toLocaleDateString()}
+                                  </span>
+                                </div>
+
+                                
+                              </div>
+                            )}
+                          </div>
+                        </TableCell>
                         <TableCell className="text-right">
                           <div className="flex items-center justify-end gap-1">
                             <Button
                               variant="ghost"
                               size="sm"
-                              onClick={() => handleEdit(doctor)}
+                              onClick={() => {
+                                handleEdit(doctor);
+                                setSelectedDoctor(doctor);
+                               
+                              }}
                               className="h-9 w-9 rounded-lg hover:bg-primary/10 hover:text-primary transition-colors"
                             >
                               <Edit className="h-4 w-4" />
@@ -673,6 +1309,17 @@ const Admin = () => {
                               className="h-9 w-9 rounded-lg text-destructive hover:text-destructive hover:bg-destructive/10 transition-colors"
                             >
                               <Trash2 className="h-4 w-4" />
+                            </Button>
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              onClick={() => {
+                                setSelectedDoctor(doctor);
+                                setShowSubscriptionDetails(true);
+                              }}
+                              className="h-9 w-9 rounded-lg hover:bg-primary/10 hover:text-primary transition-colors"
+                            >
+                              <CreditCard className="h-4 w-4" />
                             </Button>
                           </div>
                         </TableCell>

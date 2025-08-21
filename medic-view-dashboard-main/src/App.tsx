@@ -17,6 +17,8 @@ import ProtectedRoute from "./components/ProtectedRoute.jsx";
 import DoctorProfile from "./components/DoctorProfile.js";
 import Admin from "./pages/Admin";
 import { AdminRoute } from "@/components/AdminRoute";
+import AINutritionChatbot from "@/components/aibot.tsx";
+import MealPlanner from "@/components/MealPlanner"; // Add this import
 const queryClient = new QueryClient();
 
 const AppRoutes = () => {
@@ -50,6 +52,8 @@ const AppRoutes = () => {
         <Route path="/profile" element={<DoctorProfile />} />
         <Route path="/appointments" element={<Appointments />} />
         <Route path="/patients/:id" element={<PatientDetail />} />
+        <Route path="/aibot" element={<AINutritionChatbot />} />
+        <Route path="/mealplanner" element={<MealPlanner />} /> {/* Add this line */}
         <Route
           path="/admin"
           element={

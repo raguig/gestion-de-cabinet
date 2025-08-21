@@ -9,7 +9,12 @@ import { DietEditorTab } from "@/components/DietEditorTab";
 import TrainingTab from "../components/TrainingTab";
 import { useLanguage } from "@/context/LanguageContext";
 import { toast } from "sonner";
-
+const texts = {
+  backToList: {
+    fr: "Retour à la liste des patients",
+    en: "Back to patient list"
+  }
+};
 export default function PatientDetail() {
   const navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
@@ -143,9 +148,11 @@ export default function PatientDetail() {
       case "entrainement":
         return (
           <TrainingTab
+          language={language}
             patient={patient}
             visitId={latestVisitId}
             onTrainingAssigned={refreshData}
+            hasTraining={Boolean(patient?.latestVisit?.[0]?.training)}
           />
         );
       default:
@@ -155,10 +162,10 @@ export default function PatientDetail() {
 
   return (
     <div className="min-h-screen bg-background font-inter">
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <main className="p-8 space-y-8 bg-gray-50 dark:bg-gray-900 min-h-screen">
         <button
           onClick={() => navigate("/patients")}
-          className="mb-6 flex items-center gap-2 text-blue-600 hover:text-blue-900 transition-colors duration-200"
+          className="mb-6 flex items-center gap-2 text-primary hover:text-secondary transition-colors duration-200"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -172,7 +179,7 @@ export default function PatientDetail() {
               clipRule="evenodd"
             />
           </svg>
-          <span>Retour à la liste des patients</span>
+  <span>{language === "fr" ? texts.backToList.fr : texts.backToList.en}</span>
         </button>
 
         <div className="space-y-6">

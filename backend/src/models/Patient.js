@@ -21,10 +21,64 @@ const patientSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Doctor',
     required: true
+  },
+  targetWeight: { 
+    type: Number, 
+    required: true 
+  },
+  status: {
+    type: String,
+    enum: ['inactif', 'en cours', 'reussi', 'abandonne'],
+    default: 'en cours'
   }
 }, {
   timestamps: true
 });
+
+// Update middleware to check inactive status using lastmeasurement
+patientSchema.pre('save', async function(next) {
+  // Skip this middleware if status is being explicitly set
+  if (this.isModified('status')) {
+    return next();
+  }
+
+  // Don't change status if patient has abandoned
+  if (this.status === 'abandonne') {
+    return next();
+  }
+
+  try {
+    if (this.lastmeasurement) {
+      const daysSinceLastMeasurement = Math.floor(
+        (Date.now() - new Date(this.lastmeasurement).getTime()) / (1000 * 60 * 60 * 24)
+      );
+      
+      if (daysSinceLastMeasurement > 21 && this.status === 'en cours') {
+        this.status = 'inactif';
+      }
+    }
+    next();
+  } catch (error) {
+    next(error);
+  }
+});
+
+// Update the static method to use lastmeasurement
+patientSchema.statics.checkInactiveStatus = async function(patientId) {
+  const patient = await this.findById(patientId);
+  if (!patient || patient.status === 'abandonne') return;
+
+  if (patient.lastmeasurement) {
+    const daysSinceLastMeasurement = Math.floor(
+      (Date.now() - new Date(patient.lastmeasurement).getTime()) / (1000 * 60 * 60 * 24)
+    );
+    
+    if (daysSinceLastMeasurement > 21 && patient.status === 'en cours') {
+      patient.status = 'inactif';
+      await patient.save();
+    }
+  }
+};
 
 
 

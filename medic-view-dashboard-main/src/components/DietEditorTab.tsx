@@ -18,9 +18,10 @@ export function DietEditorTab({
     <DietEditorSlide
       language={language}
       calorieintake={calorieintake}
-      visitId={visitId || ""}
+      visitId={visitId}
       onDietAssigned={onDietAssigned}
-      patient={patient} // Pass the prop
+      patient={patient}
+      hasDiet={Boolean(patient?.latestVisit?.[0]?.diet)} // Pass whether a diet exists
     />
   );
 }

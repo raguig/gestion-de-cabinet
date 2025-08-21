@@ -1,0 +1,139 @@
+﻿Aliment,Catégorie,Base,Kcal,Protéines (g),Glucides (g),Lipides (g)
+Café au lait sucré (≈100 ml),Boissons,100 g,50,1.5,8,1.5
+Café noir,Boissons,100 g,2,0.2,0,0
+Jus d’orange frais (≈100 ml),Boissons,100 g,45,0.7,10.4,0.2
+Soda type cola (≈100 ml),Boissons,100 g,42,0,10.6,0
+Thé à la menthe (sans sucre),Boissons,100 g,1,0,0.2,0
+Thé à la menthe sucré (≈100 ml),Boissons,100 g,30,0,7.5,0
+Baghrir,Céréales & pains,100 g,215,5.5,43,1.5
+Batbout,Céréales & pains,100 g,250,8.5,50,1.5
+Cornflakes,Céréales & pains,100 g,357,8,84,1
+Couscous (cuit),Céréales & pains,100 g,112,3.8,23,0.2
+Harcha (galette de semoule),Céréales & pains,100 g,330,8,52,10
+Meloui,Céréales & pains,100 g,340,7,45,14
+Msemen (rghaif),Céréales & pains,100 g,320,6.5,48,10
+Pain blanc (khobz),Céréales & pains,100 g,265,8,49,1
+Pain complet,Céréales & pains,100 g,247,9,41,3.3
+Pain d’orge,Céréales & pains,100 g,244,8,43,3
+Patate douce (cuite),Céréales & pains,100 g,90,1.6,20,0.1
+Pommes de terre (cuites),Céréales & pains,100 g,87,2,17,0.1
+Pâtes (cuites),Céréales & pains,100 g,131,5.5,25,1.1
+Riz basmati (cuit),Céréales & pains,100 g,121,3.5,25,0.4
+Riz blanc (cuit),Céréales & pains,100 g,130,2.7,28,0.3
+Riz complet (cuit),Céréales & pains,100 g,111,2.6,23,1
+Semoule de blé dur (crue),Céréales & pains,100 g,360,12.7,73,1.1
+Sfenj (beignet),Céréales & pains,100 g,330,7,45,14
+Abricot,Fruits,100 g,48,1.4,11,0.4
+Ananas,Fruits,100 g,50,0.5,13,0.1
+Avocat,Fruits,100 g,160,2,9,15
+Banane,Fruits,100 g,96,1.1,23,0.3
+Citron,Fruits,100 g,29,1.1,9,0.3
+Dattes (deglet nour),Fruits,100 g,282,2.5,75,0.4
+Dattes (medjool),Fruits,100 g,277,1.8,75,0.2
+Figue,Fruits,100 g,74,0.8,19,0.3
+Figue de barbarie (handiya),Fruits,100 g,41,0.7,10,0.5
+Fraise,Fruits,100 g,33,0.8,8,0.3
+Grenade,Fruits,100 g,83,0.9,19,1.2
+Kiwi,Fruits,100 g,61,1.1,15,0.5
+Mandarine,Fruits,100 g,53,0.8,13,0.3
+Melon,Fruits,100 g,34,0.8,8,0.2
+Orange,Fruits,100 g,47,0.9,12,0.1
+Pastèque,Fruits,100 g,30,0.6,8,0.2
+Poire,Fruits,100 g,57,0.4,15,0.1
+Pomme,Fruits,100 g,52,0.3,14,0.2
+Pêche,Fruits,100 g,39,0.9,10,0.3
+Raisin,Fruits,100 g,69,0.6,18,0.2
+Amandes,"Huiles, noix & graines",100 g,579,21,22,50
+"Amlou (amandes+argan+miel, approx.)","Huiles, noix & graines",100 g,600,12,25,50
+Cacahuètes,"Huiles, noix & graines",100 g,567,25.8,16.1,49.2
+Graines de chia,"Huiles, noix & graines",100 g,486,17,42,31
+Graines de lin,"Huiles, noix & graines",100 g,534,18,29,42
+Graines de sésame,"Huiles, noix & graines",100 g,573,17,23,50
+Huile de tournesol,"Huiles, noix & graines",100 g,884,0,0,100
+Huile d’argan,"Huiles, noix & graines",100 g,884,0,0,100
+Huile d’olive,"Huiles, noix & graines",100 g,884,0,0,100
+Noisettes,"Huiles, noix & graines",100 g,628,15,17,61
+Noix,"Huiles, noix & graines",100 g,654,15,14,65
+Olives noires,"Huiles, noix & graines",100 g,145,1,8,15.3
+Olives vertes,"Huiles, noix & graines",100 g,115,0.8,6.3,10.7
+Pistaches,"Huiles, noix & graines",100 g,562,20,28,45
+Tahini (pâte de sésame),"Huiles, noix & graines",100 g,595,17,24,53
+Ail,Légumes,100 g,149,6.4,33,0.5
+Artichaut,Légumes,100 g,47,3.3,11,0.2
+Aubergine,Légumes,100 g,25,1,6,0.2
+Betterave,Légumes,100 g,43,1.6,10,0.2
+Blettes (bette),Légumes,100 g,19,1.8,3.7,0.2
+Brocoli,Légumes,100 g,34,2.8,7,0.4
+Carotte,Légumes,100 g,41,0.9,10,0.2
+Chou blanc,Légumes,100 g,25,1.3,6,0.1
+Chou-fleur,Légumes,100 g,25,1.9,5,0.3
+Concombre,Légumes,100 g,16,0.7,3.6,0.1
+Courgette,Légumes,100 g,17,1.2,3.1,0.3
+Fenouil,Légumes,100 g,31,1.2,7.3,0.2
+Laitue,Légumes,100 g,15,1.4,3.3,0.2
+Navet,Légumes,100 g,28,0.9,6,0.1
+Oignon,Légumes,100 g,40,1.1,9,0.1
+Poivron,Légumes,100 g,26,1,6,0.3
+Tomate,Légumes,100 g,18,0.9,3.9,0.2
+Épinards,Légumes,100 g,23,2.9,3.6,0.4
+Fèves/broad beans (cuites),Légumineuses,100 g,110,7.6,19.6,0.4
+Haricots blancs (cuits),Légumineuses,100 g,138,9,21,0.5
+Haricots rouges (cuits),Légumineuses,100 g,127,8.7,22,0.5
+Lentilles (cuites),Légumineuses,100 g,116,9,20,0.4
+Pois cassés (cuits),Légumineuses,100 g,118,8.3,21.1,0.8
+Pois chiches (cuits),Légumineuses,100 g,164,9,27,3
+Bissara (purée de fèves + huile),Plats marocains,100 g,95,5,10,3
+Briouate aux amandes (frite),Plats marocains,100 g,400,9,44,22
+Chebakia,Plats marocains,100 g,450,8,55,20
+Couscous aux légumes (sans viande),Plats marocains,100 g,120,4,22,2
+Couscous tfaya (poulet + oignons confits),Plats marocains,100 g,150,6,24,3
+Harira,Plats marocains,100 g,55,3,7,1.5
+Loubia (haricots blancs à la tomate),Plats marocains,100 g,120,5,18,3
+Mrouzia (agneau au miel et raisins),Plats marocains,100 g,210,10,12,12
+Pastilla au poulet,Plats marocains,100 g,250,12,24,12
+Pastilla fruits de mer,Plats marocains,100 g,230,14,22,9
+Rfissa (msemen + poulet + lentilles),Plats marocains,100 g,180,8,21,7
+Seffa medfouna (semoule sucrée),Plats marocains,100 g,200,5,35,4
+Sellou / Sfouf,Plats marocains,100 g,480,10,50,24
+Tajine bœuf aux pruneaux,Plats marocains,100 g,140,10,8,7
+Tajine de sardines (boulettes),Plats marocains,100 g,130,14,3,7
+Tajine kefta à la tomate,Plats marocains,100 g,130,12,5,7
+Tajine poulet citron & olives,Plats marocains,100 g,120,9,3,7
+Taktouka (poivron-tomate),Plats marocains,100 g,60,1.5,7,3
+Zaalouk (salade d’aubergine),Plats marocains,100 g,80,1.5,8,5
+Beurre,Produits laitiers,100 g,717,0.5,0.1,81
+Fromage fondu (type portion),Produits laitiers,100 g,320,11,12,26
+"Jben (fromage frais marocain, type feta)",Produits laitiers,100 g,264,14,4,21
+Lait demi-écrémé,Produits laitiers,100 g,46,3.4,5,1.6
+Lait entier,Produits laitiers,100 g,61,3.3,4.8,3.3
+Lait fermenté (lben/leben),Produits laitiers,100 g,58,3.1,4.5,3.2
+Lait écrémé,Produits laitiers,100 g,34,3.4,5,0.2
+Raib sucré (approx.),Produits laitiers,100 g,90,3,14,2
+Smen (beurre rance/clarifié),Produits laitiers,100 g,884,0,0,100
+Yaourt nature,Produits laitiers,100 g,61,3.5,4.7,3.3
+Briouate au miel (amandes),Pâtisseries & sucrés,100 g,430,8,53,20
+Confiture (moyenne),Pâtisseries & sucrés,100 g,250,0.3,65,0
+Ghriba aux amandes,Pâtisseries & sucrés,100 g,480,9,55,22
+Ghriba à la noix de coco,Pâtisseries & sucrés,100 g,470,6,56,23
+Halva tahini (sésame),Pâtisseries & sucrés,100 g,510,12,51,27
+Miel,Pâtisseries & sucrés,100 g,304,0.3,82,0
+Sucre,Pâtisseries & sucrés,100 g,387,0,100,0
+"Agneau, épaule",Viandes & poissons,100 g,294,25,0,20
+Bœuf haché 15% MG,Viandes & poissons,100 g,254,25,0,15
+"Bœuf, steak maigre",Viandes & poissons,100 g,217,26,0,10
+Calamar,Viandes & poissons,100 g,92,15.6,3.1,1.4
+Crevettes,Viandes & poissons,100 g,99,24,0.2,0.3
+"Dinde, blanc",Viandes & poissons,100 g,135,29,0,2
+Dorade royale,Viandes & poissons,100 g,142,20.7,0,5
+Foie de bœuf,Viandes & poissons,100 g,175,20.4,5.1,3.6
+Foie de poulet,Viandes & poissons,100 g,135,17,1,5
+Khlii (viande confite),Viandes & poissons,100 g,450,30,0,37
+Maquereau,Viandes & poissons,100 g,205,19,0,13.9
+Merlan,Viandes & poissons,100 g,90,18,0,1.3
+"Poulet, blanc (sans peau)",Viandes & poissons,100 g,165,31,0,3.6
+"Poulet, cuisse (avec peau)",Viandes & poissons,100 g,215,27,0,11
+"Sardines (conserve, égouttées)",Viandes & poissons,100 g,208,24.6,0,11.5
+Sardines (fraîches),Viandes & poissons,100 g,208,20.9,0,10.5
+"Thon (conserve à l’huile, égoutté)",Viandes & poissons,100 g,187,26,0,8
+Thon (frais),Viandes & poissons,100 g,100,23,0,0.6
+Œuf de poule,Viandes & poissons,100 g,155,13,1.1,11

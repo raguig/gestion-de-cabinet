@@ -1,27 +1,42 @@
 import { Outlet } from "react-router-dom";
 import AppSidebar from "../components/AppSidebar";
 import { AppHeader } from "../components/AppHeader";
-import { SidebarProvider } from "@/components/ui/sidebar";
+import { SidebarProvider, useSidebar } from "@/components/ui/sidebar";
+
+function MainLayoutContent() {
+  const { state } = useSidebar();
+  const isCollapsed = state === "collapsed";
+
+  return (
+    <div className="flex min-h-screen w-full bg-gray-50 dark:bg-gray-900">
+      <AppSidebar />
+
+      {/* Main Content Container */}
+      <div
+        className={`flex-1 min-h-screen flex flex-col transition-all duration-300 ease-in-out
+          ${isCollapsed ? "ml-20" : "ml-72"}`}
+      >
+        <AppHeader />
+
+        {/* Main Content Area */}
+        <main className="flex-1 w-full h-full pt-16">
+          <div className="h-full w-full p-4 md:p-6 lg:p-8">
+            <div className="h-full w-full max-w-[2000px] mx-auto">
+              <div className="min-h-[calc(100vh-10rem)]">
+                <Outlet />
+              </div>
+            </div>
+          </div>
+        </main>
+      </div>
+    </div>
+  );
+}
 
 export default function MainLayout() {
   return (
     <SidebarProvider>
-      <div className="flex flex-col md:flex-row min-h-screen w-full bg-background">
-        {/* Sidebar - hidden on mobile, visible on md and up */}
-        <div className="hidden md:block">
-          <AppSidebar />
-        </div>
-
-        {/* Main Content */}
-        <div className="flex-1 flex flex-col min-h-screen w-full">
-          <AppHeader />
-          <main className="flex-1 p-4 md:p-6 overflow-auto">
-            <div className="container mx-auto max-w-7xl">
-              <Outlet />
-            </div>
-          </main>
-        </div>
-      </div>
+      <MainLayoutContent />
     </SidebarProvider>
   );
 }

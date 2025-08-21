@@ -3,21 +3,125 @@ import Patient from '../models/Patient.js';
 import PatientVisit from '../models/PatientVisit.js';
 import Doctor from '../models/Doctor.js';
 
+// Add this new function to calculate weekly patient stats
+const getWeeklyPatientStats = async (doctorId) => {
+  const today = new Date();
+  const currentDay = today.getDay(); // 0 = Sunday, 1 = Monday, ...
+  
+  // Calculate start of week (Monday 00:00)
+  const startOfWeek = new Date(today);
+  startOfWeek.setDate(today.getDate() - currentDay + (currentDay === 0 ? -6 : 1));
+  startOfWeek.setHours(0, 0, 0, 0);
+  
+  // Calculate end of week (Sunday 23:59:59)
+  const endOfWeek = new Date(startOfWeek);
+  endOfWeek.setDate(startOfWeek.getDate() + 6);
+  endOfWeek.setHours(23, 59, 59, 999);
+
+  // Get new patients created this week
+  const newPatients = await Patient.find({
+    doctor: doctorId,
+    createdAt: {
+      $gte: startOfWeek,
+      $lte: endOfWeek
+    }
+  });
+
+  // Get all visits this week
+  const visits = await PatientVisit.find({
+    patient: { $in: await Patient.find({ doctor: doctorId }).distinct('_id') },
+    visitDate: {
+      $gte: startOfWeek,
+      $lte: endOfWeek
+    }
+  });
+
+  // Calculate daily breakdown
+  const dailyBreakdown = [];
+  const days = ['Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi', 'Dimanche'];
+  
+  for (let i = 0; i < 7; i++) {
+    const dayStart = new Date(startOfWeek);
+    dayStart.setDate(startOfWeek.getDate() + i);
+    const dayEnd = new Date(dayStart);
+    dayEnd.setHours(23, 59, 59, 999);
+
+    const dayPatients = newPatients.filter(patient => 
+      patient.createdAt >= dayStart && patient.createdAt <= dayEnd
+    ).length;
+
+    dailyBreakdown.push({
+      day: days[i],
+      count: dayPatients
+    });
+  }
+
+  // Calculate average per day
+  const totalNewPatients = newPatients.length;
+  const averagePerDay = totalNewPatients / 7;
+
+  // Get previous week's stats
+  const previousWeekTotal = await getPreviousWeekStats(doctorId, startOfWeek);
+  
+  // Calculate growth rate
+  let growthRate;
+  if (totalNewPatients === 0) {
+    growthRate = 0;
+  } else if (previousWeekTotal === 0) {
+    growthRate = 100;
+  } else {
+    growthRate = Math.round(((totalNewPatients - previousWeekTotal) / previousWeekTotal) * 100);
+    if (growthRate < 0) growthRate = 0;
+  }
+
+  return {
+    totalNewPatients,
+    totalVisits: visits.length,
+    averagePerDay: Math.round(averagePerDay * 100) / 100,
+    dailyBreakdown,
+    growthRate,
+    previousWeekTotal
+  };
+};
+
+// Add this to the getWeeklyPatientStats function
+const getPreviousWeekStats = async (doctorId, startOfWeek) => {
+  const startOfPreviousWeek = new Date(startOfWeek);
+  startOfPreviousWeek.setDate(startOfWeek.getDate() - 7);
+  
+  const endOfPreviousWeek = new Date(startOfWeek);
+  endOfPreviousWeek.setSeconds(endOfPreviousWeek.getSeconds() - 1);
+
+  const previousWeekPatients = await Patient.countDocuments({
+    doctor: doctorId,
+    createdAt: {
+      $gte: startOfPreviousWeek,
+      $lt: endOfPreviousWeek
+    }
+  });
+
+  return previousWeekPatients;
+};
+
 export const getDashboardStats = async (req, res) => {
   try {
     const doctorId = req.user._id;
     const today = new Date();
     today.setHours(0, 0, 0, 0);
 
-    // Get today's appointments
+    // Get today's appointments - Updated query
     const todayAppointments = await Appointment.find({
       doctor: doctorId,
       date: {
         $gte: today,
         $lt: new Date(today.getTime() + 24 * 60 * 60 * 1000)
       },
-      status: "scheduled"
+      // Use the correct status
+      status: { $in: ["confirme", "reprogramme"] }
     }).sort({ hour: 1 });
+
+    // Log appointments for debugging
+    console.log('Found appointments:', todayAppointments);
 
     // Get recent patient visits with diet plans
     const recentPlans = await PatientVisit.find({
@@ -68,7 +172,10 @@ export const getDashboardStats = async (req, res) => {
       { $sort: { "_id": 1 } }
     ]);
 
-    // Format response data
+    // Get weekly patient stats
+    const weeklyPatientStats = await getWeeklyPatientStats(doctorId);
+
+    // Format response data with updated appointment translation
     const dashboardData = {
       appointments: todayAppointments.map(apt => ({
         name: apt.fullname,
@@ -79,10 +186,10 @@ export const getDashboardStats = async (req, res) => {
           en: apt.objectives
         },
         type: {
-          fr: apt.status === "scheduled" ? "Planifié" : "Terminé",
-          en: apt.status === "scheduled" ? "Scheduled" : "Completed"
+          fr: getAppointmentStatusFr(apt.status),
+          en: getAppointmentStatusEn(apt.status)
         }
-      })),
+      })),  // Added missing closing parenthesis here
 
       recentPlans: recentPlans.map(visit => ({
         patient: `${visit.patient.firstname} ${visit.patient.lastname}`,
@@ -91,15 +198,12 @@ export const getDashboardStats = async (req, res) => {
           fr: visit.patient.goal,
           en: visit.patient.goal
         },
-        status: {
-          fr: "En cours",
-          en: "In progress"
-        },
+        status: visit.patient.status,
         startWeight: visit.visits?.[1]?.weight || visit.weight,
         currentWeight: visit.weight,
         targetWeight: calculateTargetWeight(visit.weight, visit.patient.goal),
         completion: calculateCompletion(visit.weight, visit.visits?.[1]?.weight, calculateTargetWeight(visit.weight, visit.patient.goal))
-      })),
+      })),  // Added missing closing parenthesis here
 
       patientProgress: patientVisits.map(({ patient, visits }) => ({
         name: `${patient.firstname} ${patient.lastname}`,
@@ -111,8 +215,8 @@ export const getDashboardStats = async (req, res) => {
         startDate: patient.createdAt.toLocaleDateString(),
         progress: calculateProgress(visits),
         status: {
-          fr: determineStatus(visits),
-          en: determineStatus(visits)
+          fr: patient.status || "en cours",
+          en: translateStatus(patient.status || "en cours")
         },
         lastVisit: visits[0]?.visitDate.toLocaleDateString() || 'N/A',
         nextVisit: calculateNextVisit(visits[0]?.visitDate)
@@ -122,13 +226,41 @@ export const getDashboardStats = async (req, res) => {
         day: new Date(stat._id).toLocaleDateString('en-US', { weekday: 'short' }),
         actual: Math.round(stat.avgCalorieIntake),
         target: 2000, // This should be calculated based on patient goals
-      }))
+      })),
+
+      // Add the new weekly patient stats
+      weeklyPatientStats
     };
 
     res.json(dashboardData);
   } catch (error) {
-    res.status(500).json({ message: "Error fetching dashboard data" });
+    console.error('Error fetching dashboard data:', error);
+    res.status(500).json({ 
+      message: "Error fetching dashboard data",
+      error: error.message 
+    });
   }
+};
+
+// Add these helper functions
+const getAppointmentStatusFr = (status) => {
+  const statusMap = {
+    'confirme': 'Confirmé',
+    'reprogramme': 'Reprogrammé',
+    'arrive': 'Arrivé',
+    'termine': 'Terminé'
+  };
+  return statusMap[status] || status;
+};
+
+const getAppointmentStatusEn = (status) => {
+  const statusMap = {
+    'confirme': 'Confirmed',
+    'reprogramme': 'Rescheduled',
+    'arrive': 'Arrived',
+    'termine': 'Completed'
+  };
+  return statusMap[status] || status;
 };
 
 // Helper functions
@@ -181,4 +313,20 @@ const calculateNextVisit = (lastVisit) => {
   const nextVisit = new Date(lastVisit);
   nextVisit.setDate(nextVisit.getDate() + 14); // Assuming bi-weekly visits
   return nextVisit.toLocaleDateString();
+};
+
+const translateStatus = (status) => {
+  const statusMap = {
+    'en cours': 'In Progress',
+    'inactif': 'Inactive',
+    'reussi': 'Success',
+    'abandonne': 'Abandoned',
+    'abandonnee': 'Abandoned'
+  };
+
+  const normalizedStatus = status.toLowerCase()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '');
+
+  return statusMap[normalizedStatus] || status;
 };

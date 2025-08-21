@@ -12,61 +12,72 @@ export const addPatient = async (req, res) => {
       dateOfBirth,
       weight,
       height,
-      bf, // Body Fat
-      healthScore, // Health Score
+      bf,
+      healthScore,
       activityLevel,
       goal,
       rythm,
       lastmeasurement,
       pathalogie,
-      allergie
+      allergie,
+      targetWeight,
+      status = 'en cours'
     } = req.body;
 
-    if (!firstname || !lastname || !sex || !dateOfBirth || !weight || !height || !activityLevel || !goal || !rythm || !lastmeasurement) {
+    // Validate required fields
+    if (!firstname || !lastname || !sex || !dateOfBirth || !weight || !height || !activityLevel || !goal || !lastmeasurement) {
       return res.status(400).json({ message: 'All fields are required.' });
     }
 
-    const doctorId = req.user._id; // Get doctor ID from authenticated user
+    // For maintenance, target weight is optional and defaults to current weight
+    if (goal !== 'maintenance' && !targetWeight) {
+      return res.status(400).json({ message: 'Target weight is required for non-maintenance goals.' });
+    }
+
+    const doctorId = req.user._id;
 
     const newPatient = new Patient({
       firstname,
       lastname,
       sex,
       dateOfBirth,
-      
       height,
-     
       activityLevel,
-      
       lastmeasurement,
       pathalogie,
       allergie,
-       doctor: doctorId, // Assign the doctor ID
+      doctor: doctorId,
+      targetWeight: goal === 'maintenance' ? weight : targetWeight,
+      status
     });
 
-   const savedPatient = await newPatient.save();
-    const massemaigre=weight*(1-(bf/100));
-    const metabolismebase=370+(21.6*massemaigre)
-    let facteur = 1.55;
-  if (activityLevel == "moderate" || activityLevel == "moderee") {
-    facteur = 1.55;
-  } else if (activityLevel == "faible" || activityLevel == "sedentary") {
-    facteur = 1.2;
-  } else {
-    facteur = 1.725;
-  }
-  let metabolismeactive=facteur*metabolismebase;
+    const savedPatient = await newPatient.save();
 
-  const difficite_calorique = (rythm * 7700) / 7;
-  let calorie_regime;
-  if (goal == "perte" || goal == "weight loss") {
-    calorie_regime = metabolismeactive - difficite_calorique;
-  } else if (goal == "gain" || goal == "muscle gain") {
-    calorie_regime = metabolismeactive + difficite_calorique;
-  } else {
-    calorie_regime = metabolismeactive + 0;
-  }
-    // Create the initial visit
+    // Calculate metabolic values
+    const massemaigre = weight * (1 - (bf/100));
+    const metabolismebase = 370 + (21.6 * massemaigre);
+    
+    let facteur = 1.55;
+    if (activityLevel === "sedentary" || activityLevel === "faible") {
+      facteur = 1.2;
+    } else if (activityLevel === "active" || activityLevel === "elevee") {
+      facteur = 1.725;
+    }
+
+    const metabolismeactive = facteur * metabolismebase;
+    const difficite_calorique = ((rythm || 0) * 7700) / 7;
+
+    // Calculate calorie regime
+    let calorie_regime;
+    if (goal === "weight loss") {
+      calorie_regime = metabolismeactive - difficite_calorique;
+    } else if (goal === "muscle gain") {
+      calorie_regime = metabolismeactive + difficite_calorique;
+    } else {
+      calorie_regime = metabolismeactive;
+    }
+
+    // Create initial visit
     const initialVisit = new PatientVisit({
       patient: savedPatient._id,
       weight,
@@ -76,8 +87,8 @@ export const addPatient = async (req, res) => {
       activemetabolisme: parseFloat(metabolismeactive.toFixed(1)),
       calorieintake: parseFloat(calorie_regime.toFixed(1)),
       healthScore,
-      rythm,
-      goal: goal,
+      rythm: rythm || 0,
+      goal,
     });
 
     await initialVisit.save();
@@ -88,6 +99,7 @@ export const addPatient = async (req, res) => {
       visit: initialVisit,
     });
   } catch (error) {
+    console.error('Error adding patient:', error);
     res.status(500).json({ message: 'Server error.' });
   }
 };
@@ -126,13 +138,22 @@ export const updatePatient = async (req, res) => {
       return res.status(404).json({ message: "Patient not found." });
     }
 
+    // Handle manual status updates
+    if (updateData.status === 'abandonne') {
+      updateData.status = 'abandonne';
+    }
+
     // Update the patient
-    const updatedPatient = await Patient.findByIdAndUpdate(id, updateData, { new: true });
+    const updatedPatient = await Patient.findByIdAndUpdate(
+      id,
+      updateData,
+      { new: true }
+    );
 
     // If weight, bf, activityLevel, goal, or rythm is included in the update, recalculate formulas
     const { weight, bf, activityLevel, goal, rythm, healthScore } = updateData;
     if (weight || bf || activityLevel || goal || rythm) {
-      const height = updatedPatient.height; // Use the updated height if available
+      const height = updatedPatient.height;
       const massemaigre = weight ? weight * (1 - (bf / 100)) : null;
       const metabolismebase = massemaigre ? 370 + (21.6 * massemaigre) : null;
 
@@ -158,7 +179,8 @@ export const updatePatient = async (req, res) => {
       }
 
       // Update the latest visit or create a new one
-      const latestVisit = await PatientVisit.findOne({ patient: id }).sort({ visitDate: -1 });
+      const latestVisit = await PatientVisit.findOne({ patient: id })
+        .sort({ visitDate: -1 });
 
       if (latestVisit) {
         // Update the latest visit with the new data
@@ -185,15 +207,30 @@ export const updatePatient = async (req, res) => {
           calorieintake: calorie_regime ? parseFloat(calorie_regime.toFixed(1)) : null,
           healthScore,
           rythm,
-          
+          visitDate: new Date()
         });
         await newVisit.save();
       }
     }
 
-    res.status(200).json({ message: "Patient updated successfully.", updatedPatient });
+    // Check inactive status
+    const lastVisit = await PatientVisit.findOne({ patient: id })
+      .sort({ visitDate: -1 });
+
+    if (lastVisit) {
+      const daysSinceLastVisit = Math.floor(
+        (Date.now() - lastVisit.visitDate) / (1000 * 60 * 60 * 24)
+      );
+      
+      if (daysSinceLastVisit > 21 && updatedPatient.status === 'en cours') {
+        updatedPatient.status = 'inactif';
+        await updatedPatient.save();
+      }
+    }
+
+    res.status(200).json(updatedPatient);
   } catch (error) {
-    res.status(500).json({ message: "Server error." });
+    res.status(500).json({ message: 'Server error.' });
   }
 };
 
@@ -230,7 +267,7 @@ export const getPatientById = async (req, res) => {
     const { id } = req.params; // Extract patient ID from URL
 
     // Find the patient by ID
-    const patient = await Patient.findById(id);
+   const patient = await Patient.findById(id).populate('doctor');
     if (!patient) {
       return res.status(404).json({ message: "Patient not found." });
     }
@@ -279,73 +316,110 @@ export const addPatientVisit = async (req, res) => {
     const { id } = req.params;
     const { weight, bf, healthScore, rythm, goal } = req.body;
 
-    // Validate required fields
-    if (!weight || !bf || !healthScore || !rythm || !goal) {
-      return res.status(400).json({ message: "Weight, body fat, health score, and rythm are required." });
+    // Validate required fields and ranges
+    if (!weight || !bf || !rythm || !goal) {
+      return res.status(400).json({ 
+        message: "Weight, body fat, and rhythm are required." 
+      });
     }
 
-    // Find the patient by ID
+    // Validate weight range
+    if (weight < 0 || weight > 200) {
+      return res.status(400).json({
+        message: "Weight must be between 0 and 200 kg"
+      });
+    }
+
+    // Validate body fat range
+    if (bf < 0 || bf > 100) {
+      return res.status(400).json({
+        message: "Body fat must be between 0 and 100%"
+      });
+    }
+
+    // Find and update the patient
     const patient = await Patient.findById(id);
     if (!patient) {
       return res.status(404).json({ message: "Patient not found." });
     }
 
-    // Calculate lean mass (masse maigre)
-    const massemaigre = weight * (1 - bf / 100);
-    const metabolismebase = 370 + 21.6 * massemaigre;
+    // Update lastmeasurement
+    patient.lastmeasurement = new Date();
+    
+    // Reset status to 'en cours' if patient was inactive
+    if (patient.status === 'inactif') {
+      patient.status = 'en cours';
+    }
 
-    // Determine activity factor based on patient's activity level
+    // Calculate metabolic values
+    const massemaigre = weight * (1 - (bf / 100));
+    const metabolismebase = 370 + (21.6 * massemaigre);
+
+    // Determine activity factor
     let facteur = 1.55;
-    if (patient.activityLevel === "moderate" || patient.activityLevel === "moderee") {
-      facteur = 1.55;
-    } else if (patient.activityLevel === "faible" || patient.activityLevel === "sedentary") {
+    if (patient.activityLevel === "sedentary" || patient.activityLevel === "faible") {
       facteur = 1.2;
-    } else {
+    } else if (patient.activityLevel === "active" || patient.activityLevel === "elevee") {
       facteur = 1.725;
     }
 
     const metabolismeactive = facteur * metabolismebase;
     const difficite_calorique = (rythm * 7700) / 7;
 
-    let calorie_regime = metabolismeactive;
-    if (goal === "perte" || goal === "weight loss") {
+    // Translate goal for database storage
+    const translatedGoal = 
+      goal === 'perte' ? 'weight loss' :
+      goal === 'gain' ? 'muscle gain' : 'maintenance';
+
+    // Calculate calorie regime based on goal
+    let calorie_regime;
+    if (translatedGoal === "weight loss") {
       calorie_regime = metabolismeactive - difficite_calorique;
-    } else if (goal === "gain" || goal === "muscle gain") {
+    } else if (translatedGoal === "muscle gain") {
       calorie_regime = metabolismeactive + difficite_calorique;
-    }else{
-      calorie_regime = metabolismeactive + 0;
+    } else {
+      calorie_regime = metabolismeactive;
     }
 
-    const bmi = patient.height ? parseFloat((weight / (patient.height / 100) ** 2).toFixed(1)) : null;
-
-    // Create a new visit
     const newVisit = new PatientVisit({
       patient: patient._id,
       weight,
       bf,
-      bmi,
+      bmi: patient.height ? parseFloat((weight / (patient.height / 100) ** 2).toFixed(1)) : null,
       basemetabolisme: parseFloat(metabolismebase.toFixed(1)),
       activemetabolisme: parseFloat(metabolismeactive.toFixed(1)),
       calorieintake: parseFloat(calorie_regime.toFixed(1)),
       healthScore,
       rythm,
-      goal: goal,
+      goal: translatedGoal,
+      visitDate: new Date()
     });
 
     await newVisit.save();
+    await patient.save(); // Save the updated patient
 
-    // Fetch the updated latest visit
-    const latestVisit = await PatientVisit.findOne({ patient: id })
-      .sort({ visitDate: -1 })
-      .populate("diet"); // Populate the diet details
+    // Check if target is reached
+    const isTargetReached = 
+      (goal === 'perte' && weight <= patient.targetWeight) ||
+      (goal === 'gain' && weight >= patient.targetWeight) ||
+      (goal === 'maintenance' && Math.abs(weight - patient.targetWeight) <= 1);
+
+    if (isTargetReached && patient.status !== 'reussi') {
+      patient.status = 'reussi';
+      await patient.save();
+    }
 
     res.status(201).json({
       message: "Visit added successfully.",
-      latestVisit, // Return the updated latest visit
+      visit: newVisit,
+      patient: await Patient.findById(id) // Get fresh patient data
     });
   } catch (error) {
-    
-    res.status(500).json({ message: "Server error." });
+    console.error('Error adding visit:', error);
+    res.status(500).json({ 
+      message: 'Server error.',
+      error: error.message 
+    });
   }
 };
 export const assignDietToVisit = async (req, res) => {
@@ -392,3 +466,45 @@ export const addDietPlan = async (req, res) => {
     res.status(500).json({ message: "Server error." });
   }
 };
+
+// Add a new function to check and update inactive patients
+export const updateInactivePatients = async () => {
+  try {
+    const patients = await Patient.find({ 
+      status: 'en cours',
+      // Don't check abandoned patients
+      status: { $nin: ['abandonne'] }
+    });
+    
+    for (const patient of patients) {
+      const lastVisit = await PatientVisit.findOne({ patient: patient._id })
+        .sort({ visitDate: -1 });
+
+      if (lastVisit) {
+        const daysSinceLastVisit = Math.floor(
+          (Date.now() - lastVisit.visitDate) / (1000 * 60 * 60 * 24)
+        );
+        
+        if (daysSinceLastVisit > 21 && patient.status === 'en cours') {
+          patient.status = 'inactif';
+          await patient.save();
+        }
+
+        // Check if target is reached
+        const isTargetReached = 
+          (patient.goal === 'weight loss' && lastVisit.weight <= patient.targetWeight) ||
+          (patient.goal === 'muscle gain' && lastVisit.weight >= patient.targetWeight) ||
+          (patient.goal === 'maintenance' && Math.abs(lastVisit.weight - patient.targetWeight) <= 1);
+
+        if (isTargetReached && patient.status !== 'reussi') {
+          patient.status = 'reussi';
+          await patient.save();
+        }
+      }
+    }
+  } catch (error) {
+    console.error('Error updating patient statuses:', error);
+  }
+};
+
+// Schedule automatic status updates (add to server.js)

@@ -78,10 +78,25 @@ export const AuthProvider = ({ children }) => {
       }
 
       const data = await response.json();
-      setUser({
-        ...data,
-        isAdmin: Boolean(data.isAdmin),
-      });
+
+      // Fetch complete user data immediately after login
+      const userResponse = await fetch(
+        `${import.meta.env.VITE_BACKEND_URL}api/auth/me`,
+        {
+          headers: {
+            Authorization: `Bearer ${data.token}`,
+          },
+        }
+      );
+
+      if (userResponse.ok) {
+        const userData = await userResponse.json();
+        setUser({
+          ...userData,
+          isAdmin: Boolean(data.isAdmin),
+        });
+      }
+
       localStorage.setItem("token", data.token);
       localStorage.setItem("doctorId", data.id);
       navigate("/");

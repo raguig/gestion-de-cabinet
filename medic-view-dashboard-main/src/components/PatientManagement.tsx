@@ -27,6 +27,7 @@ import {
   Trash2,
   X,
   Save,
+  AlertTriangle,
 } from "lucide-react";
 import axios from "axios"; // Add this import
 import { PatientForm } from "./PatientForm"; // Import the PatientForm component
@@ -57,6 +58,8 @@ export interface Patient {
   recentWeight: number;
   bmi: number;
   age: number;
+  status: "inactif" | "en cours" | "reussi" | "abandonne";
+  targetWeight: number;
 }
 
 // Initialize empty patient for new entries
@@ -74,6 +77,7 @@ const emptyPatient = {
   rhythm: 0,
   pathalogie: "",
   allergie: "",
+  targetWeight: 0,
 };
 
 export function PatientManagement() {
@@ -106,6 +110,7 @@ export function PatientManagement() {
       | "healthScore"
       | "pathalogie"
       | "allergie"
+      | "rhythm"
     >
   >({
     firstName: "",
@@ -129,14 +134,17 @@ export function PatientManagement() {
       const token = localStorage.getItem("token");
       const doctorId = localStorage.getItem("doctorId"); // Add this line
 
-      const res = await axios.get(`${import.meta.env.VITE_BACKEND_URL}api/patients`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-        params: {
-          doctorId: doctorId, // Add this parameter
-        },
-      });
+      const res = await axios.get(
+        `${import.meta.env.VITE_BACKEND_URL}api/patients`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+          params: {
+            doctorId: doctorId, // Add this parameter
+          },
+        }
+      );
 
       const mapped = res.data.map((p: any) => ({
         id: p._id,
@@ -160,7 +168,7 @@ export function PatientManagement() {
             : p.latestVisit.goal === "muscle gain"
             ? "gain"
             : "maintenance",
-        rhythm: Number(p.rythm),
+        rhythm: Number(p.latestVisit.rythm),
         startDate: p.createdAt?.slice(0, 10) || "",
         lastMeasure: p.lastmeasurement?.slice(0, 10) || "",
         recentWeight: p.latestVisit.weight,
@@ -169,10 +177,11 @@ export function PatientManagement() {
         pathalogie: p.pathalogie || "",
         allergie: p.allergie || "",
         doctorId: p.doctor, // Add this field
+        status: p.status || "inactif",
+        targetWeight: p.targetWeight || 0,
       }));
       setPatients(mapped);
-    } catch (err) {
-    }
+    } catch (err) {}
   };
   useEffect(() => {
     fetchPatients();
@@ -236,6 +245,14 @@ export function PatientManagement() {
         fr: "Ce champ est obligatoire",
         en: "This field is required",
       },
+      currentRhythm: { fr: "Rythme actuel:", en: "Current rhythm:" },
+      selectRhythm: { fr: "Sélectionner un rythme", en: "Select rhythm" },
+      status: { fr: "Statut", en: "Status" },
+      "statuses.inactif": { fr: "Inactif", en: "Inactive" },
+      "statuses.en cours": { fr: "En cours", en: "In progress" },
+      "statuses.reussi": { fr: "Réussi", en: "Succeeded" },
+      "statuses.abandonne": { fr: "Abandonné", en: "Abandoned" },
+      targetWeight: { fr: "Poids cible (kg)", en: "Target weight (kg)" },
     };
     return texts[key]?.[language] || key;
   };
@@ -294,26 +311,15 @@ export function PatientManagement() {
 
   // --- Add patient (POST) ---
   const handleAddPatient = async () => {
-    if (
-      !newPatient.firstName ||
-      !newPatient.lastName ||
-      !newPatient.birthDate ||
-      !newPatient.height ||
-      !newPatient.weight
-    ) {
-      toast.error(getText("requiredField"), {
-        className:
-          "bg-red-50 dark:bg-red-900 border border-red-200 dark:border-red-800",
-        descriptionClassName: "text-red-800 dark:text-red-200",
-        style: {
-          color: "rgb(185 28 28)", // text-red-700
-        },
-      });
-      return;
-    }
-
     try {
       const token = localStorage.getItem("token");
+
+      // Set target weight equal to current weight for maintenance
+      const targetWeight =
+        newPatient.goal === "maintenance"
+          ? newPatient.weight
+          : newPatient.targetWeight;
+
       await axios.post(
         `${API_URL}/add`,
         {
@@ -321,9 +327,9 @@ export function PatientManagement() {
           lastname: newPatient.lastName,
           sex: newPatient.gender === "M" ? "male" : "female",
           dateOfBirth: newPatient.birthDate,
-          weight: newPatient.weight, // Initial weight
-          bf: newPatient.bf || 0, // Initial body fat
-          healthScore: newPatient.healthScore || 0, // Initial health score
+          weight: newPatient.weight,
+          bf: newPatient.bf || 0,
+          healthScore: newPatient.healthScore || 0,
           height: newPatient.height,
           activityLevel:
             newPatient.activityLevel === "faible"
@@ -337,18 +343,31 @@ export function PatientManagement() {
               : newPatient.goal === "gain"
               ? "muscle gain"
               : "maintenance",
-          rythm: String(newPatient.rhythm),
+          rythm: String(newPatient.rhythm || 0), // Set to 0 for maintenance
           lastmeasurement: new Date().toISOString().split("T")[0],
           pathalogie: newPatient.pathalogie || "",
           allergie: newPatient.allergie || "",
+          targetWeight: targetWeight, // Use the calculated target weight
+          status: "en cours",
         },
         {
           headers: {
-            Authorization: `Bearer ${token}`, // Include the token in the request headers
+            Authorization: `Bearer ${token}`,
           },
         }
       );
-
+  setNewPatient({
+      firstName: "",
+      lastName: "",
+      gender: "M",
+      birthDate: "",
+      height: 0,
+      weight: 0,
+      activityLevel: "moderee",
+      goal: "maintenance",
+      rhythm: 0,
+      startDate: new Date().toISOString().split("T")[0],
+    });
       // Refresh the patient list
       fetchPatients();
       setShowAddForm(false);
@@ -489,6 +508,8 @@ export function PatientManagement() {
               : "maintenance",
           rythm: String(updatedPatient.rhythm),
           lastmeasurement: updatedPatient.lastMeasure,
+          status: updatedPatient.status,
+          targetWeight: updatedPatient.targetWeight,
         },
         {
           headers: {
@@ -524,7 +545,7 @@ export function PatientManagement() {
             "bg-red-50 dark:bg-red-900 border border-red-200 dark:border-red-800",
           descriptionClassName: "text-red-800 dark:text-red-200",
           style: {
-            color: "rgb(185 28 28)",
+            color: "rgb(185 28 28)", // text-red-700
           },
         }
       );
@@ -554,9 +575,14 @@ export function PatientManagement() {
 
   const navigate = useNavigate();
 
+  // New calculation for patients with dangerous BMI
+  const dangerousImcCount = useMemo(() => {
+    return patients.filter((p) => p.bmi < 17 || p.bmi >= 30).length;
+  }, [patients]);
+
   return (
     <div className="h-full w-full">
-      <main className="container mx-auto px-6 py-8 space-y-8">
+      <main className="p-8 space-y-8 bg-gray-50 dark:bg-gray-900 min-h-screen">
         {/* Statistics Cards */}
         <section className="grid grid-cols-1 md:grid-cols-3 gap-6">
           <Card className="relative overflow-hidden border-0 shadow-lg shadow-blue-500/10 bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-blue-950/50 dark:to-indigo-950/50 hover:shadow-xl transition-all duration-300">
@@ -583,26 +609,29 @@ export function PatientManagement() {
             </CardContent>
           </Card>
 
-          <Card className="relative overflow-hidden border-0 shadow-lg shadow-orange-500/10 bg-gradient-to-br from-orange-50 to-amber-50 dark:from-orange-950/50 dark:to-amber-950/50 hover:shadow-xl transition-all duration-300">
-            <div className="absolute top-0 right-0 w-20 h-20 bg-orange-500/10 rounded-full -mr-10 -mt-10"></div>
+          {/* New Dangerous BMI card */}
+          <Card className="relative overflow-hidden border-0 shadow-lg shadow-red-500/10 bg-gradient-to-br from-red-50 to-rose-50 dark:from-red-950/50 dark:to-rose-950/50 hover:shadow-xl transition-all duration-300">
+            <div className="absolute top-0 right-0 w-20 h-20 bg-red-500/10 rounded-full -mr-10 -mt-10"></div>
             <CardHeader className="pb-4">
               <div className="flex items-center gap-3">
-                <div className="p-3 rounded-2xl bg-orange-500/10 ring-1 ring-orange-500/20">
-                  <TrendingUp className="h-6 w-6 text-orange-600" />
+                <div className="p-3 rounded-2xl bg-red-500/10 ring-1 ring-red-500/20">
+                  <AlertTriangle className="h-6 w-6 text-red-600" />
                 </div>
                 <div>
                   <CardTitle className="text-lg text-slate-700 dark:text-slate-200">
-                    {getText("patientsWithoutRegime")}
+                    IMC Critique
                   </CardTitle>
                   <p className="text-sm text-slate-500 dark:text-slate-400">
-                    En maintenance
+                    {language === "fr"
+                      ? "Patients à risque"
+                      : "At-risk patients"}
                   </p>
                 </div>
               </div>
             </CardHeader>
             <CardContent>
-              <div className="text-4xl font-bold text-orange-600 dark:text-orange-400">
-                {patientsWithoutRegime}
+              <div className="text-4xl font-bold text-red-600 dark:text-red-400">
+                {dangerousImcCount}
               </div>
             </CardContent>
           </Card>
@@ -636,7 +665,7 @@ export function PatientManagement() {
         <section className="flex flex-col sm:flex-row gap-4 justify-between items-start sm:items-center">
           <Button
             onClick={() => setShowAddForm(true)}
-            className="flex items-center gap-3 h-12 px-6 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white shadow-lg shadow-blue-500/25 hover:shadow-xl hover:shadow-blue-500/30 transition-all duration-300 rounded-xl"
+            className="flex items-center gap-3 h-12 px-6 bg-gradient-to-r bg-primary bg-secondary hover:from-bg-primary hover:to-secondary text-white shadow-lg shadow-blue-500/25 hover:shadow-xl hover:shadow-blue-500/30 transition-all duration-300 rounded-xl"
           >
             <div className="p-1 bg-white/20 rounded-lg">
               <Plus className="h-4 w-4" />
@@ -680,61 +709,47 @@ export function PatientManagement() {
                 <table className="w-full">
                   <thead>
                     <tr className="bg-gradient-to-r from-slate-100/50 to-slate-200/50 dark:from-slate-800/50 dark:to-slate-700/50 border-b border-slate-200/50 dark:border-slate-700/50">
-                      {[
-                        { key: "fullName", label: getText("fullName") },
-
-                        { key: "gender", label: getText("gender") },
-                        { key: "age", label: getText("age") },
-                        { key: "goal", label: getText("regime") },
-                        { key: "recentWeight", label: getText("recentWeight") },
-                        { key: "height", label: getText("height") },
-                        { key: "bmi", label: getText("bmi") },
-
-                        { key: "lastMeasure", label: getText("lastMeasure") },
-                        { key: "actions", label: getText("actions") },
-                      ].map((column) => (
-                        <th
-                          key={column.key}
-                          className={`px-6 py-4 font-semibold text-slate-700 dark:text-slate-300 ${
-                            column.key === "actions"
-                              ? "text-center"
-                              : "text-left"
-                          }`}
-                        >
-                          {column.key !== "actions" ? (
-                            <Button
-                              variant="ghost"
-                              size="sm"
-                              onClick={() =>
-                                column.key !== "fullName" &&
-                                handleSort(column.key as keyof Patient)
-                              }
-                              className="h-auto p-0 font-semibold text-slate-700 dark:text-slate-300 hover:bg-transparent hover:text-blue-600 dark:hover:text-blue-400 transition-colors duration-200"
-                            >
-                              <span className="flex items-center gap-2">
-                                {column.label}
-                                {sortConfig.key === column.key && (
-                                  <ArrowUpDown className="h-3 w-3 text-blue-500" />
-                                )}
-                              </span>
-                            </Button>
-                          ) : (
-                            <span className="text-center block">
-                              {column.label}
-                            </span>
-                          )}
-                        </th>
-                      ))}
+                      <th className="px-6 py-4 text-left font-semibold text-slate-700 dark:text-slate-300">
+                        {getText("fullName")}
+                      </th>
+                      <th className="px-6 py-4 text-left font-semibold text-slate-700 dark:text-slate-300">
+                        {getText("gender")}
+                      </th>
+                      <th className="px-6 py-4 text-left font-semibold text-slate-700 dark:text-slate-300">
+                        {getText("age")}
+                      </th>
+                      <th className="px-6 py-4 text-left font-semibold text-slate-700 dark:text-slate-300">
+                        {getText("goal")}
+                      </th>
+                      <th className="px-6 py-4 text-left font-semibold text-slate-700 dark:text-slate-300">
+                        {getText("recentWeight")}
+                      </th>
+                      <th className="px-6 py-4 text-left font-semibold text-slate-700 dark:text-slate-300">
+                        {getText("height")}
+                      </th>
+                      <th className="px-6 py-4 text-left font-semibold text-slate-700 dark:text-slate-300">
+                        {getText("bmi")}
+                      </th>
+                      <th className="px-6 py-4 text-left font-semibold text-slate-700 dark:text-slate-300">
+                        {getText("lastMeasure")}
+                      </th>
+                      <th className="px-6 py-4 text-left font-semibold text-slate-700 dark:text-slate-300">
+                        {getText("status")}
+                      </th>
+                      <th className="px-6 py-4 text-center font-semibold text-slate-700 dark:text-slate-300 w-24">
+                        {getText("actions")}
+                      </th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-slate-200/50 dark:divide-slate-700/50">
                     {paginatedPatients.map((patient, index) => (
                       <tr
                         key={patient.id}
+                        onClick={() => navigate(`/patients/${patient.id}`)}
                         className={`
                   group hover:bg-gradient-to-r hover:from-blue-50/50 hover:to-indigo-50/50 
                   dark:hover:from-blue-950/20 dark:hover:to-indigo-950/20 
-                  transition-all duration-200 ease-out
+                  transition-all duration-200 ease-out cursor-pointer
                   ${
                     index % 2 === 0
                       ? "bg-white dark:bg-slate-900"
@@ -847,15 +862,19 @@ export function PatientManagement() {
                           <Badge
                             variant="outline"
                             className={`
-                      font-semibold
-                      ${
-                        patient.bmi < 18.5
-                          ? "border-orange-300 bg-orange-50 text-orange-700 dark:border-orange-700 dark:bg-orange-950/30 dark:text-orange-300"
-                          : patient.bmi > 25
-                          ? "border-red-300 bg-red-50 text-red-700 dark:border-red-700 dark:bg-red-950/30 dark:text-red-300"
-                          : "border-green-300 bg-green-50 text-green-700 dark:border-green-700 dark:bg-green-950/30 dark:text-green-300"
-                      }
-                    `}
+    font-semibold
+    ${
+      patient.bmi < 17
+        ? "border-red-300 bg-red-50 text-red-700 dark:border-red-700 dark:bg-red-950/30 dark:text-red-300"
+        : patient.bmi >= 17 && patient.bmi < 18.5
+        ? "border-orange-300 bg-orange-50 text-orange-700 dark:border-orange-700 dark:bg-orange-950/30 dark:text-orange-300"
+        : patient.bmi >= 18.5 && patient.bmi <= 24.9
+        ? "border-green-300 bg-green-50 text-green-700 dark:border-green-700 dark:bg-green-950/30 dark:text-green-300"
+        : patient.bmi > 24.9 && patient.bmi < 30
+        ? "border-orange-300 bg-orange-50 text-orange-700 dark:border-orange-700 dark:bg-orange-950/30 dark:text-orange-300"
+        : "border-red-300 bg-red-50 text-red-700 dark:border-red-700 dark:bg-red-950/30 dark:text-red-300"
+    }
+  `}
                           >
                             <Scale className="w-3 h-3 mr-1" />
                             {patient.bmi}
@@ -870,18 +889,39 @@ export function PatientManagement() {
                             </p>
                           </div>
                         </td>
-                        <td className="px-6 py-4 text-center">
-                          <div className="flex items-center justify-center gap-1 transition-opacity duration-200">
-                            <Button
-                              variant="ghost"
-                              size="sm"
-                              onClick={() =>
-                                navigate(`/patients/${patient.id}`)
-                              }
-                              className="h-8 w-8 p-0 hover:bg-blue-100 hover:text-blue-600 dark:hover:bg-blue-900/30 dark:hover:text-blue-400 rounded-lg transition-colors duration-200"
+                        <td className="px-6 py-4">
+                          <div className="flex items-center gap-2">
+                            <div
+                              className={`w-2 h-2 rounded-full ${
+                                patient.status === "en cours"
+                                  ? "bg-blue-500"
+                                  : patient.status === "reussi"
+                                  ? "bg-green-500"
+                                  : patient.status === "inactif"
+                                  ? "bg-yellow-500"
+                                  : "bg-red-500"
+                              }`}
+                            />
+                            <span
+                              className={`text-sm font-medium ${
+                                patient.status === "en cours"
+                                  ? "text-blue-700 dark:text-blue-400"
+                                  : patient.status === "reussi"
+                                  ? "text-green-700 dark:text-green-400"
+                                  : patient.status === "inactif"
+                                  ? "text-yellow-700 dark:text-yellow-400"
+                                  : "text-red-700 dark:text-red-400"
+                              }`}
                             >
-                              <Eye className="h-4 w-4" />
-                            </Button>
+                              {getText(`statuses.${patient.status}`)}
+                            </span>
+                          </div>
+                        </td>
+                        <td
+                          className="px-6 py-4 text-center"
+                          onClick={(e) => e.stopPropagation()}
+                        >
+                          <div className="flex items-center justify-center gap-1 transition-opacity duration-200">
                             <Button
                               variant="ghost"
                               size="sm"
@@ -893,7 +933,7 @@ export function PatientManagement() {
                             <Button
                               variant="ghost"
                               size="sm"
-                              onClick={() => handleDeletePatient(patient.id)} // <-- use CIN, not id
+                              onClick={() => handleDeletePatient(patient.id)}
                               className="h-8 w-8 p-0 hover:bg-red-100 hover:text-red-600 dark:hover:bg-red-900/30 dark:hover:text-red-400 rounded-lg transition-colors duration-200"
                             >
                               <Trash2 className="h-4 w-4" />
@@ -1124,25 +1164,23 @@ export function PatientManagement() {
               {`Page ${currentPage} / ${totalPages}`}
             </span>
             <div className="flex gap-2">
-              <Button
-                variant="outline"
-                size="sm"
-                disabled={currentPage === 1}
-                onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
-              >
-                Précédent
-              </Button>
-              <Button
-                variant="outline"
-                size="sm"
-                disabled={currentPage === totalPages}
-                onClick={() =>
-                  setCurrentPage((p) => Math.min(totalPages, p + 1))
-                }
-              >
-                Suivant
-              </Button>
-            </div>
+  <Button
+    variant="outline"
+    size="sm"
+    disabled={currentPage === 1}
+    onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
+  >
+    {language === "fr" ? "Précédent" : "Previous"}
+  </Button>
+  <Button
+    variant="outline"
+    size="sm"
+    disabled={currentPage === totalPages}
+    onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
+  >
+    {language === "fr" ? "Suivant" : "Next"}
+  </Button>
+</div>
           </div>
         )}
       </main>

@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import dietPlansData from "../../public/diet-plans.json"; // Adjust the path if necessary
+import dietPlansData from "../../public/diet-plans.json";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -26,16 +26,18 @@ import {
   Check,
   X,
 } from "lucide-react";
-import jsPDF from "jspdf";
+import { PDFDocument, rgb, StandardFonts } from "pdf-lib";
 import axios from "axios";
 import { toast } from "sonner";
+import { cn } from "@/lib/utils";
 
 interface DietEditorSlideProps {
   language: "fr" | "en";
   calorieintake?: number;
   visitId: string;
   onDietAssigned?: () => void;
-  patient?: any; // Add this prop
+  patient?: any;
+  hasDiet?: boolean;
 }
 
 interface Meal {
@@ -82,6 +84,7 @@ export function DietEditorSlide({
   visitId,
   onDietAssigned,
   patient,
+  hasDiet = false,
 }: DietEditorSlideProps) {
   const [versions, setVersions] = useState<DietVersion[]>([
     { id: "v1", name: "Équilibré", selectedDays: [] },
@@ -140,6 +143,15 @@ export function DietEditorSlide({
       viewDayDetails: "Voir les détails du jour",
       dietName: "Nom du régime",
       saveAndAssign: "Sauvegarder et assigner",
+      dietAlreadyAssigned:
+        "Un régime est déjà assigné. Veuillez d'abord le supprimer avant d'en assigner un nouveau.",
+      deleteDietFirst: "Supprimer le régime actuel",
+      subscriptionLimit: {
+        title: "Limite d'abonnement atteinte",
+        description: (current: number, limit: number, tier: string) =>
+          `Vous avez atteint votre limite mensuelle de régimes (${current}/${limit}) pour votre abonnement ${tier}.`,
+        upgrade: "Mettre à niveau",
+      },
     },
     en: {
       versions: "Diet versions",
@@ -170,6 +182,15 @@ export function DietEditorSlide({
       viewDayDetails: "View day details",
       dietName: "Diet Name",
       saveAndAssign: "Save and Assign",
+      dietAlreadyAssigned:
+        "A diet is already assigned. Please delete it first before assigning a new one.",
+      deleteDietFirst: "Delete current diet",
+      subscriptionLimit: {
+        title: "Subscription Limit Reached",
+        description: (current: number, limit: number, tier: string) =>
+          `You have reached your monthly diet plan limit (${current}/${limit}) for your ${tier} subscription.`,
+        upgrade: "Upgrade",
+      },
     },
   };
 
@@ -194,7 +215,6 @@ export function DietEditorSlide({
     if (!Array.isArray(mealItems) || mealItems.length === 0) {
       return t[mealType as keyof typeof t] || mealType;
     }
-    // Use the first item's name or create a descriptive name
     return mealItems.length === 1
       ? mealItems[0].name
       : `${mealItems[0].name} et ${mealItems.length - 1} autre${
@@ -223,15 +243,6 @@ export function DietEditorSlide({
 
     selectedPlan.forEach((dayPlan: any) => {
       if (dayPlan.day) {
-        // Map French meal names to English keys for consistency
-        const mealMapping = {
-          "Petit-Déjeuner": "breakfast",
-          "Collation-matin": "morningSnack",
-          Déjeuner: "lunch",
-          Collation: "afternoonSnack",
-          Dîner: "dinner",
-        };
-
         const formattedMeals = {
           breakfast: {
             name: getMealName("breakfast", dayPlan.meals?.breakfast || []),
@@ -320,20 +331,6 @@ export function DietEditorSlide({
     }
   };
 
-  const handleCreateVersion = () => {
-    if (newVersionName.trim()) {
-      const newVersion: DietVersion = {
-        id: `v${versions.length + 1}`,
-        name: newVersionName,
-        selectedDays: [],
-      };
-      setVersions([...versions, newVersion]);
-      setSelectedVersion(newVersion.id);
-      setNewVersionName("");
-      setIsCreatingVersion(false);
-    }
-  };
-
   const handleDaySelectionForVersion = (dayId: string, checked: boolean) => {
     setVersions(
       versions.map((version) =>
@@ -410,81 +407,13 @@ export function DietEditorSlide({
     setEditingMeal(null);
   };
 
-  const handleSelectSingleMeal = async (dayId: string, mealType: string) => {
-    try {
-      const token = localStorage.getItem("token");
-      const plan = getCurrentDietPlan(dayId);
-      const meal = plan.meals[mealType as keyof typeof plan.meals];
-
-      // Create a diet with only the selected meal
-      const dietData = {
-        name: `${plan.id} - ${t[mealType as keyof typeof t]}`,
-        meals: {
-          breakfast: mealType === "breakfast" ? meal.details : "",
-          morningSnack: mealType === "morningSnack" ? meal.details : "",
-          lunch: mealType === "lunch" ? meal.details : "",
-          afternoonSnack: mealType === "afternoonSnack" ? meal.details : "",
-          dinner: mealType === "dinner" ? meal.details : "",
-        },
-      };
-
-      const addDietResponse = await axios.post(
-        `${import.meta.env.VITE_BACKEND_URL}api/patients/diets`,
-        dietData,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-
-      const createdDiet = addDietResponse.data.dietPlan;
-      // Assign the diet to the visit
-      await axios.put(
-        `${import.meta.env.VITE_BACKEND_URL}api/patients/visits/${visitId}/assign-diet`,
-        { dietId: createdDiet._id },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-
-      toast.success(
-        language === "fr"
-          ? `${t[mealType as keyof typeof t]} ajouté et assigné avec succès!`
-          : `${t[mealType as keyof typeof t]} added and assigned successfully!`,
-        {
-          className:
-            "bg-green-50 dark:bg-green-900 border border-green-200 dark:border-green-800",
-          descriptionClassName: "text-green-800 dark:text-green-200",
-          style: {
-            color: "rgb(21 128 61)", // text-green-700
-          },
-        }
-      );
-      if (onDietAssigned) {
-        onDietAssigned(); // Call the refresh function
-      }
-    } catch (error) {
-      toast.error(
-        language === "fr"
-          ? "Échec de l'ajout et de l'assignation du régime."
-          : "Failed to add and assign diet.",
-        {
-          className:
-            "bg-red-50 dark:bg-red-900 border border-red-200 dark:border-red-800",
-          descriptionClassName: "text-red-800 dark:text-red-200",
-          style: {
-            color: "rgb(185 28 28)", // text-red-700
-          },
-        }
-      );
-    }
-  };
-
   const handleAssignSelectedDays = async () => {
     try {
+      if (hasDiet) {
+        toast.error(t.dietAlreadyAssigned);
+        return;
+      }
+
       const token = localStorage.getItem("token");
       const currentVersion = versions.find((v) => v.id === selectedVersion);
 
@@ -492,20 +421,11 @@ export function DietEditorSlide({
         toast.error(
           language === "fr"
             ? "Veuillez sélectionner au moins un jour à assigner."
-            : "Please select at least one day to assign.",
-          {
-            className:
-              "bg-red-50 dark:bg-red-900 border border-red-200 dark:border-red-800",
-            descriptionClassName: "text-red-800 dark:text-red-200",
-            style: {
-              color: "rgb(185 28 28)", // text-red-700
-            },
-          }
+            : "Please select at least one day to assign."
         );
         return;
       }
 
-      // Create a comprehensive diet plan with all selected days
       const selectedDaysData = currentVersion.selectedDays.map((dayId) => {
         const plan = getCurrentDietPlan(dayId);
         return {
@@ -514,7 +434,6 @@ export function DietEditorSlide({
         };
       });
 
-      // Create a combined meal plan
       const combinedMeals = {
         breakfast: selectedDaysData
           .map((day) => `${day.day}: ${day.meals.breakfast.details}`)
@@ -544,6 +463,7 @@ export function DietEditorSlide({
         )}`,
         meals: combinedMeals,
       };
+
       const addDietResponse = await axios.post(
         `${import.meta.env.VITE_BACKEND_URL}api/patients/diets`,
         dietData,
@@ -555,9 +475,11 @@ export function DietEditorSlide({
       );
 
       const createdDiet = addDietResponse.data.dietPlan;
-      // Assign the diet to the visit
+
       await axios.put(
-        `${import.meta.env.VITE_BACKEND_URL}api/patients/visits/${visitId}/assign-diet`,
+        `${
+          import.meta.env.VITE_BACKEND_URL
+        }api/patients/visits/${visitId}/assign-diet`,
         { dietId: createdDiet._id },
         {
           headers: {
@@ -575,28 +497,46 @@ export function DietEditorSlide({
             "bg-green-50 dark:bg-green-900 border border-green-200 dark:border-green-800",
           descriptionClassName: "text-green-800 dark:text-green-200",
           style: {
-            color: "rgb(21 128 61)", // text-green-700
+            color: "rgb(21 128 61)",
           },
         }
       );
 
       if (onDietAssigned) {
-        onDietAssigned(); // Call the refresh function
+        onDietAssigned();
       }
     } catch (error) {
-      toast.error(
-        language === "fr"
-          ? "Échec de l'assignation du régime."
-          : "Failed to assign diet.",
-        {
-          className:
-            "bg-red-50 dark:bg-red-900 border border-red-200 dark:border-red-800",
-          descriptionClassName: "text-red-800 dark:text-red-200",
-          style: {
-            color: "rgb(185 28 28)", // text-red-700
-          },
-        }
-      );
+      if (axios.isAxiosError(error) && error.response?.status === 403) {
+        const limitData = error.response.data;
+        toast.error(
+          t.subscriptionLimit.description(
+            limitData.currentUsage,
+            limitData.limit,
+            limitData.tier
+          ),
+          {
+            duration: 5000,
+            action: {
+              label: t.subscriptionLimit.upgrade,
+              onClick: () => {
+                // Navigate to upgrade page or show upgrade modal
+                window.location.href = "/admin";
+              },
+            },
+            className:
+              "bg-red-50 dark:bg-red-900 border-red-200 dark:border-red-800",
+            style: {
+              color: "rgb(185 28 28)",
+            },
+          }
+        );
+      } else {
+        toast.error(
+          language === "fr"
+            ? "Échec de l'assignation du régime."
+            : "Failed to assign diet."
+        );
+      }
     }
   };
 
@@ -614,7 +554,7 @@ export function DietEditorSlide({
               "bg-red-50 dark:bg-red-900 border border-red-200 dark:border-red-800",
             descriptionClassName: "text-red-800 dark:text-red-200",
             style: {
-              color: "rgb(185 28 28)", // text-red-700
+              color: "rgb(185 28 28)",
             },
           }
         );
@@ -633,9 +573,10 @@ export function DietEditorSlide({
 
       const createdDiet = addDietResponse.data.dietPlan;
 
-      // Assign the diet to the visit
       await axios.put(
-        `${import.meta.env.VITE_BACKEND_URL}api/patients/visits/${visitId}/assign-diet`,
+        `${
+          import.meta.env.VITE_BACKEND_URL
+        }api/patients/visits/${visitId}/assign-diet`,
         { dietId: createdDiet._id },
         {
           headers: {
@@ -653,7 +594,7 @@ export function DietEditorSlide({
             "bg-green-50 dark:bg-green-900 border border-green-200 dark:border-green-800",
           descriptionClassName: "text-green-800 dark:text-green-200",
           style: {
-            color: "rgb(21 128 61)", // text-green-700
+            color: "rgb(21 128 61)",
           },
         }
       );
@@ -670,295 +611,420 @@ export function DietEditorSlide({
         },
       });
     } catch (error) {
+      if (axios.isAxiosError(error) && error.response?.status === 403) {
+        const limitData = error.response.data;
+        toast.error(
+          t.subscriptionLimit.description(
+            limitData.currentUsage,
+            limitData.limit,
+            limitData.tier
+          ),
+          {
+            duration: 5000,
+            action: {
+              label: t.subscriptionLimit.upgrade,
+              onClick: () => {
+                window.location.href = "/admin";
+              },
+            },
+            className:
+              "bg-red-50 dark:bg-red-900 border-red-200 dark:border-red-800",
+            style: {
+              color: "rgb(185 28 28)",
+            },
+          }
+        );
+      } else {
+        toast.error(
+          language === "fr"
+            ? "Échec de l'ajout du régime personnalisé."
+            : "Failed to add custom diet."
+        );
+      }
+    }
+  };
+
+  // Updated PDF generation function using template
+  const generatePDF = async () => {
+    try {
+      const version = versions.find((v) => v.id === selectedVersion);
+
+      // First, we need to load the template PDF
+      const templateUrl = "/Diettemplate.pdf";
+      const existingPdfBytes = await fetch(templateUrl).then((res) =>
+        res.arrayBuffer()
+      );
+      const pdfDoc = await PDFDocument.load(existingPdfBytes);
+
+      // Get the pages from template
+      const pages = pdfDoc.getPages();
+      const firstPage = pages[0];
+
+      // Get page dimensions
+      const { width, height } = firstPage.getSize();
+
+      // Embed fonts
+      const helveticaFont = await pdfDoc.embedFont(StandardFonts.Helvetica);
+      const helveticaBoldFont = await pdfDoc.embedFont(
+        StandardFonts.HelveticaBold
+      );
+      console.log(patient);
+      // Patient information
+      const patientInfo = {
+        name: `${patient?.firstname || ""} ${patient?.lastname || ""}`,
+        age: patient?.age || "--",
+        sex: patient?.sex || "--",
+        weight: patient?.latestVisit?.[0]?.weight
+          ? `${patient.latestVisit[0].weight} kg`
+          : "--",
+        height: patient?.height ? `${patient.height} cm` : "--",
+        bmi: patient?.latestVisit?.[0]?.bmi
+          ? patient.latestVisit[0].bmi.toFixed(1)
+          : "--",
+        calorieintake: patient?.latestVisit?.[0]?.calorieintake
+          ? `${patient.latestVisit[0].calorieintake.toFixed(0)} kcal`
+          : "--",
+        currentWeight: patient?.latestVisit?.[0]?.weight || "--",
+        targetWeight: patient?.targetWeight || "--",
+        date: new Date().toLocaleDateString(
+          language === "fr" ? "fr-FR" : "en-US"
+        ),
+        doctor: patient?.doctor?.lastname || "--",
+      };
+
+      // Define text positions for both first and second page layouts
+      const textPositions = {
+        // Patient details section (same for all pages)
+        patientName: { x: 102, y: height - 246 },
+        age: { x: 102, y: height - 282 },
+        sex: { x: 102, y: height - 316 },
+        currentWeight: { x: 396, y: height - 246 },
+        height: { x: 351, y: height - 282 },
+        targetWeight: { x: 414, y: height - 315 },
+        startDate: { x: 171, y: height - 160 },
+        doctor: { x: 444, y: height - 20 },
+        notes: { x: 50, y: height - 550 },
+
+        // First page meal sections
+        breakfast: { x: 52, y: height - 405, width: 156 },
+        morningSnack: { x: 52, y: height - 648, width: 156 },
+        lunch: { x: 222, y: height - 405, width: 156 },
+        afternoonSnack: { x: 222, y: height - 648, width: 156 },
+        dinner: { x: 397, y: height - 405, width: 156 },
+
+        // Second page meal sections (different positions for second page layout)
+        breakfastSecond: { x: 52, y: height - 108, width: 153 },
+        morningSnackSecond: { x: 52, y: height - 351, width: 153 },
+        lunchSecond: { x: 220, y: height - 108, width: 153 },
+        afternoonSnackSecond: { x: 220, y: height - 351, width: 153 },
+        dinnerSecond: { x: 395, y: height - 108, width: 153 },
+      };
+
+      // Helper function to fill patient information on any page
+      const fillPatientInfo = (page) => {
+        page.drawText(patientInfo.name, {
+          x: textPositions.patientName.x,
+          y: textPositions.patientName.y,
+          size: 12,
+          font: helveticaFont,
+          color: rgb(0, 0, 0),
+        });
+
+        page.drawText(patientInfo.age.toString(), {
+          x: textPositions.age.x,
+          y: textPositions.age.y,
+          size: 12,
+          font: helveticaFont,
+          color: rgb(0, 0, 0),
+        });
+
+        page.drawText(patientInfo.sex.toString(), {
+          x: textPositions.sex.x,
+          y: textPositions.sex.y,
+          size: 12,
+          font: helveticaFont,
+          color: rgb(0, 0, 0),
+        });
+
+        page.drawText(patientInfo.currentWeight.toString(), {
+          x: textPositions.currentWeight.x,
+          y: textPositions.currentWeight.y,
+          size: 12,
+          font: helveticaFont,
+          color: rgb(0, 0, 0),
+        });
+
+        page.drawText(patientInfo.height, {
+          x: textPositions.height.x,
+          y: textPositions.height.y,
+          size: 12,
+          font: helveticaFont,
+          color: rgb(0, 0, 0),
+        });
+
+        page.drawText(patientInfo.targetWeight.toString(), {
+          x: textPositions.targetWeight.x,
+          y: textPositions.targetWeight.y,
+          size: 12,
+          font: helveticaFont,
+          color: rgb(0, 0, 0),
+        });
+
+        page.drawText(patientInfo.date, {
+          x: textPositions.startDate.x,
+          y: textPositions.startDate.y,
+          size: 12,
+          font: helveticaFont,
+          color: rgb(0, 0, 0),
+        });
+        page.drawText(patientInfo.doctor, {
+          x: textPositions.doctor.x,
+          y: textPositions.doctor.y,
+          size: 12,
+          font: helveticaFont,
+          color: rgb(0, 0, 0),
+        });
+      };
+
+      // Helper function to draw text with word wrapping
+      const drawTextWithWrapping = (page, text, position, options = {}) => {
+        if (!text) return;
+
+        const { x, y, width = 156 } = position;
+        const {
+          size = 10,
+          font = helveticaFont,
+          color = rgb(0, 0, 0),
+          maxLines = 4,
+        } = options;
+
+        const lines = text.split("\n").slice(0, maxLines);
+        let currentY = y;
+
+        lines.forEach((line) => {
+          const words = line.split(" ");
+          let currentLine = "";
+
+          for (const word of words) {
+            const testLine = currentLine ? `${currentLine} ${word}` : word;
+            const textWidth = font.widthOfTextAtSize(testLine, size);
+
+            if (textWidth <= width) {
+              currentLine = testLine;
+            } else {
+              if (currentLine) {
+                page.drawText(currentLine, {
+                  x,
+                  y: currentY,
+                  size,
+                  font,
+                  color,
+                });
+                currentY -= 15;
+              }
+              currentLine = word;
+            }
+          }
+
+          if (currentLine) {
+            page.drawText(currentLine, {
+              x,
+              y: currentY,
+              size,
+              font,
+              color,
+            });
+            currentY -= 15;
+          }
+        });
+      };
+
+      // Helper function to fill meal data on a page
+      const fillMealData = (
+        page,
+        dayData,
+        day,
+        useSecondPageLayout = false
+      ) => {
+        const formatMeal = (mealDetails) => {
+          if (!mealDetails) return "";
+          return mealDetails.replace(/\n/g, " ").trim();
+        };
+
+        // Choose the appropriate meal positions based on page layout
+        const mealPositions = useSecondPageLayout
+          ? {
+              breakfast: textPositions.breakfastSecond,
+              morningSnack: textPositions.morningSnackSecond,
+              lunch: textPositions.lunchSecond,
+              afternoonSnack: textPositions.afternoonSnackSecond,
+              dinner: textPositions.dinnerSecond,
+            }
+          : {
+              breakfast: textPositions.breakfast,
+              morningSnack: textPositions.morningSnack,
+              lunch: textPositions.lunch,
+              afternoonSnack: textPositions.afternoonSnack,
+              dinner: textPositions.dinner,
+            };
+
+        // Fill meals
+        if (dayData.breakfast) {
+          const text = formatMeal(dayData.breakfast);
+          drawTextWithWrapping(page, text, mealPositions.breakfast);
+        }
+
+        if (dayData.morningSnack) {
+          const text = formatMeal(dayData.morningSnack);
+          drawTextWithWrapping(page, text, mealPositions.morningSnack, {
+            maxLines: 3,
+          });
+        }
+
+        if (dayData.lunch) {
+          const text = formatMeal(dayData.lunch);
+          drawTextWithWrapping(page, text, mealPositions.lunch);
+        }
+
+        if (dayData.afternoonSnack) {
+          const text = formatMeal(dayData.afternoonSnack);
+          drawTextWithWrapping(page, text, mealPositions.afternoonSnack, {
+            maxLines: 3,
+          });
+        }
+
+        if (dayData.dinner) {
+          const text = formatMeal(dayData.dinner);
+          drawTextWithWrapping(page, text, mealPositions.dinner);
+        }
+
+        // Add day indicator
+
+        // Add notes
+      };
+
+      // Fill patient information on first page
+      fillPatientInfo(firstPage);
+
+      // Get patient diet meals
+      const patientDiet = patient?.latestVisit?.[0]?.diet?.meals;
+
+      if (patientDiet) {
+        // Group meals by day first
+        const dayMeals = {};
+        Object.entries(patientDiet).forEach(([mealType, details]) => {
+          if (details) {
+            details.split("\n\n").forEach((line) => {
+              if (line.trim()) {
+                const [day, meal] = line.split(": ");
+                if (day && meal) {
+                  const dayKey = day.trim();
+                  dayMeals[dayKey] = dayMeals[dayKey] || {};
+                  dayMeals[dayKey][mealType] = meal.trim();
+                }
+              }
+            });
+          }
+        });
+
+        const sortedDays = Object.keys(dayMeals).sort();
+
+        if (sortedDays.length > 0) {
+          // First day goes on the first page (using first page layout)
+          const firstDay = sortedDays[0];
+          const firstDayMeals = dayMeals[firstDay];
+          fillMealData(firstPage, firstDayMeals, firstDay, false);
+
+          // Handle remaining days (day 2, 3, 4, etc.) - each gets a NEW page based on page 2 template
+          for (let i = 1; i < sortedDays.length; i++) {
+            const currentDay = sortedDays[i];
+            const dayData = dayMeals[currentDay];
+
+            let targetPage;
+
+            // Always create new pages for day 2 and beyond to avoid data overlap
+            // Determine which page to copy from template
+            let pageIndexToCopy;
+            if (pages.length > 1) {
+              // Copy from the second page of template
+              pageIndexToCopy = 1;
+            } else {
+              // If template only has one page, copy from the first page
+              pageIndexToCopy = 0;
+            }
+
+            // Create a fresh copy for each day (including day 2)
+            const [copiedPage] = await pdfDoc.copyPages(pdfDoc, [
+              pageIndexToCopy,
+            ]);
+            targetPage = pdfDoc.addPage(copiedPage);
+
+            // Fill patient information on this page
+
+            // Fill meal data using second page layout (or first page layout if template only has 1 page)
+            const useSecondPageLayout = pages.length > 1;
+            fillMealData(targetPage, dayData, currentDay, useSecondPageLayout);
+          }
+        }
+      }
+      if (pages.length > 1) {
+        pdfDoc.removePage(1); // Remove second page (index 1)
+      }
+      // Save the PDF
+      const pdfBytes = await pdfDoc.save();
+
+      // Create blob and download
+      const blob = new Blob([pdfBytes], { type: "application/pdf" });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = `regime-${patient?.firstname || "patient"}-${
+        version.name
+      }.pdf`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
+
+      toast.success(
+        language === "fr"
+          ? "PDF généré avec succès!"
+          : "PDF generated successfully!",
+        {
+          className:
+            "bg-green-50 dark:bg-green-900 border border-green-200 dark:border-green-800",
+          descriptionClassName: "text-green-800 dark:text-green-200",
+          style: { color: "rgb(21 128 61)" },
+        }
+      );
+    } catch (error) {
+      console.error("Error generating PDF:", error);
       toast.error(
         language === "fr"
-          ? "Échec de l'ajout du régime personnalisé."
-          : "Failed to add custom diet.",
+          ? "Erreur lors de la génération du PDF"
+          : "Error generating PDF",
         {
           className:
             "bg-red-50 dark:bg-red-900 border border-red-200 dark:border-red-800",
           descriptionClassName: "text-red-800 dark:text-red-200",
-          style: {
-            color: "rgb(185 28 28)", // text-red-700
-          },
+          style: { color: "rgb(185 28 28)" },
         }
       );
     }
   };
-
-  const generatePDF = () => {
-    const doc = new jsPDF();
-    const version = versions.find((v) => v.id === selectedVersion);
-    if (!version || version.selectedDays.length === 0) return;
-    // Use actual patient info
-    const patientInfo = {
-      name: `${patient?.firstname} ${patient?.lastname}`,
-      age: patient?.age || "--",
-      weight: patient?.latestVisit[0]?.weight
-        ? `${patient.latestVisit[0].weight} kg`
-        : "--",
-      height: patient?.height ? `${patient.height} cm` : "--",
-      bmi: patient?.latestVisit[0]?.bmi
-        ? patient.latestVisit[0].bmi.toFixed(1)
-        : "--",
-      calorieintake: patient?.latestVisit[0]?.calorieintake
-        ? `${patient.latestVisit[0].calorieintake.toFixed(0)} kcal`
-        : "--",
-      date: new Date().toLocaleDateString(
-        language === "fr" ? "fr-FR" : "en-US"
-      ),
-    };
-
-    const pageWidth = doc.internal.pageSize.width;
-    const pageHeight = doc.internal.pageSize.height;
-    const margin = 15;
-
-    // Enhanced colors
-    const colors = {
-      primary: [41, 128, 185], // Nice blue
-      secondary: [46, 204, 113], // Green
-      accent: [230, 126, 34], // Orange
-      text: [44, 62, 80], // Dark blue-grey
-      lightGray: [236, 240, 241], // Light gray
-      white: [255, 255, 255],
-      headerBg: [52, 152, 219], // Bright blue
-    };
-
-    // Enhanced Header with Logo/Design
-    const drawHeader = () => {
-      // Header background with gradient effect
-      doc.setFillColor(...colors.headerBg);
-      doc.rect(0, 0, pageWidth, 40, "F");
-
-      // Add subtle design element
-      doc.setFillColor(...colors.accent);
-      doc.circle(pageWidth - 20, 20, 15, "F");
-
-      doc.setFontSize(24);
-      doc.setTextColor(...colors.white);
-      doc.setFont("helvetica", "bold");
-      const title =
-        language === "fr" ? "PLAN NUTRITIONNEL" : "NUTRITIONAL PLAN";
-      const titleWidth = doc.getTextWidth(title);
-      doc.text(title, (pageWidth - titleWidth) / 2, 25);
-    };
-
-    // Enhanced Patient Info Section
-    const drawPatientInfo = () => {
-      const infoX = margin;
-      let infoY = 50;
-
-      // Info box background
-      doc.setFillColor(...colors.lightGray);
-      doc.roundedRect(
-        margin - 5,
-        45,
-        pageWidth - 2 * margin + 10,
-        50,
-        3,
-        3,
-        "F"
-      );
-
-      // Title
-      doc.setFontSize(14);
-      doc.setTextColor(...colors.primary);
-      doc.setFont("helvetica", "bold");
-      doc.text(
-        language === "fr" ? "INFORMATIONS PATIENT" : "PATIENT INFORMATION",
-        infoX,
-        infoY
-      );
-
-      // Patient details in two columns
-      infoY += 10;
-      doc.setFontSize(11);
-      doc.setTextColor(...colors.text);
-
-      const leftColumn = [
-        [`${language === "fr" ? "Nom:" : "Name:"} ${patientInfo.name}`],
-        [
-          `${language === "fr" ? "Âge:" : "Age:"} ${patientInfo.age} ${
-            language === "fr" ? "ans" : "years"
-          }`,
-        ],
-        [`${language === "fr" ? "Taille:" : "Height:"} ${patientInfo.height}`],
-      ];
-
-      const rightColumn = [
-        [`${language === "fr" ? "Poids:" : "Weight:"} ${patientInfo.weight}`],
-        [`${language === "fr" ? "IMC:" : "BMI:"} ${patientInfo.bmi}`],
-        [
-          `${language === "fr" ? "Calories:" : "Calories:"} ${
-            patientInfo.calorieintake
-          }`,
-        ],
-      ];
-
-      // Draw columns
-      leftColumn.forEach((line, index) => {
-        doc.text(line, infoX, infoY + index * 8);
-      });
-
-      rightColumn.forEach((line, index) => {
-        doc.text(line, pageWidth / 2 + margin, infoY + index * 8);
-      });
-    };
-
-    // Enhanced Daily Plans
-    const drawDailyPlans = () => {
-      // First check if patient has a diet plan
-      const patientDiet = patient?.latestVisit[0]?.diet?.meals;
-      if (!patientDiet) return;
-
-      // Group meals by day
-      const dayMeals: Record<string, Record<string, string>> = {};
-      Object.entries(patientDiet).forEach(([mealType, details]) => {
-        details.split("\n\n").forEach((line) => {
-          if (line.trim()) {
-            const [day, meal] = line.split(": ");
-            if (day && meal) {
-              dayMeals[day.trim()] = dayMeals[day.trim()] || {};
-              dayMeals[day.trim()][mealType] = meal.trim();
-            }
-          }
-        });
-      });
-
-      // Sort days to ensure they appear in order (J1 to J7)
-      const sortedDays = Object.keys(dayMeals).sort();
-
-      // Meal type translations
-      const mealTypes = {
-        breakfast: language === "fr" ? "Petit Déjeuner" : "Breakfast",
-        morningSnack:
-          language === "fr" ? "Collation Matinale" : "Morning Snack",
-        lunch: language === "fr" ? "Déjeuner" : "Lunch",
-        afternoonSnack:
-          language === "fr" ? "Collation Après-midi" : "Afternoon Snack",
-        dinner: language === "fr" ? "Dîner" : "Dinner",
-      };
-
-      // Draw patient info on first page
-      drawHeader();
-      drawPatientInfo();
-
-      // Draw each day on a new page
-      sortedDays.forEach((day, index) => {
-        if (index > 0) {
-          // Add new page for each day except first one
-          doc.addPage();
-          drawHeader();
-        }
-
-        let currentY = 110; // Start position after patient info for first page
-
-        if (index > 0) {
-          currentY = 50; // Start position for subsequent pages
-        }
-
-        // Draw day header
-        doc.setFillColor(...colors.primary);
-        doc.roundedRect(
-          margin,
-          currentY - 5,
-          pageWidth - 2 * margin,
-          12,
-          2,
-          2,
-          "F"
-        );
-
-        doc.setFontSize(16);
-        doc.setTextColor(...colors.white);
-        doc.setFont("helvetica", "bold");
-        doc.text(day, margin + 5, currentY + 4);
-
-        currentY += 20;
-
-        // Draw meals for this day
-        Object.entries(mealTypes).forEach(([type, title]) => {
-          if (dayMeals[day][type]) {
-            // Meal title with enhanced styling
-            doc.setFillColor(...colors.lightGray);
-            doc.roundedRect(
-              margin + 10,
-              currentY - 3,
-              pageWidth - 2 * margin - 20,
-              8,
-              1,
-              1,
-              "F"
-            );
-
-            doc.setFontSize(11);
-            doc.setTextColor(...colors.primary);
-            doc.setFont("helvetica", "bold");
-            doc.text(title, margin + 15, currentY + 3);
-
-            currentY += 12;
-
-            // Meal content with bullet points
-            doc.setFontSize(10);
-            doc.setTextColor(...colors.text);
-            doc.setFont("helvetica", "normal");
-
-            const lines = doc.splitTextToSize(
-              dayMeals[day][type],
-              pageWidth - margin * 2 - 30
-            );
-
-            lines.forEach((line: string) => {
-              if (line.trim()) {
-                doc.text("•", margin + 20, currentY);
-                doc.text(line, margin + 25, currentY);
-                currentY += 6;
-              }
-            });
-
-            currentY += 8; // Space between meals
-          }
-        });
-
-        // Add footer with date and page number
-        doc.setFontSize(10);
-        doc.setTextColor(...colors.text);
-        doc.text(
-          `${language === "fr" ? "Date:" : "Date:"} ${patientInfo.date}`,
-          margin,
-          pageHeight - margin
-        );
-        doc.text(
-          `${language === "fr" ? "Page" : "Page"} ${index + 1}/${
-            sortedDays.length
-          }`,
-          pageWidth - margin - 30,
-          pageHeight - margin
-        );
-      });
-    };
-
-    // Rest of your existing code...
-    drawHeader();
-    drawPatientInfo();
-    drawDailyPlans();
-
-    doc.save(`regime-${patient?.firstname || "patient"}-${version.name}.pdf`);
-  };
-
   const currentVersion = versions.find((v) => v.id === selectedVersion);
 
   return (
     <div className="space-y-6">
-      {/* Version Management */}
-
       {/* Day Plans Accordion */}
-      <Card>
-        <CardHeader>
-          <CardTitle>{t.dayPlans}</CardTitle>
+      <Card className="border-0 shadow-lg">
+        <CardHeader className="border-b bg-gradient-to-r from-primary/10 to-primary/20 dark:from-primary/20 dark:to-primary/30">
+          <CardTitle className="text-2xl text-primary dark:text-primary">
+            {t.dayPlans}
+          </CardTitle>
         </CardHeader>
-        <CardContent>
-          <Accordion type="multiple" className="w-full">
+        <CardContent className="p-6">
+          <Accordion type="multiple" className="w-full space-y-4">
             {allDays.map((dayId) => {
               const plan = getCurrentDietPlan(dayId);
               if (!plan) return null;
@@ -967,9 +1033,13 @@ export function DietEditorSlide({
                 currentVersion?.selectedDays.includes(dayId) || false;
 
               return (
-                <AccordionItem key={dayId} value={dayId}>
-                  <div className="flex items-center justify-between w-full py-4">
-                    <div className="flex items-center gap-3">
+                <AccordionItem
+                  key={dayId}
+                  value={dayId}
+                  className="border rounded-xl shadow-sm hover:shadow-md transition-all"
+                >
+                  <div className="flex items-center justify-between w-full p-4 bg-gradient-to-r from-gray-50 to-gray-100 dark:from-gray-800 dark:to-gray-750 rounded-t-xl">
+                    <div className="flex items-center gap-4">
                       <Checkbox
                         checked={isSelected}
                         onCheckedChange={(checked) =>
@@ -978,158 +1048,159 @@ export function DietEditorSlide({
                             checked as boolean
                           )
                         }
+                        className="h-5 w-5"
                       />
-                      <span className="font-semibold text-lg">{dayId}</span>
+                      <span className="font-bold text-xl text-gray-800 dark:text-gray-100">
+                        {dayId}
+                      </span>
                     </div>
+                    <AccordionTrigger className="hover:no-underline py-2 px-4 text-primary dark:text-primary hover:text-primary/80 dark:hover:text-primary/80">
+                      <span className="text-sm font-medium">
+                        {t.viewDayDetails}
+                      </span>
+                    </AccordionTrigger>
                   </div>
-                  <AccordionTrigger className="hover:no-underline pt-0 pb-4">
-                    <span className="text-sm text-muted-foreground">
-                      {t.viewDayDetails}
-                    </span>
-                  </AccordionTrigger>
 
-                  <AccordionContent>
-                    <div className="space-y-4 pt-4">
-                      {/* Meals */}
-                      <div className="grid gap-3">
-                        {Object.entries(plan.meals)
-                          .filter(
-                            ([mealType, meal]) =>
-                              meal.details && meal.details.trim() !== ""
-                          )
-                          .map(([mealType, meal]) => {
-                            const isEditing =
-                              editingMeal?.dayId === dayId &&
-                              editingMeal?.mealType === mealType;
+                  <AccordionContent className="p-4">
+                    <div className="grid gap-6">
+                      {Object.entries(plan.meals)
+                        .filter(
+                          ([_, meal]) =>
+                            meal.details && meal.details.trim() !== ""
+                        )
+                        .map(([mealType, meal]) => {
+                          const isEditing =
+                            editingMeal?.dayId === dayId &&
+                            editingMeal?.mealType === mealType;
 
-                            return (
-                              <div key={mealType} className="relative group">
-                                <div className="flex items-start gap-4 p-6 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl shadow-sm hover:shadow-md dark:hover:shadow-lg transition-all duration-300 hover:border-gray-300 dark:hover:border-gray-600">
-                                  {/* Meal Type Indicator */}
-                                  <div className="flex flex-col items-center gap-3 min-w-[70px] flex-shrink-0">
-                                    {/* Icon Container */}
-                                    <div className="w-14 h-14 rounded-full bg-gradient-to-br from-blue-50 to-blue-100 dark:from-blue-900/50 dark:to-blue-800/50 flex items-center justify-center text-blue-600 dark:text-blue-400 shadow-sm border border-blue-100 dark:border-blue-800">
-                                      <span className="text-xl">
-                                        {getMealIcon(mealType)}
-                                      </span>
-                                    </div>
-
-                                    {/* Meal Type Label */}
-                                    <span
-                                      className="text-xs font-semibold text-blue-700 dark:text-blue-300 text-center leading-tight px-2 py-1 bg-blue-50 dark:bg-blue-900/50 rounded-md min-h-[24px] flex items-center justify-center max-w-[70px] border border-blue-100 dark:border-blue-800"
-                                      title={t[mealType as keyof typeof t]}
-                                    >
+                          return (
+                            <div key={mealType} className="relative group">
+                              <div className="flex flex-col lg:flex-row gap-6 p-6 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl shadow-sm hover:shadow-md transition-all">
+                                <div className="flex items-center gap-4 lg:w-48 flex-shrink-0">
+                                  <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-primary/10 to-primary/20 dark:from-primary/20 dark:to-primary/30 flex items-center justify-center shadow-inner border border-primary/20 dark:border-primary/30">
+                                    <span className="text-2xl text-primary dark:text-primary">
+                                      {getMealIcon(mealType)}
+                                    </span>
+                                  </div>
+                                  <div className="flex flex-col">
+                                    <span className="text-sm font-semibold text-primary dark:text-primary">
                                       {t[mealType as keyof typeof t]}
                                     </span>
                                   </div>
+                                </div>
 
-                                  {/* Main Content */}
-                                  <div className="flex-1 min-w-0 space-y-4">
-                                    {/* Meal Header */}
-                                    <div className="flex items-start justify-between gap-4">
-                                      <div className="flex-1 min-w-0">
-                                        {isEditing ? (
-                                          <Input
-                                            value={meal.name}
-                                            onChange={(e) =>
-                                              handleMealEdit(
-                                                dayId,
-                                                mealType,
-                                                "name",
-                                                e.target.value
-                                              )
-                                            }
-                                            className="text-base font-semibold h-10 border-2 border-blue-200 dark:border-blue-700 
-              focus:border-blue-400 dark:focus:border-blue-500 focus:ring-2 focus:ring-blue-200 
-              dark:focus:ring-blue-800 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
-                                            placeholder="Nom du plat"
-                                          />
-                                        ) : (
-                                          <h4 className="text-lg font-semibold text-gray-900 dark:text-gray-100 truncate">
-                                            {meal.name}
-                                          </h4>
-                                        )}
-                                      </div>
-
-                                      {/* Controls Section */}
-                                      <div className="flex items-center gap-3 flex-shrink-0">
-                                        {/* Edit Button */}
-                                        {isEditing ? (
-                                          <div className="flex gap-2">
-                                            <Button
-                                              size="sm"
-                                              variant="ghost"
-                                              onClick={handleSaveMealEdit}
-                                              className="h-10 w-10 p-0 text-green-600 dark:text-green-400 hover:text-green-700 
-                dark:hover:text-green-300 hover:bg-green-50 dark:hover:bg-green-900/50 
-                border-2 border-green-200 dark:border-green-700 rounded-lg"
-                                            >
-                                              <Check className="h-5 w-5" />
-                                            </Button>
-                                            <Button
-                                              size="sm"
-                                              variant="ghost"
-                                              onClick={handleCancelMealEdit}
-                                              className="h-10 w-10 p-0 text-red-600 dark:text-red-400 hover:text-red-700 
-                dark:hover:text-red-300 hover:bg-red-50 dark:hover:bg-red-900/50 
-                border-2 border-red-200 dark:border-red-700 rounded-lg"
-                                            >
-                                              <X className="h-5 w-5" />
-                                            </Button>
-                                          </div>
-                                        ) : (
-                                          <Button
-                                            size="sm"
-                                            variant="ghost"
-                                            onClick={() =>
-                                              setEditingMeal({
-                                                dayId,
-                                                mealType,
-                                              })
-                                            }
-                                            className="h-10 w-10 p-0 text-blue-600 dark:text-blue-400 hover:text-blue-700 
-              dark:hover:text-blue-300 hover:bg-blue-50 dark:hover:bg-blue-900/50 
-              border-2 border-blue-200 dark:border-blue-700 rounded-lg"
-                                          >
-                                            <Edit2 className="h-4 w-4" />
-                                          </Button>
-                                        )}
-
-                                        {/* Select Diet Button */}
-                                      </div>
-                                    </div>
-
-                                    {/* Meal Details */}
-                                    <div className="border-t border-gray-100 dark:border-gray-700 pt-4">
+                                <div className="flex-1 min-w-0 space-y-4">
+                                  <div className="flex items-center justify-between gap-4 border-b border-gray-100 dark:border-gray-700 pb-4">
+                                    <div className="flex-1">
                                       {isEditing ? (
-                                        <Textarea
-                                          value={meal.details}
+                                        <Input
+                                          value={meal.name}
                                           onChange={(e) =>
                                             handleMealEdit(
                                               dayId,
                                               mealType,
-                                              "details",
+                                              "name",
                                               e.target.value
                                             )
                                           }
-                                          className="text-sm min-h-[100px] resize-none border-gray-200 dark:border-gray-600 focus:border-blue-400 dark:focus:border-blue-500 focus:ring-blue-200 dark:focus:ring-blue-800 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 placeholder:text-gray-500 dark:placeholder:text-gray-400"
-                                          placeholder="Détails du repas, ingrédients, préparation..."
+                                          className="text-lg font-semibold border-2 border-primary/30 dark:border-primary/40 rounded-lg focus:border-primary focus:ring-primary"
+                                          placeholder="Nom du plat"
                                         />
                                       ) : (
-                                        <div className="bg-gray-50 dark:bg-gray-700/50 border border-gray-100 dark:border-gray-600 rounded-lg p-4">
-                                          <p className="text-sm text-gray-700 dark:text-gray-300 leading-relaxed whitespace-pre-wrap">
-                                            {meal.details ||
-                                              t.noDetailsAvailable}
-                                          </p>
-                                        </div>
+                                        <h3 className="text-xl font-bold text-gray-900 dark:text-gray-100">
+                                          {meal.name}
+                                        </h3>
+                                      )}
+                                    </div>
+
+                                    <div className="flex items-center gap-2">
+                                      {isEditing ? (
+                                        <>
+                                          <Button
+                                            size="sm"
+                                            variant="ghost"
+                                            onClick={handleSaveMealEdit}
+                                            className="h-10 w-10 rounded-lg bg-success/10 dark:bg-success/20 text-success dark:text-success hover:bg-success/20"
+                                          >
+                                            <Check className="h-5 w-5" />
+                                          </Button>
+                                          <Button
+                                            size="sm"
+                                            variant="ghost"
+                                            onClick={handleCancelMealEdit}
+                                            className="h-10 w-10 rounded-lg bg-destructive/10 dark:bg-destructive/20 text-destructive dark:text-destructive hover:bg-destructive/20"
+                                          >
+                                            <X className="h-5 w-5" />
+                                          </Button>
+                                        </>
+                                      ) : (
+                                        <Button
+                                          size="sm"
+                                          variant="ghost"
+                                          onClick={() =>
+                                            setEditingMeal({ dayId, mealType })
+                                          }
+                                          className="h-10 w-10 rounded-lg bg-primary/10 dark:bg-primary/20 text-primary dark:text-primary hover:bg-primary/20"
+                                        >
+                                          <Edit2 className="h-4 w-4" />
+                                        </Button>
                                       )}
                                     </div>
                                   </div>
+
+                                  <div className="bg-gradient-to-br from-slate-50 to-slate-100 dark:from-gray-800/50 dark:to-gray-800/30 rounded-xl p-6 shadow-inner">
+                                    {isEditing ? (
+                                      <Textarea
+                                        value={meal.details}
+                                        onChange={(e) =>
+                                          handleMealEdit(
+                                            dayId,
+                                            mealType,
+                                            "details",
+                                            e.target.value
+                                          )
+                                        }
+                                        className="min-h-[120px] text-base leading-relaxed border-2 border-gray-200 dark:border-gray-600 rounded-lg focus:border-primary focus:ring-primary"
+                                        placeholder="Détails du repas, ingrédients, préparation..."
+                                      />
+                                    ) : (
+                                      <div className="prose dark:prose-invert max-w-none space-y-2">
+                                        {meal.details ? (
+                                          meal.details
+                                            .split("\n")
+                                            .map((line, index) => (
+                                              <p
+                                                key={index}
+                                                className={cn(
+                                                  "text-lg tracking-wide",
+                                                  "font-medium text-gray-900 dark:text-gray-100",
+                                                  "leading-relaxed",
+                                                  line.startsWith("-") ||
+                                                    line.startsWith("•")
+                                                    ? "pl-4"
+                                                    : "font-semibold"
+                                                )}
+                                              >
+                                                {line.trim() &&
+                                                !line.startsWith("-") &&
+                                                !line.startsWith("•")
+                                                  ? `• ${line}`
+                                                  : line}
+                                              </p>
+                                            ))
+                                        ) : (
+                                          <p className="text-base italic text-gray-500 dark:text-gray-400">
+                                            {t.noDetailsAvailable}
+                                          </p>
+                                        )}
+                                      </div>
+                                    )}
+                                  </div>
                                 </div>
                               </div>
-                            );
-                          })}
-                      </div>
+                            </div>
+                          );
+                        })}
                     </div>
                   </AccordionContent>
                 </AccordionItem>
@@ -1143,24 +1214,34 @@ export function DietEditorSlide({
       <Card>
         <CardContent className="pt-6">
           <div className="flex flex-col gap-4">
-            {/* Selected Days Action */}
-
             <div className="flex gap-3">
+              {hasDiet ? (
+                <div className="flex-1 flex items-center justify-between px-4 py-3 bg-destructive/10 dark:bg-destructive/20 border border-destructive/30 dark:border-destructive/40 rounded-lg">
+                  <span className="text-destructive dark:text-destructive">
+                    {t.dietAlreadyAssigned}
+                  </span>
+                </div>
+              ) : (
+                <Button
+                  className="flex-1 bg-primary hover:bg-primary/90 text-primary-foreground"
+                  size="lg"
+                  onClick={handleAssignSelectedDays}
+                >
+                  {t.assignToPatient} - {currentVersion?.name} (
+                  {currentVersion?.selectedDays.length} jours)
+                </Button>
+              )}
               <Button
-                className="flex-1"
+                onClick={generatePDF}
+                variant="outline"
                 size="lg"
-                onClick={handleAssignSelectedDays}
+                disabled={!hasDiet}
+                className="border-primary/30 text-primary hover:bg-primary/10"
               >
-                {t.assignToPatient} - {currentVersion.name} (
-                {currentVersion.selectedDays.length} jours)
-              </Button>
-              <Button onClick={generatePDF} variant="outline" size="lg">
                 <Download className="h-4 w-4 mr-2" />
                 {t.downloadPdf}
               </Button>
             </div>
-
-            {/* Add Custom Diet Button */}
           </div>
         </CardContent>
       </Card>
@@ -1169,7 +1250,9 @@ export function DietEditorSlide({
       {isAddingDiet && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg w-[600px] max-w-[90vw] max-h-[90vh] overflow-y-auto">
-            <h3 className="text-lg font-semibold mb-4">{t.addDiet}</h3>
+            <h3 className="text-lg font-semibold mb-4 text-primary">
+              {t.addDiet}
+            </h3>
             <div className="space-y-4">
               <Input
                 placeholder={t.dietName}
@@ -1177,11 +1260,12 @@ export function DietEditorSlide({
                 onChange={(e) =>
                   setNewDietForm({ ...newDietForm, name: e.target.value })
                 }
+                className="focus:border-primary focus:ring-primary"
               />
 
               <div className="grid gap-4">
                 <div>
-                  <label className="block text-sm font-medium mb-2">
+                  <label className="block text-sm font-medium mb-2 text-primary">
                     {t.breakfast}
                   </label>
                   <Textarea
@@ -1196,12 +1280,12 @@ export function DietEditorSlide({
                         },
                       })
                     }
-                    className="min-h-[80px]"
+                    className="min-h-[80px] focus:border-primary focus:ring-primary"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium mb-2">
+                  <label className="block text-sm font-medium mb-2 text-primary">
                     {t.morningSnack}
                   </label>
                   <Textarea
@@ -1216,12 +1300,12 @@ export function DietEditorSlide({
                         },
                       })
                     }
-                    className="min-h-[80px]"
+                    className="min-h-[80px] focus:border-primary focus:ring-primary"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium mb-2">
+                  <label className="block text-sm font-medium mb-2 text-primary">
                     {t.lunch}
                   </label>
                   <Textarea
@@ -1233,12 +1317,12 @@ export function DietEditorSlide({
                         meals: { ...newDietForm.meals, lunch: e.target.value },
                       })
                     }
-                    className="min-h-[80px]"
+                    className="min-h-[80px] focus:border-primary focus:ring-primary"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium mb-2">
+                  <label className="block text-sm font-medium mb-2 text-primary">
                     {t.afternoonSnack}
                   </label>
                   <Textarea
@@ -1253,12 +1337,12 @@ export function DietEditorSlide({
                         },
                       })
                     }
-                    className="min-h-[80px]"
+                    className="min-h-[80px] focus:border-primary focus:ring-primary"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium mb-2">
+                  <label className="block text-sm font-medium mb-2 text-primary">
                     {t.dinner}
                   </label>
                   <Textarea
@@ -1270,7 +1354,7 @@ export function DietEditorSlide({
                         meals: { ...newDietForm.meals, dinner: e.target.value },
                       })
                     }
-                    className="min-h-[80px]"
+                    className="min-h-[80px] focus:border-primary focus:ring-primary"
                   />
                 </div>
               </div>
@@ -1292,12 +1376,13 @@ export function DietEditorSlide({
                     },
                   });
                 }}
+                className="border-primary/30 text-primary hover:bg-primary/10"
               >
                 {t.cancel}
               </Button>
               <Button
                 onClick={handleAddCustomDiet}
-                className="bg-blue-600 text-white hover:bg-blue-700"
+                className="bg-primary text-primary-foreground hover:bg-primary/90"
               >
                 {t.saveAndAssign}
               </Button>

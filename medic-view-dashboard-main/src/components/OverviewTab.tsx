@@ -39,6 +39,7 @@ interface Patient {
     calorieintake?: number;
     bmi?: number;
   };
+  targetWeight: number;
 }
 
 interface OverviewTabProps {
@@ -112,6 +113,14 @@ export function OverviewTab({
         "Êtes-vous sûr de vouloir supprimer cet entraînement ?",
       trainingDeleted: "Entraînement supprimé avec succès",
       errorDeletingTraining: "Erreur lors de la suppression de l'entraînement",
+      dietDay: "Régime",
+      targetWeight: "Poids cible (kg)",
+      weightProgress: "Progression vers l'objectif",
+      initialWeight: "Poids initial",
+      currentWeight: "Poids actuel",
+      addVisit: "Ajouter une visite",
+      nutritionGuide: "Votre guide nutritionnel personnalisé",
+
     },
     en: {
       bodyInfo: "Anthropometry & Body Composition",
@@ -165,6 +174,13 @@ export function OverviewTab({
       confirmDeleteTraining: "Are you sure you want to delete this training?",
       trainingDeleted: "Training deleted successfully",
       errorDeletingTraining: "Error deleting training",
+      dietDay: "Diet",
+      targetWeight: "Target weight (kg)",
+      weightProgress: "Goal Progress",
+      initialWeight: "Initial weight",
+      currentWeight: "Current weight",
+      addVisit: "Add Visit",
+      nutritionGuide: "Your personalized nutrition guide",
     },
   };
 
@@ -189,28 +205,28 @@ export function OverviewTab({
   const getBMICategory = (bmiValue: string): string => {
     if (bmiValue === "--") return "";
     const bmi = parseFloat(bmiValue);
-    if (bmi < 16)
-      return language === "fr"
-        ? "Dénutrition sévère (< 16)"
-        : "Severe malnutrition (< 16)";
+
     if (bmi < 17)
       return language === "fr"
-        ? "Dénutrition modérée (16-17)"
-        : "Moderate malnutrition (16-17)";
-    if (bmi < 18.5) return t.bmiCategories.underweight;
-    if (bmi < 25) return t.bmiCategories.normal;
-    if (bmi < 30) return t.bmiCategories.overweight;
-    if (bmi < 35)
+        ? "Masse musculaire faible ou immunité faible (< 17)"
+        : "Low muscle mass or weak immunity (< 17)";
+
+    if (bmi < 18.5)
       return language === "fr"
-        ? "Obésité classe I (30-35)"
-        : "Class I obesity (30-35)";
-    if (bmi < 40)
+        ? "Légèrement en sous-poids (17-18.4)"
+        : "Slightly underweight (17-18.4)";
+
+    if (bmi < 25)
       return language === "fr"
-        ? "Obésité classe II (35-40)"
-        : "Class II obesity (35-40)";
+        ? "Poids normal (18.5-24.9)"
+        : "Normal weight (18.5-24.9)";
+
+    if (bmi < 30)
+      return language === "fr" ? "Surpoids (25-29.9)" : "Overweight (25-29.9)";
+
     return language === "fr"
-      ? "Obésité classe III (≥ 40)"
-      : "Class III obesity (≥ 40)";
+      ? "Risque cardio-vasculaire (≥ 30)"
+      : "Cardiovascular risk (≥ 30)";
   };
 
   // Clinical muscle mass estimation with Boer formula approximation
@@ -236,12 +252,18 @@ export function OverviewTab({
   const getBMIColor = (bmiValue: string): string => {
     if (bmiValue === "--") return "gray";
     const bmiNum = parseFloat(bmiValue);
-    if (bmiNum < 16) return "red"; // Severe malnutrition
-    if (bmiNum < 18.5) return "orange"; // Underweight
-    if (bmiNum < 25) return "green"; // Normal
-    if (bmiNum < 30) return "yellow"; // Overweight
-    if (bmiNum < 35) return "orange"; // Class I obesity
-    return "red"; // Class II-III obesity
+
+    // Severely underweight or obese (red)
+    if (bmiNum < 17 || bmiNum >= 30) return "red";
+
+    // Normal weight (green)
+    if (bmiNum >= 18.5 && bmiNum <= 24.9) return "green";
+
+    // Slightly underweight or overweight (orange)
+    if ((bmiNum >= 17 && bmiNum < 18.5) || (bmiNum >= 25 && bmiNum < 30))
+      return "orange";
+
+    return "gray"; // default fallback
   };
 
   const handleAddVisit = async (visitData: {
@@ -454,6 +476,65 @@ export function OverviewTab({
   // Add this check before rendering the delete button
   const isLatestVisit = currentVisit?._id === visits[visits.length - 1]?._id;
 
+  // Add this function inside OverviewTab component
+  const calculateWeightGoalProgress = (): number => {
+    if (!patient?.targetWeight || !currentVisit?.weight) return 0;
+
+    const initialWeight = visits[0]?.weight || patient.weight || 0;
+    const currentWeight = currentVisit.weight;
+    const targetWeight = patient.targetWeight;
+
+    // Calculate progress based on goal type
+    if (patient.goal === "perte") {
+      // For weight loss
+      const totalToLose = initialWeight - targetWeight;
+      const currentLoss = initialWeight - currentWeight;
+      return Math.min(100, Math.max(0, (currentLoss / totalToLose) * 100));
+    } else if (patient.goal === "gain") {
+      // For weight gain
+      const totalToGain = targetWeight - initialWeight;
+      const currentGain = currentWeight - initialWeight;
+      return Math.min(100, Math.max(0, (currentGain / totalToGain) * 100));
+    }
+
+    // For maintenance, check if weight is within 2% of target
+    const percentDiff =
+      (Math.abs(currentWeight - targetWeight) / targetWeight) * 100;
+    return percentDiff <= 2 ? 100 : 0;
+  };
+
+  // Add this improved progress calculation function:
+  const calculateWeightProgress = (): number => {
+    if (!patient?.targetWeight || !currentVisit?.weight || !visits[0]?.weight)
+      return 0;
+
+    const initialWeight = visits[0].weight;
+    const currentWeight = currentVisit.weight;
+    const targetWeight = patient.targetWeight;
+
+    // Handle different goal types
+    if (patient.goal === "perte") {
+      if (initialWeight <= targetWeight) return 0; // Invalid goal
+      const progress = Math.floor(
+        ((initialWeight - currentWeight) / (initialWeight - targetWeight)) * 100
+      );
+      return Math.min(Math.max(progress, 0), 100);
+    } else if (patient.goal === "gain") {
+      if (initialWeight >= targetWeight) return 0; // Invalid goal
+      const progress = Math.floor(
+        ((currentWeight - initialWeight) / (targetWeight - initialWeight)) * 100
+      );
+      return Math.min(Math.max(progress, 0), 100);
+    } else {
+      // maintenance
+      // Consider within 2% of target as success
+      const deviation = Math.abs(currentWeight - targetWeight) / targetWeight;
+      return deviation <= 0.02
+        ? 100
+        : Math.floor(Math.max(0, (1 - deviation) * 100));
+    }
+  };
+
   return (
     <>
       <div
@@ -462,13 +543,13 @@ export function OverviewTab({
         }`}
       >
         {/* Header Section */}
-        <div className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-sm border border-gray-200 dark:border-gray-700">
-          <div className="flex items-center justify-between mb-6">
+        <div className="bg-white dark:bg-gray-800 rounded-xl p-4 sm:p-6 shadow-sm border border-gray-200 dark:border-gray-700">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-6 gap-3">
             <div className="flex items-center gap-3">
-              <div className="p-2 bg-blue-100 dark:bg-blue-900 rounded-lg">
+              <div className="p-2 bg-blue-100 dark:bg-blue-900 rounded-lg flex-shrink-0">
                 <Scale className="h-6 w-6 text-blue-600 dark:text-blue-400" />
               </div>
-              <div>
+              <div className="min-w-0">
                 <h2 className="text-xl font-bold text-gray-900 dark:text-gray-100">
                   {t.bodyInfo}
                 </h2>
@@ -479,20 +560,27 @@ export function OverviewTab({
             </div>
             <button
               onClick={() => setShowAddVisitForm(true)}
-              className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-md"
+              className="px-4 py-2 bg-primary hover:bg-secondary text-white rounded-md flex-shrink-0"
             >
-              Add Visit
+              {t.addVisit}
             </button>
           </div>
 
-          {/* Body Metrics Grid */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4 auto-rows-fr">
+          {/* Body Metrics Grid - Fixed for your MetricCard component */}
+          <div
+            className="grid gap-4 lg:gap-5 xl:gap-6"
+            style={{
+              gridTemplateColumns:
+                "repeat(auto-fit, minmax(min(100%, 200px), 1fr))",
+            }}
+          >
             <MetricCard
               title={t.basemet}
               value={currentVisit?.basemetabolisme ?? t.noData}
               unit="kcal"
               color="blue"
-              icon={<Scale className="h-6 w-6" />}
+              icon={<Scale className="h-5 w-5 lg:h-6 lg:w-6" />}
+              className="transition-all duration-300 hover:scale-[1.02] hover:shadow-lg !min-h-[140px] sm:!min-h-[150px] lg:!min-h-[160px]"
             />
 
             <MetricCard
@@ -500,7 +588,8 @@ export function OverviewTab({
               value={currentVisit?.activemetabolisme ?? t.noData}
               unit="kcal"
               color="teal"
-              icon={<Activity className="h-6 w-6" />}
+              icon={<Activity className="h-5 w-5 lg:h-6 lg:w-6" />}
+              className="transition-all duration-300 hover:scale-[1.02] hover:shadow-lg !min-h-[140px] sm:!min-h-[150px] lg:!min-h-[160px]"
             />
 
             <MetricCard
@@ -508,7 +597,8 @@ export function OverviewTab({
               value={currentVisit?.calorieintake ?? t.noData}
               unit="kcal"
               color="green"
-              icon={<TrendingUp className="h-6 w-6" />}
+              icon={<TrendingUp className="h-5 w-5 lg:h-6 lg:w-6" />}
+              className="transition-all duration-300 hover:scale-[1.02] hover:shadow-lg !min-h-[140px] sm:!min-h-[150px] lg:!min-h-[160px]"
             />
 
             <MetricCard
@@ -516,7 +606,8 @@ export function OverviewTab({
               value={currentVisit?.bmi ?? t.noData}
               unit=""
               color={getBMIColor(currentVisit?.bmi)}
-              icon={<TrendingUp className="h-6 w-6" />}
+              icon={<TrendingUp className="h-5 w-5 lg:h-6 lg:w-6" />}
+              className="transition-all duration-300 hover:scale-[1.02] hover:shadow-lg !min-h-[140px] sm:!min-h-[150px] lg:!min-h-[160px]"
             />
 
             <MetricCard
@@ -524,9 +615,8 @@ export function OverviewTab({
               value={currentVisit?.bf ?? t.noData}
               unit="%"
               color="orange"
-              icon={<Heart className="h-6 w-6" />}
-              subtitle={bf ? `${bf}%` : t.noData}
-              clinicalNote={t.clinicalNotes.bodyFatNote}
+              icon={<Heart className="h-5 w-5 lg:h-6 lg:w-6" />}
+              className="transition-all duration-300 hover:scale-[1.02] hover:shadow-lg !min-h-[140px] sm:!min-h-[150px] lg:!min-h-[160px]"
             />
           </div>
         </div>
@@ -611,9 +701,10 @@ export function OverviewTab({
           </div>
         </div>
 
-        {/* Health Metrics Section */}
-        <div className="xl:col-span-1">
-          <div className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-sm border border-gray-200 dark:border-gray-700 h-full">
+        {/* Health Metrics & Weight Progress Section */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {/* Health Score Card */}
+          <div className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-sm border border-gray-200 dark:border-gray-700">
             <div className="flex items-center gap-3 mb-4">
               <div className="p-2 bg-green-100 dark:bg-green-900 rounded-lg">
                 <Heart className="h-5 w-5 text-green-600 dark:text-green-400" />
@@ -623,10 +714,60 @@ export function OverviewTab({
               </h3>
             </div>
             <HealthScore
-              score={currentVisit?.healthScore ?? 0} // Dynamically use healthScore
+              score={currentVisit?.healthScore ?? 0}
               language={language}
               className="h-full"
             />
+          </div>
+
+          {/* Weight Progress Card */}
+          <div className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-sm border border-gray-200 dark:border-gray-700">
+            <div className="flex items-center gap-3 mb-4">
+              <div className="p-2 bg-blue-100 dark:bg-blue-900 rounded-lg">
+                <TrendingUp className="h-5 w-5 text-blue-600 dark:text-blue-400" />
+              </div>
+              <div>
+                <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
+                  {t.weightProgress}
+                </h3>
+                <p className="text-sm text-gray-500">
+                  {t.targetWeight}: {patient?.targetWeight} kg
+                </p>
+              </div>
+            </div>
+
+            <div className="mt-4">
+              <div className="relative pt-1">
+                <div className="flex mb-2 items-center justify-between">
+                  <div>
+                    <span className="text-xs font-semibold inline-block py-1 px-2 uppercase rounded-full bg-blue-100 text-blue-600">
+                      {calculateWeightProgress()}%
+                    </span>
+                  </div>
+                  <div className="text-right">
+                    <span className="text-xs font-semibold inline-block text-gray-600">
+                      {currentVisit?.weight || "--"} /{" "}
+                      {patient?.targetWeight || "--"} kg
+                    </span>
+                  </div>
+                </div>
+                <div className="flex h-2 mb-4 overflow-hidden bg-blue-100 rounded">
+                  <div
+                    style={{ width: `${calculateWeightProgress()}%` }}
+                    className="flex flex-col justify-center overflow-hidden bg-gradient-to-r from-blue-500 to-blue-600 shadow-lg transition-all duration-500"
+                  />
+                </div>
+                <div className="flex justify-between text-xs text-gray-500">
+                  <span>
+                    {t.initialWeight}:{" "}
+                    {visits[0]?.weight || patient?.weight || "--"} kg
+                  </span>
+                  <span>
+                    {t.currentWeight}: {currentVisit?.weight || "--"} kg
+                  </span>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
 
@@ -643,8 +784,7 @@ export function OverviewTab({
                   {t.dietPlan}
                 </h2>
                 <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
-                  Your personalized nutrition guide
-                </p>
+  {t.nutritionGuide}                </p>
               </div>
             </div>
 
@@ -669,61 +809,119 @@ export function OverviewTab({
                   ([mealType, details]) => {
                     details
                       .split("\n")
-                      .filter((line) => line.trim() !== "") // Remove empty lines
+                      .filter((line) => line.trim() !== "")
                       .forEach((line) => {
                         const [day, meal] = line.split(": ");
                         if (day && meal) {
-                          dayMeals[day.trim()] = dayMeals[day.trim()] || {};
-                          dayMeals[day.trim()][mealType] = meal.trim();
+                          const dietNumber = day.match(/\d+/);
+                          const dietKey = dietNumber
+                            ? `diet${dietNumber[0]}`
+                            : day.trim();
+                          dayMeals[dietKey] = dayMeals[dietKey] || {};
+                          dayMeals[dietKey][mealType] = meal.trim();
                         }
                       });
                   }
                 );
 
-                // Sort days in the correct order (J1, J2, J3, etc.)
-                const sortedDays = Object.keys(dayMeals).sort((a, b) => {
-                  // Extract the number from the day string (J1, J2, etc.)
-                  const getNumber = (day: string) => {
-                    const match = day.match(/\d+/);
+                // Sort diets numerically
+                const sortedDiets = Object.keys(dayMeals).sort((a, b) => {
+                  const getNumber = (diet: string) => {
+                    const match = diet.match(/\d+/);
                     return match ? parseInt(match[0]) : 0;
                   };
                   return getNumber(a) - getNumber(b);
                 });
 
-                return sortedDays.map((day) => {
-                  const meals = dayMeals[day];
+                return sortedDiets.map((dietKey) => {
+                  const meals = dayMeals[dietKey];
+                  // Get the diet number and format display text
+                  const dietNumber = dietKey.match(/\d+/)?.[0] || "";
+                  const displayText = `${t.dietDay} ${dietNumber}`;
+
                   return (
                     <div
-                      key={day}
-                      className="group relative bg-white/70 dark:bg-gray-800/70 rounded-xl p-6 border border-gray-200/60 dark:border-gray-700/60 hover:shadow-md hover:border-green-300/50 dark:hover:border-green-600/50 transition-all duration-300"
+                      key={dietKey}
+                      className="group relative bg-white/90 dark:bg-gray-800/90 rounded-2xl p-6 sm:p-8 border border-gray-200/60 dark:border-gray-700/60 
+                           hover:shadow-lg hover:border-green-300/50 dark:hover:border-green-600/50 
+                           transition-all duration-300 backdrop-blur-sm"
                     >
-                      {/* Day header with decorative line */}
-                      <div className="flex items-center gap-4 mb-6">
-                        <div className="flex-shrink-0 w-2 h-2 rounded-full bg-gradient-to-r from-green-400 to-green-600"></div>
-                        <h3 className="text-xl font-bold text-gray-900 dark:text-gray-100 tracking-tight">
-                          {day}
-                        </h3>
-                        <div className="flex-1 h-px bg-gradient-to-r from-gray-300 to-transparent dark:from-gray-600 dark:to-transparent"></div>
+                      {/* Diet header with decorative elements */}
+                      <div className="relative mb-8">
+                        {/* Decorative circle */}
+                        <div
+                          className="absolute -left-2 top-1/2 -translate-y-1/2 w-4 h-4 rounded-full 
+                          bg-gradient-to-r from-green-400 to-green-600 
+                          shadow-lg shadow-green-500/20"
+                        >
+                          <div className="absolute inset-0 rounded-full bg-green-400 animate-ping opacity-20"></div>
+                        </div>
+
+                        <div className="flex items-center gap-6 pl-4">
+                          <h3
+                            className="text-2xl font-bold bg-gradient-to-r from-gray-900 to-gray-600 dark:from-gray-100 dark:to-gray-300 
+                         bg-clip-text text-transparent tracking-tight"
+                          >
+                            {displayText}
+                          </h3>
+                          <div
+                            className="flex-1 h-px bg-gradient-to-r from-gray-300 via-gray-200 to-transparent 
+                        dark:from-gray-600 dark:via-gray-700 dark:to-transparent"
+                          ></div>
+                        </div>
                       </div>
 
-                      {/* Meals grid */}
-                      <div className="grid gap-4">
+                      {/* Meals grid with improved layout */}
+                      <div className="grid gap-4 sm:gap-6">
                         {Object.entries(meals).map(([mealType, meal]) => (
                           <div
                             key={mealType}
-                            className="flex flex-col sm:flex-row sm:items-start gap-2 p-4 rounded-lg bg-gray-50/80 dark:bg-gray-900/50 border border-gray-200/50 dark:border-gray-700/50 hover:bg-gray-100/80 dark:hover:bg-gray-900/80 transition-colors duration-200"
+                            className="group/meal relative flex flex-col sm:flex-row items-start gap-4 
+                     p-5 sm:p-6 rounded-xl 
+                     bg-gradient-to-br from-gray-50 to-white dark:from-gray-900 dark:to-gray-800/80
+                     border border-gray-200/50 dark:border-gray-700/50 
+                     hover:shadow-md hover:border-green-200 dark:hover:border-green-800
+                     transition-all duration-300"
                           >
-                            <div className="flex items-center gap-2 sm:min-w-[120px]">
-                              <div className="w-1.5 h-1.5 rounded-full bg-green-500"></div>
-                              <span className="font-semibold text-gray-800 dark:text-gray-200 text-sm uppercase tracking-wide">
+                            {/* Meal Type Header */}
+                            <div className="flex items-center gap-3 sm:w-[140px] flex-shrink-0">
+                              <div
+                                className="flex items-center justify-center w-8 h-8 rounded-full 
+                         bg-green-100 dark:bg-green-900/50 
+                         border border-green-200 dark:border-green-800"
+                              >
+                                <div
+                                  className="w-2 h-2 rounded-full bg-green-500 
+                           group-hover/meal:scale-110 transition-transform"
+                                ></div>
+                              </div>
+                              <span
+                                className="font-semibold text-gray-800 dark:text-gray-200 
+                         text-sm uppercase tracking-wider"
+                              >
                                 {t[mealType as keyof typeof t]}
                               </span>
                             </div>
-                            <div className="flex-1 sm:ml-2">
-                              <p className="text-gray-700 dark:text-gray-300 leading-relaxed">
-                                {meal}
-                              </p>
+
+                            {/* Meal Content with enhanced typography */}
+                            <div className="flex-1 min-w-0">
+                              <div className="prose prose-gray dark:prose-invert max-w-none">
+                                <p
+                                  className="text-base sm:text-lg text-gray-700 dark:text-gray-300 
+                        leading-relaxed font-medium"
+                                >
+                                  {meal}
+                                </p>
+                              </div>
                             </div>
+
+                            {/* Decorative corner accent */}
+                            <div
+                              className="absolute top-0 right-0 w-16 h-16 pointer-events-none 
+                       bg-gradient-to-bl from-green-100/40 dark:from-green-900/20 
+                       rounded-tr-xl opacity-0 group-hover/meal:opacity-100 
+                       transition-opacity"
+                            ></div>
                           </div>
                         ))}
                       </div>
@@ -783,51 +981,111 @@ export function OverviewTab({
               {currentVisit.training.exercises?.map((day, dayIndex) => (
                 <div
                   key={dayIndex}
-                  className="group relative bg-white/70 dark:bg-gray-800/70 rounded-xl p-6 border border-gray-200/60 dark:border-gray-700/60 hover:shadow-md hover:border-blue-300/50 dark:hover:border-blue-600/50 transition-all duration-300"
+                  className="group relative bg-white/90 dark:bg-gray-800/90 rounded-2xl p-6 sm:p-8 border border-gray-200/60 dark:border-gray-700/60 
+               hover:shadow-lg hover:border-blue-300/50 dark:hover:border-blue-600/50 
+               transition-all duration-300 backdrop-blur-sm"
                 >
-                  {/* Day header */}
-                  <div className="flex items-center gap-4 mb-6">
-                    <div className="flex-shrink-0 w-2 h-2 rounded-full bg-gradient-to-r from-blue-400 to-blue-600"></div>
-                    <h3 className="text-xl font-bold text-gray-900 dark:text-gray-100 tracking-tight">
-                      {day.title}
-                    </h3>
-                    <div className="flex-1 h-px bg-gradient-to-r from-gray-300 to-transparent dark:from-gray-600 dark:to-transparent"></div>
+                  {/* Day header with decorative elements */}
+                  <div className="relative mb-8">
+                    {/* Decorative circle */}
+                    <div
+                      className="absolute -left-2 top-1/2 -translate-y-1/2 w-4 h-4 rounded-full 
+                    bg-gradient-to-r from-blue-400 to-blue-600 
+                    shadow-lg shadow-blue-500/20"
+                    >
+                      <div className="absolute inset-0 rounded-full bg-blue-400 animate-ping opacity-20"></div>
+                    </div>
+
+                    <div className="flex items-center gap-6 pl-4">
+                      <h3
+                        className="text-2xl font-bold bg-gradient-to-r from-gray-900 to-gray-600 dark:from-gray-100 dark:to-gray-300 
+                     bg-clip-text text-transparent tracking-tight"
+                      >
+                        {day.title}
+                      </h3>
+                      <div
+                        className="flex-1 h-px bg-gradient-to-r from-gray-300 via-gray-200 to-transparent 
+                      dark:from-gray-600 dark:via-gray-700 dark:to-transparent"
+                      ></div>
+                    </div>
                   </div>
 
-                  {/* Exercises */}
-                  <div className="space-y-4">
+                  {/* Exercises grid */}
+                  <div className="grid gap-4 sm:gap-6">
                     {day.workouts?.map((workout, index) => (
                       <div
                         key={index}
-                        className="flex flex-col sm:flex-row sm:items-start gap-2 p-4 rounded-lg bg-gray-50/80 dark:bg-gray-900/50 border border-gray-200/50 dark:border-gray-700/50 hover:bg-gray-100/80 dark:hover:bg-gray-900/80 transition-colors duration-200"
+                        className="group/exercise relative flex flex-col sm:flex-row items-start gap-4 
+                   p-5 sm:p-6 rounded-xl 
+                   bg-gradient-to-br from-gray-50 to-white dark:from-gray-900 dark:to-gray-800/80
+                   border border-gray-200/50 dark:border-gray-700/50 
+                   hover:shadow-md hover:border-blue-200 dark:hover:border-blue-800
+                   transition-all duration-300"
                       >
-                        <div className="flex-1">
-                          <div className="font-semibold text-gray-800 dark:text-gray-200">
-                            {workout.name}
+                        {/* Exercise Name Header */}
+                        <div className="flex items-center gap-3 sm:w-[180px] flex-shrink-0">
+                          <div
+                            className="flex items-center justify-center w-8 h-8 rounded-full 
+                         bg-blue-100 dark:bg-blue-900/50 
+                         border border-blue-200 dark:border-blue-800"
+                          >
+                            <div
+                              className="w-2 h-2 rounded-full bg-blue-500 
+                           group-hover/exercise:scale-110 transition-transform"
+                            ></div>
                           </div>
-                          <div className="mt-2 flex flex-wrap gap-4 text-sm text-gray-600 dark:text-gray-400">
+                          <span
+                            className="font-semibold text-gray-800 dark:text-gray-200 
+                         text-base tracking-wide"
+                          >
+                            {workout.name}
+                          </span>
+                        </div>
+
+                        {/* Exercise Details */}
+                        <div className="flex-1 min-w-0 space-y-3">
+                          <div className="flex flex-wrap gap-4">
                             {workout.sets > 0 && (
-                              <span>
+                              <span
+                                className="px-3 py-1 rounded-full bg-blue-50 dark:bg-blue-900/30 
+                               text-blue-700 dark:text-blue-300 text-sm font-medium"
+                              >
                                 {t.sets}: {workout.sets}
                               </span>
                             )}
                             {workout.reps && (
-                              <span>
+                              <span
+                                className="px-3 py-1 rounded-full bg-blue-50 dark:bg-blue-900/30 
+                               text-blue-700 dark:text-blue-300 text-sm font-medium"
+                              >
                                 {t.reps}: {workout.reps}
                               </span>
                             )}
                             {workout.duration && (
-                              <span>
+                              <span
+                                className="px-3 py-1 rounded-full bg-blue-50 dark:bg-blue-900/30 
+                               text-blue-700 dark:text-blue-300 text-sm font-medium"
+                              >
                                 {t.duration}: {workout.duration}
                               </span>
                             )}
                           </div>
                           {workout.note && (
-                            <div className="mt-2 text-sm text-gray-500 dark:text-gray-500 italic">
-                              {workout.note}
+                            <div className="prose dark:prose-invert max-w-none">
+                              <p className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed italic pl-4 border-l-2 border-blue-200 dark:border-blue-800">
+                                {workout.note}
+                              </p>
                             </div>
                           )}
                         </div>
+
+                        {/* Decorative corner accent */}
+                        <div
+                          className="absolute top-0 right-0 w-16 h-16 pointer-events-none 
+                       bg-gradient-to-bl from-blue-100/40 dark:from-blue-900/20 
+                       rounded-tr-xl opacity-0 group-hover/exercise:opacity-100 
+                       transition-opacity"
+                        ></div>
                       </div>
                     ))}
                   </div>

@@ -1,6 +1,6 @@
 import Appointment from "../models/Appointment.js";
-
-// Get all appointments for a specific doctor
+import Doctor from "../models/Doctor.js";
+import { TIER_LIMITS } from "../middleware/subscriptionLimits.js";
 
 export const getAppointments = async (req, res) => {
   try {
@@ -8,6 +8,7 @@ export const getAppointments = async (req, res) => {
 
     if (!doctorId) {
       return res.status(400).json({
+        success: false,
         message: "Doctor ID is required"
       });
     }
@@ -18,28 +19,35 @@ export const getAppointments = async (req, res) => {
     res.status(200).json(appointments);
   } catch (error) {
     res.status(500).json({
+      success: false,
       message: "Erreur lors de la récupération des rendez-vous",
       error: error.message
     });
   }
 };
 
-// Get a single appointment by ID
 export const getAppointmentById = async (req, res) => {
   try {
-   
     const { id } = req.params;
     const appointment = await Appointment.findById(id);
     if (!appointment) {
-      return res.status(404).json({ message: "Appointment not found." });
+      return res.status(404).json({ 
+        success: false,
+        message: "Rendez-vous non trouvé" 
+      });
     }
-    res.status(200).json(appointment);
+    res.status(200).json({
+      success: true,
+      appointment
+    });
   } catch (error) {
-    res.status(500).json({ message: "Server error." });
+    res.status(500).json({ 
+      success: false,
+      message: "Erreur serveur" 
+    });
   }
 };
 
-// Create a new appointment with doctor reference
 export const createAppointment = async (req, res) => {
   try {
     const { fullname, number, objectives, date, hour, status, doctor } = req.body;
@@ -51,17 +59,34 @@ export const createAppointment = async (req, res) => {
       });
     }
 
+    // Check subscription limit
+    const doctorDoc = await Doctor.findById(doctor);
+    const tier = doctorDoc.subscription.tier;
+    const currentUsage = doctorDoc.subscription.monthlyUsage.appointments;
+    const limit = TIER_LIMITS[tier].appointments;
+
+    if (currentUsage >= limit && limit !== Infinity) {
+      return res.status(403).json({
+        success: false,
+        message: `Vous avez atteint votre limite mensuelle de rendez-vous (${limit}) pour votre abonnement ${tier}`
+      });
+    }
+
     const newAppointment = new Appointment({
       fullname,
       number,
       objectives,
       date: new Date(date),
       hour,
-      status: status || "scheduled",
+      status: status || "confirme",
       doctor
     });
 
     const savedAppointment = await newAppointment.save();
+
+    // Update doctor's monthly usage
+    
+
 
     res.status(201).json({
       success: true,
@@ -76,7 +101,7 @@ export const createAppointment = async (req, res) => {
     });
   }
 };
-// Update an existing appointment
+
 export const updateAppointment = async (req, res) => {
   try {
     const { id } = req.params;
@@ -84,9 +109,17 @@ export const updateAppointment = async (req, res) => {
 
     const appointment = await Appointment.findById(id);
     if (!appointment) {
-      return res.status(404).json({ 
+      return res.status(404).json({
         success: false,
-        message: "Rendez-vous non trouvé" 
+        message: "Rendez-vous non trouvé"
+      });
+    }
+
+    // Validate status
+    if (status && !["arrive", "termine", "reprogramme", "confirme"].includes(status)) {
+      return res.status(400).json({
+        success: false,
+        message: "Statut invalide"
       });
     }
 
@@ -104,33 +137,41 @@ export const updateAppointment = async (req, res) => {
       { new: true }
     );
 
-    res.status(200).json({ 
+    res.status(200).json({
       success: true,
       message: "Rendez-vous modifié avec succès",
-      appointment: updatedAppointment 
+      appointment: updatedAppointment
     });
   } catch (error) {
-    res.status(500).json({ 
+    res.status(500).json({
       success: false,
       message: "Erreur lors de la modification du rendez-vous",
-      error: error.message 
+      error: error.message
     });
   }
 };
 
-// Delete an appointment
 export const deleteAppointment = async (req, res) => {
   try {
     const { id } = req.params;
 
     const appointment = await Appointment.findById(id);
     if (!appointment) {
-      return res.status(404).json({ message: "Appointment not found." });
+      return res.status(404).json({ 
+        success: false,
+        message: "Rendez-vous non trouvé" 
+      });
     }
 
     await appointment.deleteOne();
-    res.status(200).json({ message: "Appointment deleted successfully." });
+    res.status(200).json({ 
+      success: true,
+      message: "Rendez-vous supprimé avec succès" 
+    });
   } catch (error) {
-    res.status(500).json({ message: "Server error." });
+    res.status(500).json({ 
+      success: false,
+      message: "Erreur serveur" 
+    });
   }
 };
