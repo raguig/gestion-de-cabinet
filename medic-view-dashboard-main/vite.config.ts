@@ -9,7 +9,6 @@ export default defineConfig(({ mode }) => ({
     port: 3000,
     strictPort: true,
   },
-  base: 'https://projet-amine-front.vercel.app',
   plugins: [
     react(),
     mode === 'development' &&
