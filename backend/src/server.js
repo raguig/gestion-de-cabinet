@@ -21,17 +21,10 @@ const app = express();
 
 // Update allowedOrigins to include your local API URL
 const allowedOrigins = [
-    'https://prod-front.vercel.app',
-    'https://prod-front-n2ifynuv4-raguigs-projects.vercel.app',
-    'https://gestion-cabinet-front-dbb7aqeiw-raguigs-projects.vercel.app',
-    'https://gestion-cabinet-front-raguigs-projects.vercel.app',
-    'https://amine-front.vercel.app',
-    'https://amine-front-i3vxtnnds-raguigs-projects.vercel.app',
+    'https://projet-amine-front.vercel.app',
     'http://localhost:3000',
     'http://localhost:5173',
-    'https://projet-amine-front.vercel.app',
-    'https://projet-amine-front-4qq0rhguo-raguigs-projects.vercel.app',
-    process.env.VITE_API_URL // Add the API URL from environment variables
+    'http://localhost:8080'
 ];
 
 app.use(cors({
@@ -39,6 +32,7 @@ app.use(cors({
         if (!origin || allowedOrigins.includes(origin)) {
             callback(null, true);
         } else {
+            console.log('Blocked origin:', origin);
             callback(new Error('Not allowed by CORS'));
         }
     },
