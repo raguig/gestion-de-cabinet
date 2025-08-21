@@ -11,16 +11,25 @@ import mealPlannerRoutes from '../src/routes/mealPlannerRoutes.js';
 
 const app = express();
 
-// CORS preflight
+// CORS configuration
+app.use(cors({
+  origin: 'https://projet-amine-front.vercel.app',
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization']
+}));
+
+// Handle preflight requests
 app.options('*', (req, res) => {
-  res.header('Access-Control-Allow-Origin', 'https://projet-amine-front.vercel.app');
-  res.header('Access-Control-Allow-Methods', 'GET,POST,PUT,DELETE,OPTIONS');
-  res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-  res.header('Access-Control-Allow-Credentials', 'true');
-  res.sendStatus(200);
+  res.status(204).end();
 });
 
 app.use(express.json());
+
+// Health check endpoint
+app.get('/', (req, res) => {
+  res.json({ status: 'ok' });
+});
 
 // Routes without /api prefix
 app.use('/auth', authRoutes);
@@ -31,7 +40,7 @@ app.use('/', dashboardRoutes);
 app.use('/ai', aiRoutes);
 app.use('/mealplanner', mealPlannerRoutes);
 
-// Error handler
+// Global error handler
 app.use((err, req, res, next) => {
   console.error('Error:', err);
   res.status(err.status || 500).json({
@@ -40,15 +49,8 @@ app.use((err, req, res, next) => {
   });
 });
 
-// Connect to database
-if (process.env.NODE_ENV !== 'production') {
-  connectDB().catch(console.error);
-}
 
-// Add error handling
-app.use((err, req, res, next) => {
-  console.error(err.stack);
-  res.status(500).json({ message: 'Something went wrong!' });
-});
+  connectDB().catch(console.error);
+
 
 export default app;
