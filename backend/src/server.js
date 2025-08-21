@@ -16,53 +16,18 @@ dotenv.config();
 
 const app = express();
 
-// ✅ Enhanced CORS configuration
-const corsOptions = {
-  origin: [
-    "https://projet-amine-front.vercel.app",
-    "http://localhost:3000",
-    "http://localhost:5173"
-  ],
+
+const allowedOrigins = [
+  "https://projet-amine-front.vercel.app",
+  "http://localhost:3000",
+  "http://localhost:5173"
+];
+
+app.use(cors({
+  origin: allowedOrigins,
   credentials: true,
-  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"],
-  allowedHeaders: [
-    "Content-Type", 
-    "Authorization", 
-    "X-Requested-With",
-    "Accept",
-    "Origin"
-  ],
-  preflightContinue: false,
-  optionsSuccessStatus: 204
-};
-app.use((req, res, next) => {
-  const allowedOrigins = [
-    "https://projet-amine-front.vercel.app",
-    "http://localhost:3000",
-    "http://localhost:5173"
-  ];
-  
-  const origin = req.headers.origin;
-  
-  // Always set CORS headers
-  if (allowedOrigins.includes(origin)) {
-    res.setHeader('Access-Control-Allow-Origin', origin);
-  }
-  
-  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS, PATCH');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With, Accept, Origin');
-  res.setHeader('Access-Control-Allow-Credentials', 'true');
-  res.setHeader('Access-Control-Max-Age', '86400'); // 24 hours
-  
-  // Handle preflight requests
-  if (req.method === 'OPTIONS') {
-    console.log(`Preflight request from ${origin} for ${req.url}`);
-    return res.status(204).end();
-  }
-  
-  console.log(`${req.method} ${req.url} from ${origin}`);
-  next();
-});
+  methods: ["GET","POST","PUT","DELETE","OPTIONS","PATCH"]
+}));
 
 
 app.use(express.json());
