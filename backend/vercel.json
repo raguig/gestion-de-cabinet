@@ -2,7 +2,7 @@
   "version": 2,
   "rewrites": [
     {
-      "source": "/(.*)",
+      "source": "/api/(.*)",
       "destination": "/api/index.js"
     }
   ],
@@ -20,7 +20,7 @@
         },
         {
           "key": "Access-Control-Allow-Methods",
-          "value": "GET,OPTIONS,PATCH,DELETE,POST,PUT"
+          "value": "GET,POST,PUT,DELETE,OPTIONS,PATCH"
         },
         {
           "key": "Access-Control-Allow-Headers",
