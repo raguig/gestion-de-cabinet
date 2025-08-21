@@ -1,12 +1,20 @@
 {
   "name": "gestion-cabinet-back-end",
   "version": "1.0.0",
-  "type": "module",
+  "main": "src/server.js",
   "scripts": {
-    "dev": "nodemon dev.js",
-    "start": "node dev.js"
+    "dev": "nodemon src/server.js",
+    "start": "node src/server.js",
+    "build": "node build.js"
   },
+  "type": "module",
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
   "dependencies": {
+    "@upstash/ratelimit": "^2.0.5",
+    "@upstash/redis": "^1.34.9",
     "bcryptjs": "^3.0.2",
     "cors": "^2.8.5",
     "dotenv": "^17.1.0",
