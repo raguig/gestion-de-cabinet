@@ -1,12 +1,37 @@
-import app from '../src/server.js';
+import express from 'express';
+import cors from "cors";
+import serverless from "serverless-http";
+import authRoutes from "../src/routes/auth.js";
+import patientRoutes from "../src/routes/patientRoutes.js";
+// ...import other routers as needed...
 
-// ensure OPTIONS is handled at this layer too (optional, safe)
-app.options('*', (req, res) => res.sendStatus(204));
+const app = express();
 
-// Error handler (keep existing)
+app.use(cors({
+  origin: "https://projet-amine-front.vercel.app",
+  credentials: true,
+  methods: ["GET","POST","PUT","DELETE","OPTIONS","PATCH"],
+  allowedHeaders: ["Content-Type","Authorization"]
+}));
+
+// quick preflight handler (ensures OPTIONS returns ok)
+app.options("*", (req, res) => res.sendStatus(204));
+
+app.use(express.json());
+
+// health check (helps verify deployment)
+app.get("/", (req, res) => res.json({ ok: true, env: process.env.NODE_ENV || "unknown" }));
+
+// mount routers without /api prefix because rewrite sends /api/* -> this file
+app.use("/auth", authRoutes);
+app.use("/patients", patientRoutes);
+// ...other app.use(...)...
+
+// minimal error handler
 app.use((err, req, res, next) => {
-  console.error(err.stack);
-  res.status(500).json({ message: 'Something went wrong!' });
+  console.error(err);
+  res.status(err.status || 500).json({ error: err.message || "internal" });
 });
 
-export default app;
+// export serverless handler for Vercel
+export default serverless(app);
