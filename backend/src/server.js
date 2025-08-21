@@ -2,18 +2,16 @@ import express from 'express';
 import { connectDB } from './config/db.js';
 import dotenv from 'dotenv';
 import cors from 'cors';
-import cron from 'node-cron';
-import Patient from './models/Patient.js';
-import { initializeSubscriptionCron } from './utils/subscriptionCron.js';
-
 import patientRoutes from './routes/patientRoutes.js';
 import authRoutes from './routes/auth.js';
 import appointmentRoutes from './routes/appointmentRoutes.js';
 import doctorRoutes from "./routes/doctorRoutes.js";
 import dashboardRoutes from "./routes/dashboardRoutes.js";
-import { updateInactivePatients } from './controller/patientController.js';
 import aiRoutes from './routes/aiRoutes.js';
 import mealPlannerRoutes from './routes/mealPlannerRoutes.js';
+import { initializeSubscriptionCron } from './utils/subscriptionCron.js';
+import Patient from './models/Patient.js';
+
 dotenv.config();
 
 
@@ -21,10 +19,17 @@ const app = express();
 
 // Update allowedOrigins to include your local API URL
 const allowedOrigins = [
-    'https://projet-amine-front.vercel.app',
+    'https://prod-front.vercel.app',
+    'https://prod-front-n2ifynuv4-raguigs-projects.vercel.app',
+    'https://gestion-cabinet-front-dbb7aqeiw-raguigs-projects.vercel.app',
+    'https://gestion-cabinet-front-raguigs-projects.vercel.app',
+    'https://amine-front.vercel.app',
+    'https://amine-front-i3vxtnnds-raguigs-projects.vercel.app',
     'http://localhost:3000',
     'http://localhost:5173',
-    'http://localhost:8080'
+    'https://projet-amine-front.vercel.app',
+    'https://projet-amine-front-4qq0rhguo-raguigs-projects.vercel.app',
+    process.env.VITE_API_URL // Add the API URL from environment variables
 ];
 
 app.use(cors({
@@ -32,7 +37,6 @@ app.use(cors({
         if (!origin || allowedOrigins.includes(origin)) {
             callback(null, true);
         } else {
-            console.log('Blocked origin:', origin);
             callback(new Error('Not allowed by CORS'));
         }
     },
@@ -49,6 +53,8 @@ app.use('/api/patients/',patientRoutes);
 app.use("/api/appointments", appointmentRoutes);
 app.use("/api/doctors", doctorRoutes);
 app.use("/api/", dashboardRoutes);
+app.use("/api/ai/", aiRoutes);
+app.use("/api/mealplanner/", mealPlannerRoutes);
 
 // Connect to database immediately
 connectDB().then(() => {

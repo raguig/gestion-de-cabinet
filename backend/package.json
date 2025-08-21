@@ -1,11 +1,11 @@
 {
   "name": "gestion-cabinet-back-end",
   "version": "1.0.0",
-  "main": "api/index.js",
+  "main": "src/server.js",
   "scripts": {
-    "start": "node api/index.js",
-    "build": "node build.js",
-    "vercel-build": "node build.js"
+    "dev": "nodemon src/server.js",
+    "start": "node src/server.js",
+    "build": "node build.js"
   },
   "type": "module",
   "keywords": [],
